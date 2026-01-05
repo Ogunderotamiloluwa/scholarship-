@@ -79,22 +79,25 @@ const Home: React.FC<HomeProps> = ({ onNavigate, onOpenStory }) => {
             <p className="text-slate-300 text-lg md:text-xl font-light leading-relaxed mb-12 max-w-2xl border-l-4 border-indigo-500/50 pl-6 md:pl-8">
               Managing $366M in endowment capital for America's brightest minds. We transform potential into groundbreaking research, policy innovation, and global leadership.
             </p>
-            <div className="flex flex-col sm:flex-row gap-5 w-full sm:w-auto">
+            {/* DUAL CTA BUTTONS */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full sm:w-auto max-w-2xl">
               <motion.button 
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                onClick={() => onNavigate('APPLY')} 
-                className="group px-10 py-5 bg-gradient-to-r from-white to-slate-100 text-slate-950 rounded-2xl font-black text-sm md:text-base shadow-2xl hover:shadow-white/25 transition-all flex items-center justify-center gap-3 active:scale-95"
+                onClick={() => onNavigate('SCHOLARSHIPS')} 
+                className="group px-8 py-5 bg-gradient-to-r from-indigo-400 to-indigo-500 text-white rounded-2xl font-black text-sm md:text-base shadow-2xl hover:shadow-indigo-500/50 transition-all flex items-center justify-center gap-3 active:scale-95"
               >
-                Apply for 2026 <ArrowRight size={18} className="group-hover:translate-x-2 transition-transform" />
+                <Award size={18} />
+                Find Scholarships <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
               </motion.button>
               <motion.button 
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                onClick={() => onNavigate('ABOUT')} 
-                className="px-10 py-5 bg-slate-900/40 backdrop-blur-md text-white border-2 border-white/20 hover:border-white/50 rounded-2xl font-black text-sm md:text-base hover:bg-white/10 transition-all active:scale-95 flex items-center justify-center gap-2 shadow-lg"
+                onClick={() => onNavigate('GRANTS')} 
+                className="group px-8 py-5 bg-gradient-to-r from-emerald-400 to-emerald-500 text-white rounded-2xl font-black text-sm md:text-base shadow-2xl hover:shadow-emerald-500/50 transition-all flex items-center justify-center gap-3 active:scale-95"
               >
-                Our Heritage <Info size={18} />
+                <Briefcase size={18} />
+                Browse Grants <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
               </motion.button>
             </div>
           </motion.div>

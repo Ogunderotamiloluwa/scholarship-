@@ -18,6 +18,11 @@ import Grants from './components/Grants';
 import HowItWorks from './components/HowItWorks';
 import GrantDetails from './components/GrantDetails';
 import GrantApplication from './components/GrantApplication';
+import News from './components/News';
+import Events from './components/Events';
+import Members from './components/Members';
+import ApplicationTracker from './components/ApplicationTracker';
+import Donate from './components/Donate';
 
 // --- SUB-COMPONENTS ---
 
@@ -915,6 +920,21 @@ const App: React.FC = () => {
 
       case 'HOW_IT_WORKS':
         return <HowItWorks onNavigate={setCurrentView} />;
+
+      case 'NEWS':
+        return <News onNavigate={setCurrentView} />;
+
+      case 'EVENTS':
+        return <Events onNavigate={setCurrentView} />;
+
+      case 'MEMBERS':
+        return <Members onNavigate={setCurrentView} />;
+
+      case 'APPLICATION_TRACKER':
+        return <ApplicationTracker onNavigate={setCurrentView} />;
+
+      case 'DONATE':
+        return <Donate onNavigate={setCurrentView} />;
 
       case 'ADMIN':
         return <AdminDashboard applicants={applicants} />;

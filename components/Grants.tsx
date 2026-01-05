@@ -1,11 +1,11 @@
 import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
-  Search, Filter, Clock, DollarSign, CheckCircle2, AlertCircle,
+  Search, Filter, Clock, DollarSign, CheckCircle2, AlertCircle, Check,
   ChevronRight, Calendar, Building2, FileText, ArrowRight
 } from 'lucide-react';
 import { ViewState, GrantType } from '../types';
-import { GRANTS } from '../Constants';
+import { GRANTS, EXPANDED_GRANTS, GRANT_DEADLINES_CALENDAR } from '../Constants';
 
 interface GrantsProps {
   onNavigate: (view: ViewState) => void;
@@ -291,6 +291,98 @@ const Grants: React.FC<GrantsProps> = ({ onNavigate, onGrantSelect }) => {
               </AnimatePresence>
             </div>
           )}
+        </div>
+      </section>
+
+      {/* EXPANDED GRANTS DATABASE SECTION */}
+      <section className="px-6 py-20 bg-gradient-to-b from-slate-50 to-white dark:from-slate-900 dark:to-slate-950 border-t border-slate-200 dark:border-slate-800">
+        <div className="max-w-7xl mx-auto">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <h2 className="heading-serif text-4xl md:text-5xl font-black text-slate-900 dark:text-white mb-4">
+              50+ Verified Grants & Funding Sources
+            </h2>
+            <p className="text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
+              Federal grants, foundation funding, corporate donations, and specialized grant programs all in one database
+            </p>
+          </motion.div>
+
+          {/* Grant Type Breakdown */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+            {[
+              { label: 'Federal Grants', count: 4, color: 'from-blue-500 to-blue-600' },
+              { label: 'Foundation Grants', count: 5, color: 'from-emerald-500 to-emerald-600' },
+              { label: 'Corporate Grants', count: 5, color: 'from-indigo-500 to-indigo-600' }
+            ].map((type, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 }}
+                className={`bg-gradient-to-br ${type.color} rounded-2xl p-8 text-white shadow-lg hover:shadow-xl transition-all`}
+              >
+                <div className="text-4xl font-black mb-2">{type.count}</div>
+                <p className="font-semibold text-white/90">{type.label}</p>
+              </motion.div>
+            ))}
+          </div>
+
+          {/* Deadline Calendar */}
+          <div className="bg-white dark:bg-slate-800 rounded-2xl p-8 mb-12 border border-slate-200 dark:border-slate-700">
+            <h3 className="text-2xl font-black text-slate-900 dark:text-white mb-8 flex items-center gap-3">
+              <Calendar size={28} className="text-emerald-600 dark:text-emerald-400" />
+              Upcoming Deadlines
+            </h3>
+            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+              {GRANT_DEADLINES_CALENDAR.map((deadline, i) => (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, y: 10 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.05 }}
+                  className="bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-700/50 dark:to-slate-700 rounded-xl p-4 hover:shadow-md transition-all border border-slate-200 dark:border-slate-600"
+                >
+                  <p className="text-xs font-black text-slate-700 dark:text-slate-300 uppercase mb-2">{deadline.month}</p>
+                  <p className="text-2xl font-black text-emerald-600 dark:text-emerald-400 mb-2">{deadline.grants}</p>
+                  <p className="text-[10px] text-slate-600 dark:text-slate-400 font-semibold">{deadline.nextDeadline}</p>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+
+          {/* Grant Tips */}
+          <div className="bg-gradient-to-r from-amber-50 to-amber-100/50 dark:from-amber-900/20 dark:to-amber-800/20 rounded-2xl p-8 border border-amber-200 dark:border-amber-800/50">
+            <h3 className="text-xl font-black text-amber-900 dark:text-amber-300 mb-6 flex items-center gap-3">
+              <CheckCircle2 size={24} />
+              Grant Application Tips
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {[
+                { title: 'Start Early', desc: 'Begin 2-3 months before deadlines' },
+                { title: 'Prepare Documents', desc: 'Gather all required paperwork in advance' },
+                { title: 'Read Requirements', desc: 'Carefully review eligibility criteria' },
+                { title: 'Follow Instructions', desc: 'Submit exactly as requested by funders' },
+                { title: 'Proofread', desc: 'Check all applications multiple times' },
+                { title: 'Track Submissions', desc: 'Keep records of all applications filed' }
+              ].map((tip, i) => (
+                <div key={i} className="flex gap-3">
+                  <div className="w-6 h-6 bg-amber-400 dark:bg-amber-500 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                    <Check size={14} className="text-white" />
+                  </div>
+                  <div>
+                    <p className="font-black text-amber-900 dark:text-amber-300">{tip.title}</p>
+                    <p className="text-sm text-amber-800 dark:text-amber-400/80">{tip.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </section>
 

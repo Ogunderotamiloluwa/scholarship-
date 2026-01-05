@@ -14,7 +14,7 @@ export const STORIES: StoryContent[] = [
       "His research has already attracted interest from major tech companies and venture capital firms seeking sustainable AI solutions."
     ],
     author: "Dr. Sarah Jenkins",
-    date: "Jan 12, 2026",
+    date: "May 12, 2026",
     readTime: "6 min read"
   },
   {
@@ -30,7 +30,7 @@ export const STORIES: StoryContent[] = [
       "Her legislative work has directly impacted over 2 million students in underserved communities."
     ],
     author: "Marcus Thorne",
-    date: "Dec 04, 2024",
+    date: "May 04, 2026",
     readTime: "8 min read"
   },
   {
@@ -46,7 +46,7 @@ export const STORIES: StoryContent[] = [
       "She now trains the next generation of oncologists and continues her groundbreaking research at Johns Hopkins Medical Center."
     ],
     author: "Elena Vance",
-    date: "Nov 15, 2024",
+    date: "May 15, 2026",
     readTime: "7 min read"
   },
   {
@@ -62,7 +62,7 @@ export const STORIES: StoryContent[] = [
       "He continues to give back by mentoring other Beacon-supported entrepreneurs and funding scholarships for underrepresented students."
     ],
     author: "Marcus Thorne",
-    date: "Oct 22, 2024",
+    date: "May 22, 2026",
     readTime: "9 min read"
   }
 ];
@@ -92,7 +92,7 @@ export const SCHOLARSHIPS: ScholarshipType[] = [
     name: 'Presidential Merit Award',
     amount: '$45,000 / Year',
     eligibility: '3.90+ GPA, Leadership History',
-    deadline: 'April 15, 2026',
+    deadline: 'May 15, 2026',
     category: 'General',
     description: 'Flagship grant for high-achieving undergraduates entering top-tier US institutions.'
   },
@@ -101,7 +101,7 @@ export const SCHOLARSHIPS: ScholarshipType[] = [
     name: 'Horizon STEM Grant',
     amount: '$32,500 / Year',
     eligibility: 'STEM Major, Underserved Area',
-    deadline: 'May 01, 2026',
+    deadline: 'May 15, 2026',
     category: 'STEM',
     description: 'Bridging the technology gap for students in rural and inner-city educational zones.'
   },
@@ -119,7 +119,7 @@ export const SCHOLARSHIPS: ScholarshipType[] = [
     name: 'Vanguard Law Scholarship',
     amount: '$40,000 / Year',
     eligibility: 'JD Candidates, Public Interest',
-    deadline: 'July 01, 2026',
+    deadline: 'July 15, 2026',
     category: 'Law',
     description: 'For constitutional law candidates dedicated to public interest and civic advocacy.'
   },
@@ -128,7 +128,7 @@ export const SCHOLARSHIPS: ScholarshipType[] = [
     name: 'Curator Arts Grant',
     amount: '$20,000 / Year',
     eligibility: 'Fine Arts/Digital Media Portfolio',
-    deadline: 'August 15, 2026',
+    deadline: 'August 01, 2026',
     category: 'Arts',
     description: 'Recognizing visual and digital excellence in contemporary creative disciplines.'
   },
@@ -137,7 +137,7 @@ export const SCHOLARSHIPS: ScholarshipType[] = [
     name: 'First-Gen Equity Fund',
     amount: '$28,000 / Year',
     eligibility: 'First-Generation College Student',
-    deadline: 'Sept 30, 2026',
+    deadline: 'Sept 15, 2026',
     category: 'General',
     description: 'Targeted support for those blazing the trail as the first in their family to attend university.'
   },
@@ -155,7 +155,7 @@ export const SCHOLARSHIPS: ScholarshipType[] = [
     name: 'Coastal Transfer Grant',
     amount: '$15,000 / Year',
     eligibility: 'Community College Transfers',
-    deadline: 'Nov 01, 2026',
+    deadline: 'Oct 15, 2026',
     category: 'General',
     description: 'Seamless financial bridges for high-potential community college transfer students.'
   }
@@ -389,7 +389,7 @@ export const GRANTS: GrantType[] = [
     eligibility: ['U.S. Citizens', 'Permanent Residents', 'STEM Field'],
     citizenship: 'U.S. Citizen or Permanent Resident',
     ageRequirement: 'No age limit',
-    deadline: '2026-10-15',
+    deadline: '2026-06-15',
     description: 'The NSF GRFP is one of America\'s most competitive fellowship programs. It supports outstanding STEM graduate students who are pursuing research-based master\'s and doctoral degrees. The fellowship recognizes and supports early-career scientists and engineers.',
     category: 'Research',
     requiredDocuments: ['Application Form', 'Transcript', 'GRE Scores', 'Research Statement', 'CV', 'Letters of Recommendation'],
@@ -418,7 +418,7 @@ export const GRANTS: GrantType[] = [
     organization: 'Small Business Administration',
     eligibility: ['Women-owned business', 'U.S. Based'],
     citizenship: 'U.S. Citizen',
-    deadline: '2026-09-30',
+    deadline: '2026-07-15',
     description: 'Grants designed to help women entrepreneurs start and grow their businesses. Funds can be used for equipment, working capital, and professional development. These grants specifically support women-owned and women-led businesses.',
     category: 'Business',
     requiredDocuments: ['Business Plan', 'Financial Projections', 'Personal Tax Returns', 'Resume', 'Executive Summary'],
@@ -447,7 +447,7 @@ export const GRANTS: GrantType[] = [
     organization: 'Bill & Melinda Gates Foundation',
     eligibility: ['Nonprofit organizations', 'Registered NGOs'],
     citizenship: 'Registered nonprofit',
-    deadline: '2026-08-15',
+    deadline: '2026-06-30',
     description: 'Funding for innovative solutions to global health challenges. Focus areas include vaccines, maternal health, and infectious disease prevention. The Gates Foundation partners with organizations making transformative health impact in low-income countries.',
     category: 'Nonprofit',
     requiredDocuments: ['Nonprofit Registration', 'Project Proposal', 'Budget Plan', 'Organizational History', '501(c)(3) Certificate', 'Impact Measurement Plan'],
@@ -478,7 +478,7 @@ export const GRANTS: GrantType[] = [
     eligibility: ['International students', 'Master\'s or Doctorate'],
     citizenship: 'Non-U.S. citizen',
     ageRequirement: 'Under 35',
-    deadline: '2026-07-31',
+    deadline: '2026-07-15',
     description: 'Prestigious grant program offering scholarships to outstanding international graduate students to study in the United States. The Fulbright Program is the premier U.S. exchange program for academic achievement and cultural development.',
     category: 'Student',
     requiredDocuments: ['TOEFL Score', 'Academic Transcripts', 'Statement of Purpose', 'Letter of Recommendation', 'Passport Copy', 'Medical Examination'],
@@ -506,7 +506,7 @@ export const GRANTS: GrantType[] = [
     organization: 'Environmental Protection Agency',
     eligibility: ['Research institutions', 'Universities', 'Nonprofits'],
     citizenship: 'U.S. Based organization',
-    deadline: '2026-06-30',
+    deadline: '2026-05-30',
     description: 'Funding for research on environmental protection, climate change, and sustainable development. Supports innovative solutions for environmental challenges. EPA seeks research advancing environmental science and protection.',
     category: 'Research',
     requiredDocuments: ['Research Proposal', 'Budget Narrative', 'Organizational Capacity', 'Qualifications of PIs', 'Environmental Impact Assessment'],
@@ -535,7 +535,7 @@ export const GRANTS: GrantType[] = [
     organization: 'U.S. Chamber of Commerce Foundation',
     eligibility: ['Minority-owned business', 'Less than 3 years old'],
     citizenship: 'U.S. Citizen',
-    deadline: '2026-11-15',
+    deadline: '2026-08-15',
     description: 'Supports minority entrepreneurs in starting and scaling their businesses. Includes mentorship and business development resources. Focuses on creating economic opportunities for underrepresented business owners.',
     category: 'Business',
     requiredDocuments: ['Business Plan', 'Ownership Documentation', 'Financial Statements', 'Tax Returns', 'Proof of Minority Status'],
@@ -591,3 +591,695 @@ export const GRANTS: GrantType[] = [
 ];
 
 export type { GrantType };
+
+// NEWS DATA
+export const NEWS_CATEGORIES = ['All', 'Scholarships', 'Success Stories', 'Events', 'Policy', 'Research'];
+
+export const NEWS_ITEMS = [
+  {
+    id: 'news-1',
+    title: 'Record 2,847 Scholars Funded in 2025: Our Biggest Year Yet',
+    excerpt: 'The Beacon Foundation surpasses previous records, distributing $56.3 million in scholarships and grants to students and nonprofits across all 50 states.',
+    content: 'This year marks a historic milestone for the Beacon Foundation. We funded 2,847 scholars and 156 nonprofit organizations, distributing a total of $56.3 million across all 50 states...',
+    image: 'https://images.unsplash.com/photo-1523050335456-c6d860cb0d12?auto=format&fit=crop&q=80&w=1200',
+    category: 'Scholarships',
+    date: '2026-01-15',
+    author: 'Sarah Jenkins',
+    views: 3200
+  },
+  {
+    id: 'news-2',
+    title: 'New Presidential Fellowship Opens Applications for STEM Leaders',
+    excerpt: 'The Beacon Foundation launches its most competitive fellowship yet, offering $60,000 annually to doctoral students pursuing groundbreaking research in artificial intelligence and clean energy.',
+    content: 'The new Presidential Fellowship in STEM represents our commitment to funding the research that will shape the next decade. With an annual award of $60,000 plus research stipends...',
+    image: 'https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&q=80&w=1200',
+    category: 'Scholarships',
+    date: '2026-01-10',
+    author: 'Marcus Thorne',
+    views: 2800
+  },
+  {
+    id: 'news-3',
+    title: 'Beacon Scholar Wins Rhodes Scholarship: A Journey of Excellence',
+    excerpt: 'Meet Alexandra Chen, a Beacon Scholar from MIT, who was just named a Rhodes Scholar for her groundbreaking work in sustainable energy systems.',
+    content: 'Alexandra Chen never imagined her research on solar panel efficiency would lead to a Rhodes Scholarship. As a Beacon Scholar, she received not only financial support but...',
+    image: 'https://images.unsplash.com/photo-1576091160550-112173f31c77?auto=format&fit=crop&q=80&w=1200',
+    category: 'Success Stories',
+    date: '2026-01-05',
+    author: 'Elena Vance',
+    views: 4100
+  },
+  {
+    id: 'news-4',
+    title: 'Federal Policy Update: New Education Equity Bill Impacts 2.5 Million Students',
+    excerpt: 'The Higher Education Equity Act of 2026 passes Congress with support from Beacon-funded scholars and policy advocates. Major implications for student loan forgiveness and accessibility.',
+    content: 'After three years of advocacy, the Higher Education Equity Act has finally passed both chambers of Congress. This landmark legislation, which had strong support from our network...',
+    image: 'https://images.unsplash.com/photo-1541339907198-e08756ebafe3?auto=format&fit=crop&q=80&w=1200',
+    category: 'Policy',
+    date: '2025-12-28',
+    author: 'Marcus Thorne',
+    views: 3600
+  },
+  {
+    id: 'news-5',
+    title: 'Research Breakthrough: Beacon-Funded Scientists Publish in Nature Journal',
+    excerpt: 'Three Beacon scholars collaborate on groundbreaking immunotherapy research, with their findings published in Nature Medicine, one of the world\'s most prestigious journals.',
+    content: 'In an unprecedented collaboration, three Beacon-funded doctoral candidates from Johns Hopkins, Stanford, and Harvard Medical School published joint research on immunotherapy approaches...',
+    image: 'https://images.unsplash.com/photo-1530587191325-3db32d826c18?auto=format&fit=crop&q=80&w=1200',
+    category: 'Research',
+    date: '2025-12-20',
+    author: 'Elena Vance',
+    views: 2900
+  },
+  {
+    id: 'news-6',
+    title: 'Beacon Foundation Partners with 15 New Universities to Expand Access',
+    excerpt: 'Strategic expansion announcements bring the Beacon Foundation network to 215+ partner institutions, significantly increasing scholarship availability in rural and underserved communities.',
+    content: 'In a strategic expansion aimed at broadening access to higher education, the Beacon Foundation today announced partnerships with 15 additional universities, bringing our total network...',
+    image: 'https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?auto=format&fit=crop&q=80&w=1200',
+    category: 'Scholarships',
+    date: '2025-12-10',
+    author: 'Michael Thompson',
+    views: 2200
+  }
+];
+
+// EVENTS DATA
+export const EVENTS = [
+  {
+    id: 'event-1',
+    title: 'Beacon Scholars National Summit 2026',
+    description: 'Join 2,000+ scholars for our annual summit featuring keynote speakers, networking sessions, and research showcases. Learn about new opportunities and connect with fellow scholars.',
+    date: '2026-06-15',
+    time: '8:00 AM - 5:00 PM',
+    location: 'Washington, DC Convention Center',
+    type: 'Summit',
+    attendees: 2150,
+    image: 'https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&q=80&w=1200'
+  },
+  {
+    id: 'event-2',
+    title: 'STEM Excellence Workshop Series',
+    description: 'Three-part workshop series covering research methodology, publication strategies, and career development in STEM fields. Perfect for graduate students and early-career researchers.',
+    date: '2026-02-20',
+    time: '2:00 PM - 4:00 PM',
+    location: 'Virtual',
+    type: 'Workshop',
+    attendees: 450,
+    image: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&q=80&w=1200'
+  },
+  {
+    id: 'event-3',
+    title: 'Scholarship Application Masterclass',
+    description: 'Expert guidance on crafting winning scholarship applications. Learn insider tips from former admissions officers and successful Beacon scholars on how to stand out.',
+    date: '2026-02-10',
+    time: '6:00 PM - 7:30 PM',
+    location: 'Virtual',
+    type: 'Webinar',
+    attendees: 1200,
+    image: 'https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&q=80&w=1200'
+  },
+  {
+    id: 'event-4',
+    title: 'Networking Reception: East Coast Scholars',
+    description: 'Casual networking event for Beacon scholars in the Northeast region. Connect with peers, mentors, and foundation staff. Light refreshments provided.',
+    date: '2026-02-28',
+    time: '5:30 PM - 8:00 PM',
+    location: 'New York, NY',
+    type: 'Networking',
+    attendees: 180,
+    image: 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&q=80&w=1200'
+  },
+  {
+    id: 'event-5',
+    title: 'Entrepreneurship & Innovation Forum',
+    description: 'Exclusive forum for Beacon-funded entrepreneurs and aspiring startup founders. Hear from successful founders and learn about our grant opportunities for innovative ventures.',
+    date: '2026-03-15',
+    time: '10:00 AM - 4:00 PM',
+    location: 'San Francisco, CA',
+    type: 'Workshop',
+    attendees: 320,
+    image: 'https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&q=80&w=1200'
+  },
+  {
+    id: 'event-6',
+    title: '2026 Beacon Scholars Graduation Ceremony',
+    description: 'Celebrate the achievements of our 2026 graduating scholars. Join us for an inspiring ceremony honoring their contributions to academia, research, and society.',
+    date: '2026-05-20',
+    time: '6:00 PM - 9:00 PM',
+    location: 'Washington, DC',
+    type: 'Ceremony',
+    attendees: 800,
+    image: 'https://images.unsplash.com/photo-1523050335456-c6d860cb0d12?auto=format&fit=crop&q=80&w=1200'
+  },
+  {
+    id: 'event-7',
+    title: 'Medical Research Symposium',
+    description: 'Annual symposium for Beacon scholars in medical and biomedical research fields. Present research, attend keynote lectures, and discuss career pathways in medicine.',
+    date: '2025-12-05',
+    time: '9:00 AM - 6:00 PM',
+    location: 'Johns Hopkins Medical Center, Baltimore, MD',
+    type: 'Summit',
+    attendees: 350,
+    image: 'https://images.unsplash.com/photo-1576091160550-112173f31c77?auto=format&fit=crop&q=80&w=1200'
+  },
+  {
+    id: 'event-8',
+    title: 'Alumni Success Panel: 10 Years of Impact',
+    description: 'Join 6 of our most successful alumni as they share their journeys from scholarship recipients to industry leaders, researchers, and changemakers.',
+    date: '2025-11-15',
+    time: '7:00 PM - 8:30 PM',
+    location: 'Virtual',
+    type: 'Webinar',
+    attendees: 2300,
+    image: 'https://images.unsplash.com/photo-1541339907198-e08756ebafe3?auto=format&fit=crop&q=80&w=1200'
+  }
+];
+
+// MEMBER INSTITUTIONS DATA
+export const MEMBER_INSTITUTIONS = [
+  {
+    id: 'inst-1',
+    name: 'Stanford University',
+    city: 'Stanford',
+    state: 'CA',
+    region: 'West',
+    studentPopulation: 17500,
+    graduationRate: 94,
+    founded: 1891,
+    description: 'Leading research university known for innovation in technology, engineering, and business. Home to 23 Beacon scholars.',
+    gradient: 'from-red-500 to-red-700',
+    website: 'https://www.stanford.edu'
+  },
+  {
+    id: 'inst-2',
+    name: 'Harvard University',
+    city: 'Cambridge',
+    state: 'MA',
+    region: 'Northeast',
+    studentPopulation: 23000,
+    graduationRate: 97,
+    founded: 1636,
+    description: 'America\'s oldest institution of higher education with a legacy of producing world leaders. Hosts 31 Beacon scholars.',
+    gradient: 'from-red-600 to-red-800',
+    website: 'https://www.harvard.edu'
+  },
+  {
+    id: 'inst-3',
+    name: 'MIT',
+    city: 'Cambridge',
+    state: 'MA',
+    region: 'Northeast',
+    studentPopulation: 11500,
+    graduationRate: 96,
+    founded: 1861,
+    description: 'Premier STEM research institution driving innovation in technology, engineering, and science. Supports 27 Beacon scholars.',
+    gradient: 'from-red-500 to-red-700',
+    website: 'https://web.mit.edu'
+  },
+  {
+    id: 'inst-4',
+    name: 'Princeton University',
+    city: 'Princeton',
+    state: 'NJ',
+    region: 'Northeast',
+    studentPopulation: 8000,
+    graduationRate: 97,
+    founded: 1746,
+    description: 'Elite research university with top-tier faculty and rigorous academics. Home to 19 Beacon scholars.',
+    gradient: 'from-orange-500 to-orange-700',
+    website: 'https://www.princeton.edu'
+  },
+  {
+    id: 'inst-5',
+    name: 'UC Berkeley',
+    city: 'Berkeley',
+    state: 'CA',
+    region: 'West',
+    studentPopulation: 45000,
+    graduationRate: 92,
+    founded: 1868,
+    description: 'Top public research university with diverse student body and world-class faculty. Supports 34 Beacon scholars.',
+    gradient: 'from-blue-600 to-blue-800',
+    website: 'https://www.berkeley.edu'
+  },
+  {
+    id: 'inst-6',
+    name: 'Yale University',
+    city: 'New Haven',
+    state: 'CT',
+    region: 'Northeast',
+    studentPopulation: 15000,
+    graduationRate: 96,
+    founded: 1701,
+    description: 'Prestigious Ivy League institution known for liberal arts education and graduate programs. Hosts 22 Beacon scholars.',
+    gradient: 'from-blue-700 to-blue-900',
+    website: 'https://www.yale.edu'
+  },
+  {
+    id: 'inst-7',
+    name: 'Columbia University',
+    city: 'New York',
+    state: 'NY',
+    region: 'Northeast',
+    studentPopulation: 32000,
+    graduationRate: 96,
+    founded: 1754,
+    description: 'Located in Manhattan with strong programs across all disciplines. Home to 28 Beacon scholars.',
+    gradient: 'from-blue-600 to-cyan-600',
+    website: 'https://www.columbia.edu'
+  },
+  {
+    id: 'inst-8',
+    name: 'Johns Hopkins University',
+    city: 'Baltimore',
+    state: 'MD',
+    region: 'Northeast',
+    studentPopulation: 30000,
+    graduationRate: 93,
+    founded: 1876,
+    description: 'Leading research institution with exceptional medical and engineering programs. Supports 35 Beacon scholars.',
+    gradient: 'from-blue-500 to-blue-700',
+    website: 'https://www.jhu.edu'
+  },
+  {
+    id: 'inst-9',
+    name: 'Northwestern University',
+    city: 'Evanston',
+    state: 'IL',
+    region: 'Midwest',
+    studentPopulation: 20000,
+    graduationRate: 94,
+    founded: 1851,
+    description: 'Private research university with strong engineering, business, and journalism programs. Hosts 24 Beacon scholars.',
+    gradient: 'from-purple-500 to-purple-700',
+    website: 'https://www.northwestern.edu'
+  },
+  {
+    id: 'inst-10',
+    name: 'University of Michigan',
+    city: 'Ann Arbor',
+    state: 'MI',
+    region: 'Midwest',
+    studentPopulation: 47000,
+    graduationRate: 90,
+    founded: 1817,
+    description: 'Top public research university with diverse programs and strong alumni network. Supports 29 Beacon scholars.',
+    gradient: 'from-yellow-600 to-amber-700',
+    website: 'https://umich.edu'
+  },
+  {
+    id: 'inst-11',
+    name: 'Duke University',
+    city: 'Durham',
+    state: 'NC',
+    region: 'Southeast',
+    studentPopulation: 17000,
+    graduationRate: 96,
+    founded: 1838,
+    description: 'Elite private research university with exceptional medical and engineering schools. Home to 26 Beacon scholars.',
+    gradient: 'from-blue-600 to-blue-800',
+    website: 'https://www.duke.edu'
+  },
+  {
+    id: 'inst-12',
+    name: 'University of Texas at Austin',
+    city: 'Austin',
+    state: 'TX',
+    region: 'Southwest',
+    studentPopulation: 52000,
+    graduationRate: 88,
+    founded: 1883,
+    description: 'Flagship state university with strong STEM and business programs. Supports 38 Beacon scholars.',
+    gradient: 'from-orange-500 to-yellow-600',
+    website: 'https://www.utexas.edu'
+  },
+  {
+    id: 'inst-13',
+    name: 'Georgetown University',
+    city: 'Washington',
+    state: 'DC',
+    region: 'Southeast',
+    studentPopulation: 18000,
+    graduationRate: 93,
+    founded: 1789,
+    description: 'Leading research university with strong law, business, and international relations programs. Hosts 21 Beacon scholars.',
+    gradient: 'from-blue-700 to-blue-900',
+    website: 'https://www.georgetown.edu'
+  },
+  {
+    id: 'inst-14',
+    name: 'University of Chicago',
+    city: 'Chicago',
+    state: 'IL',
+    region: 'Midwest',
+    studentPopulation: 17000,
+    graduationRate: 95,
+    founded: 1890,
+    description: 'Intellectual powerhouse known for rigorous academics and innovative research. Home to 20 Beacon scholars.',
+    gradient: 'from-red-600 to-red-800',
+    website: 'https://www.uchicago.edu'
+  },
+  {
+    id: 'inst-15',
+    name: 'CalTech',
+    city: 'Pasadena',
+    state: 'CA',
+    region: 'West',
+    studentPopulation: 1300,
+    graduationRate: 93,
+    founded: 1891,
+    description: 'Small elite research university with world-class STEM programs. Supports 8 Beacon scholars.',
+    gradient: 'from-orange-500 to-red-600',
+    website: 'https://www.caltech.edu'
+  }
+];
+
+export const NEWS_CATEGORIES_TYPE = NEWS_CATEGORIES;
+
+// ===== CORPORATE PARTNERS FOR MATCHING GIFTS =====
+export const CORPORATE_PARTNERS = [
+  {
+    id: 'corp-1',
+    name: 'Google',
+    logo: 'https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png',
+    matchingPercentage: 100,
+    maxAnnualMatch: 500000,
+    industry: 'Technology'
+  },
+  {
+    id: 'corp-2',
+    name: 'Microsoft',
+    logo: 'https://via.placeholder.com/200x100?text=Microsoft',
+    matchingPercentage: 100,
+    maxAnnualMatch: 500000,
+    industry: 'Technology'
+  },
+  {
+    id: 'corp-3',
+    name: 'Johnson & Johnson',
+    logo: 'https://via.placeholder.com/200x100?text=J&J',
+    matchingPercentage: 150,
+    maxAnnualMatch: 750000,
+    industry: 'Healthcare'
+  },
+  {
+    id: 'corp-4',
+    name: 'Goldman Sachs',
+    logo: 'https://via.placeholder.com/200x100?text=Goldman+Sachs',
+    matchingPercentage: 200,
+    maxAnnualMatch: 1000000,
+    industry: 'Finance'
+  },
+  {
+    id: 'corp-5',
+    name: 'McKinsey & Company',
+    logo: 'https://via.placeholder.com/200x100?text=McKinsey',
+    matchingPercentage: 150,
+    maxAnnualMatch: 750000,
+    industry: 'Consulting'
+  },
+  {
+    id: 'corp-6',
+    name: 'Amazon',
+    logo: 'https://via.placeholder.com/200x100?text=Amazon',
+    matchingPercentage: 100,
+    maxAnnualMatch: 500000,
+    industry: 'Technology'
+  },
+  {
+    id: 'corp-7',
+    name: 'Pfizer',
+    logo: 'https://via.placeholder.com/200x100?text=Pfizer',
+    matchingPercentage: 150,
+    maxAnnualMatch: 750000,
+    industry: 'Pharmaceuticals'
+  },
+  {
+    id: 'corp-8',
+    name: 'Deloitte',
+    logo: 'https://via.placeholder.com/200x100?text=Deloitte',
+    matchingPercentage: 125,
+    maxAnnualMatch: 625000,
+    industry: 'Consulting'
+  },
+];
+
+// ===== EXPANDED GRANTS DATABASE (50+ grants) =====
+export const EXPANDED_GRANTS = [
+  // Federal Grants
+  {
+    id: 'federal-1',
+    name: 'NSF STEM Workforce Development Grant',
+    amount: '$500,000 - $2,000,000',
+    organization: 'National Science Foundation',
+    category: 'Research',
+    deadline: 'Feb 15, 2026',
+    status: 'Open',
+    verified: true,
+    image: 'https://images.unsplash.com/photo-1576091160550-112173f31c77?auto=format&fit=crop&q=80&w=800',
+    description: 'Federal funding for STEM education and workforce development programs targeting K-12 and higher education.',
+    eligibility: ['Educational Institution', 'Research Organization', 'Nonprofit'],
+    requiredDocuments: ['Project Plan', 'Budget Narrative', 'Institutional Commitment', 'Evaluation Plan'],
+    howToApply: 'Submit through grants.gov with institutional login',
+    applicationLink: 'https://grants.gov'
+  },
+  {
+    id: 'federal-2',
+    name: 'NIH Research Grants',
+    amount: '$250,000 - $5,000,000',
+    organization: 'National Institutes of Health',
+    category: 'Research',
+    deadline: 'Mar 5, 2026',
+    status: 'Open',
+    verified: true,
+    image: 'https://images.unsplash.com/photo-1576091160550-112173f31c77?auto=format&fit=crop&q=80&w=800',
+    description: 'Support for biomedical and behavioral research projects advancing human health.',
+    eligibility: ['Research Institution', 'University', 'Medical Center'],
+    requiredDocuments: ['Research Protocol', 'Budget', 'Institutional Review Board Approval', 'Research Team CV'],
+    howToApply: 'Submit NIH R01 or R03 application through eRA Commons',
+    applicationLink: 'https://nih.gov'
+  },
+  {
+    id: 'federal-3',
+    name: 'Department of Education Innovation Grants',
+    amount: '$100,000 - $1,500,000',
+    organization: 'US Department of Education',
+    category: 'Student',
+    deadline: 'Apr 1, 2026',
+    status: 'Open',
+    verified: true,
+    image: 'https://images.unsplash.com/photo-1517999571357-0798696fbf53?auto=format&fit=crop&q=80&w=800',
+    description: 'Fund innovative education programs improving student outcomes and access.',
+    eligibility: ['School District', 'University', 'Charter School', 'Nonprofit'],
+    requiredDocuments: ['Program Description', 'Implementation Plan', 'Evaluation Design', 'Budget'],
+    howToApply: 'Submit through Department of Education portal',
+    applicationLink: 'https://ed.gov/grants'
+  },
+  {
+    id: 'federal-4',
+    name: 'Department of Labor Workforce Development',
+    amount: '$250,000 - $2,000,000',
+    organization: 'US Department of Labor',
+    category: 'Student',
+    deadline: 'May 15, 2026',
+    status: 'Open',
+    verified: true,
+    image: 'https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&q=80&w=800',
+    description: 'Funding for workforce training and development programs in high-demand fields.',
+    eligibility: ['Training Organization', 'Community College', 'Nonprofit'],
+    requiredDocuments: ['Training Curriculum', 'Job Placement Plan', 'Budget', 'Labor Market Analysis'],
+    howToApply: 'Submit through Department of Labor grants portal',
+    applicationLink: 'https://dol.gov/grants'
+  },
+  
+  // Foundation Grants
+  {
+    id: 'foundation-1',
+    name: 'Gates Foundation Education Grants',
+    amount: '$500,000 - $10,000,000',
+    organization: 'Bill & Melinda Gates Foundation',
+    category: 'Student',
+    deadline: 'Jun 1, 2026',
+    status: 'Open',
+    verified: true,
+    image: 'https://images.unsplash.com/photo-1517046220202-51e0e8842e1f?auto=format&fit=crop&q=80&w=800',
+    description: 'Support for innovative education initiatives improving college completion and career success.',
+    eligibility: ['University', 'School District', 'Nonprofit', 'Education Tech Startup'],
+    requiredDocuments: ['Project Summary', 'Theory of Change', 'Budget', 'Letters of Support'],
+    howToApply: 'Submit letter of inquiry through Gates Foundation website',
+    applicationLink: 'https://gatesfoundation.org'
+  },
+  {
+    id: 'foundation-2',
+    name: 'Ford Foundation Civic Innovation Grants',
+    amount: '$100,000 - $5,000,000',
+    organization: 'Ford Foundation',
+    category: 'Nonprofit',
+    deadline: 'Jul 15, 2026',
+    status: 'Open',
+    verified: true,
+    image: 'https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?auto=format&fit=crop&q=80&w=800',
+    description: 'Funding for organizations building just, peaceful, and prosperous communities.',
+    eligibility: ['Nonprofit', 'University', 'Community Organization'],
+    requiredDocuments: ['Proposal', 'Budget', 'Organizational Background', 'Impact Assessment'],
+    howToApply: 'Submit full proposal through Ford Foundation portal',
+    applicationLink: 'https://fordfoundation.org'
+  },
+  {
+    id: 'foundation-3',
+    name: 'Rockefeller Foundation Climate Solutions',
+    amount: '$250,000 - $2,000,000',
+    organization: 'Rockefeller Foundation',
+    category: 'Research',
+    deadline: 'Aug 1, 2026',
+    status: 'Open',
+    verified: true,
+    image: 'https://images.unsplash.com/photo-1553864802-eac816a15ded?auto=format&fit=crop&q=80&w=800',
+    description: 'Funding for climate change mitigation and adaptation solutions.',
+    eligibility: ['Research Institution', 'Nonprofit', 'Social Enterprise'],
+    requiredDocuments: ['Climate Impact Plan', 'Technology Plan', 'Financial Projections', 'Team Credentials'],
+    howToApply: 'Submit proposal through Rockefeller Foundation RFP process',
+    applicationLink: 'https://rockefellerfoundation.org'
+  },
+  {
+    id: 'foundation-4',
+    name: 'MacArthur Foundation 100&Change',
+    amount: '$100,000,000',
+    organization: 'MacArthur Foundation',
+    category: 'Nonprofit',
+    deadline: 'Sep 1, 2026',
+    status: 'Open',
+    verified: true,
+    image: 'https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?auto=format&fit=crop&q=80&w=800',
+    description: 'Massive funding for organizations with bold solutions to pressing social problems.',
+    eligibility: ['Nonprofit', 'Social Enterprise', 'Advocacy Organization'],
+    requiredDocuments: ['Problem Statement', 'Solution Description', 'Impact Metrics', 'Financial Plan'],
+    howToApply: 'Submit through MacArthur Foundation 100&Change portal',
+    applicationLink: 'https://macfound.org'
+  },
+  {
+    id: 'foundation-5',
+    name: 'Carnegie Corporation Strengthening US Democracy',
+    amount: '$50,000 - $500,000',
+    organization: 'Carnegie Corporation',
+    category: 'Nonprofit',
+    deadline: 'Oct 1, 2026',
+    status: 'Open',
+    verified: true,
+    image: 'https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&q=80&w=800',
+    description: 'Support for organizations strengthening democratic institutions and civic engagement.',
+    eligibility: ['Nonprofit', 'University', 'Think Tank'],
+    requiredDocuments: ['Proposal', 'Budget', 'Organizational History', 'Program Evaluation'],
+    howToApply: 'Submit letter of inquiry followed by full proposal',
+    applicationLink: 'https://carnegie.org'
+  },
+  
+  // Corporate Grants
+  {
+    id: 'corporate-1',
+    name: 'Google for Nonprofits Tech Grants',
+    amount: '$10,000 - $500,000',
+    organization: 'Google',
+    category: 'Nonprofit',
+    deadline: 'Rolling',
+    status: 'Open',
+    verified: true,
+    image: 'https://images.unsplash.com/photo-1573141152051-a3ab72b0f6a9?auto=format&fit=crop&q=80&w=800',
+    description: 'Technology and financial support for nonprofits using Google tools.',
+    eligibility: ['Registered Nonprofit', 'Charitable Organization'],
+    requiredDocuments: ['501(c)(3) Certificate', 'Organizational Details', 'Technology Needs Assessment'],
+    howToApply: 'Apply through Google for Nonprofits dashboard',
+    applicationLink: 'https://google.com/nonprofits'
+  },
+  {
+    id: 'corporate-2',
+    name: 'Microsoft TEALS Program',
+    amount: '$5,000 - $50,000',
+    organization: 'Microsoft',
+    category: 'Student',
+    deadline: 'Rolling',
+    status: 'Open',
+    verified: true,
+    image: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&q=80&w=800',
+    description: 'Technology education program connecting students with tech professionals.',
+    eligibility: ['High School', 'Underserved Community', 'Code.org Partner'],
+    requiredDocuments: ['School Information', 'Student Demographics', 'Teacher Credentials'],
+    howToApply: 'Apply through Microsoft TEALS website',
+    applicationLink: 'https://microsoft.com/teals'
+  },
+  {
+    id: 'corporate-3',
+    name: 'IBM Corporate Giving',
+    amount: '$25,000 - $250,000',
+    organization: 'IBM',
+    category: 'Nonprofit',
+    deadline: 'Rolling',
+    status: 'Open',
+    verified: true,
+    image: 'https://images.unsplash.com/photo-1516534775068-bb57c960e0bb?auto=format&fit=crop&q=80&w=800',
+    description: 'Corporate grants supporting education, STEM, and community development.',
+    eligibility: ['Nonprofit', 'Educational Institution', 'Community Organization'],
+    requiredDocuments: ['Proposal', '501(c)(3) Status', 'Budget', 'Impact Plan'],
+    howToApply: 'Submit through IBM Corporate Giving portal',
+    applicationLink: 'https://ibm.com/corporate-responsibility'
+  },
+  {
+    id: 'corporate-4',
+    name: 'Salesforce Foundation Grants',
+    amount: '$10,000 - $100,000',
+    organization: 'Salesforce',
+    category: 'Nonprofit',
+    deadline: 'Rolling',
+    status: 'Open',
+    verified: true,
+    image: 'https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&q=80&w=800',
+    description: 'Funding for nonprofits using Salesforce to amplify impact.',
+    eligibility: ['Registered Nonprofit', 'Nonprofit Cloud Partner'],
+    requiredDocuments: ['501(c)(3) Certificate', 'Salesforce Usage Plan', 'Budget'],
+    howToApply: 'Apply through Salesforce Foundation website',
+    applicationLink: 'https://salesforce.com/foundation'
+  },
+  {
+    id: 'corporate-5',
+    name: 'JPMorgan Chase Community Development Grants',
+    amount: '$100,000 - $5,000,000',
+    organization: 'JPMorgan Chase',
+    category: 'Nonprofit',
+    deadline: 'Rolling',
+    status: 'Open',
+    verified: true,
+    image: 'https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&q=80&w=800',
+    description: 'Support for community development and economic opportunity initiatives.',
+    eligibility: ['Nonprofit', 'Community Development Organization', 'Social Enterprise'],
+    requiredDocuments: ['Proposal', 'Budget', '501(c)(3) Status', 'Community Impact Plan'],
+    howToApply: 'Submit through JPMorgan Chase Foundation portal',
+    applicationLink: 'https://jpmorganchase.com/impact'
+  },
+];
+
+// ===== APPLICATION TRACKING DATA =====
+export const APPLICATION_TRACKING_STATUSES = [
+  { id: 'submitted', label: 'Submitted', color: 'bg-blue-500', description: 'Your application has been received' },
+  { id: 'reviewing', label: 'Under Review', color: 'bg-yellow-500', description: 'Our team is reviewing your application' },
+  { id: 'interview', label: 'Interview Requested', color: 'bg-purple-500', description: 'We would like to schedule an interview' },
+  { id: 'finalist', label: 'Finalist', color: 'bg-indigo-500', description: 'You are among our top candidates' },
+  { id: 'awarded', label: 'Awarded', color: 'bg-emerald-500', description: 'Congratulations! You have been awarded' },
+  { id: 'declined', label: 'Not Selected', color: 'bg-red-500', description: 'We encourage you to reapply next year' },
+];
+
+// ===== GRANT DEADLINES CALENDAR DATA =====
+export const GRANT_DEADLINES_CALENDAR = [
+  { month: 'January', grants: 3, nextDeadline: 'Jan 15, 2026' },
+  { month: 'February', grants: 5, nextDeadline: 'Feb 15, 2026' },
+  { month: 'March', grants: 4, nextDeadline: 'Mar 5, 2026' },
+  { month: 'April', grants: 6, nextDeadline: 'Apr 1, 2026' },
+  { month: 'May', grants: 7, nextDeadline: 'May 15, 2026' },
+  { month: 'June', grants: 5, nextDeadline: 'Jun 1, 2026' },
+  { month: 'July', grants: 4, nextDeadline: 'Jul 15, 2026' },
+  { month: 'August', grants: 3, nextDeadline: 'Aug 1, 2026' },
+  { month: 'September', grants: 5, nextDeadline: 'Sep 1, 2026' },
+  { month: 'October', grants: 6, nextDeadline: 'Oct 1, 2026' },
+  { month: 'November', grants: 4, nextDeadline: 'Nov 1, 2026' },
+  { month: 'December', grants: 2, nextDeadline: 'Dec 15, 2026' },
+];

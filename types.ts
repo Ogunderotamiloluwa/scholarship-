@@ -98,9 +98,39 @@ export interface ResourcePhase {
 export interface NewsItem {
   id: string;
   title: string;
-  date: string;
-  image: string;
   excerpt: string;
+  content: string;
+  image: string;
+  category: string;
+  date: string;
+  author: string;
+  views?: number;
+}
+
+export interface Event {
+  id: string;
+  title: string;
+  description: string;
+  date: string;
+  time: string;
+  location: string;
+  type: 'Webinar' | 'Workshop' | 'Summit' | 'Networking' | 'Ceremony';
+  attendees: number;
+  image: string;
+}
+
+export interface MemberInstitution {
+  id: string;
+  name: string;
+  city: string;
+  state: string;
+  region: string;
+  studentPopulation: number;
+  graduationRate: number;
+  founded: number;
+  description: string;
+  gradient: string;
+  website: string;
 }
 
 export interface GalleryImage {
@@ -124,4 +154,53 @@ export interface TeamMember {
   img: string;
 }
 
-export type ViewState = 'HOME' | 'ABOUT' | 'SCHOLARSHIPS' | 'GRANTS' | 'APPLY' | 'FAQ' | 'ADMIN' | 'STORY_DETAIL' | 'RESOURCE_HUB' | 'HOW_IT_WORKS' | 'GRANT_DETAIL' | 'GRANT_APPLICATION';
+export interface Application {
+  id: string;
+  type: 'Scholarship' | 'Grant' | 'Fellowship';
+  programId: string;
+  programName: string;
+  applicantId: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  submissionDate: string;
+  status: 'submitted' | 'reviewing' | 'interview' | 'finalist' | 'awarded' | 'declined';
+  lastUpdated: string;
+  score?: number;
+  reviewerNotes?: string;
+}
+
+export interface CorporateDonor {
+  id: string;
+  companyName: string;
+  ein: string;
+  contactPerson: string;
+  email: string;
+  phone: string;
+  address: string;
+  donationAmount: number;
+  donationType: 'One-Time' | 'Monthly' | 'Annual' | 'Matching';
+  matchingPercentage?: number;
+  taxId: string;
+  donationDate: string;
+  status: 'pending' | 'verified' | 'completed';
+}
+
+export interface CorporatePartner {
+  id: string;
+  name: string;
+  logo: string;
+  matchingPercentage: number;
+  maxAnnualMatch: number;
+  industry: string;
+}
+
+export interface GrantDeadline {
+  month: string;
+  grants: number;
+  nextDeadline: string;
+}
+
+export type ViewState = 'HOME' | 'ABOUT' | 'SCHOLARSHIPS' | 'GRANTS' | 'APPLY' | 'FAQ' | 'ADMIN' | 'STORY_DETAIL' | 'RESOURCE_HUB' | 'HOW_IT_WORKS' | 'GRANT_DETAIL' | 'GRANT_APPLICATION' | 'NEWS' | 'EVENTS' | 'MEMBERS' | 'APPLICATION_TRACKER' | 'DONATE';
+
