@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { ViewState } from '../types';
-import { Menu, X, Heart, ChevronRight, Zap, Award, BookOpen, HelpCircle, Briefcase, FileText, Calendar, Landmark } from 'lucide-react';
+import { Menu, X, Heart, ChevronRight, Zap, Award, BookOpen, HelpCircle, Briefcase, FileText, Calendar, Landmark, ArrowLeft } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface NavigationProps {
@@ -9,9 +9,10 @@ interface NavigationProps {
   setView: (view: ViewState) => void;
   isMenuOpen: boolean;
   setIsMenuOpen: (open: boolean) => void;
+  onBack?: () => void;
 }
 
-const Navigation: React.FC<NavigationProps> = ({ currentView, setView, isMenuOpen, setIsMenuOpen }) => {
+const Navigation: React.FC<NavigationProps> = ({ currentView, setView, isMenuOpen, setIsMenuOpen, onBack }) => {
   const menuItems: { id: ViewState; label: string; icon: JSX.Element }[] = [
     { id: 'HOME', label: 'Home', icon: <Zap size={20} /> },
     { id: 'SCHOLARSHIPS', label: 'Scholarships', icon: <Award size={20} /> },
@@ -48,22 +49,35 @@ const Navigation: React.FC<NavigationProps> = ({ currentView, setView, isMenuOpe
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-[120] h-16 md:h-20 border-b border-slate-100 dark:border-slate-800 transition-all bg-white/95 dark:bg-slate-950/95 backdrop-blur-xl shadow-sm">
-      <div className="max-w-7xl mx-auto px-4 md:px-8 h-full flex items-center justify-between gap-4 md:gap-8">
+      <div className="max-w-7xl mx-auto px-4 md:px-8 h-full flex items-center justify-between gap-2 md:gap-4 lg:gap-8">
+        {/* Back Button - Show on non-home pages */}
+        {currentView !== 'HOME' && (
+          <motion.button
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            onClick={onBack}
+            className="flex-shrink-0 w-10 h-10 md:w-12 md:h-12 flex items-center justify-center rounded-lg md:rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-indigo-100 dark:hover:bg-indigo-900/30 hover:text-indigo-600 dark:hover:text-indigo-400 transition-all shadow-sm hover:shadow-md group"
+            title="Go back to previous page"
+          >
+            <ArrowLeft size={18} className="md:w-6 md:h-6 group-hover:-translate-x-1 transition-transform" />
+          </motion.button>
+        )}
+
         {/* Logo - Now with more spacing */}
         <LogoComponent />
 
-        {/* Desktop Menu - Visible on MD and up */}
-        <div className="hidden md:flex items-center gap-1 lg:gap-2 xl:gap-3 flex-1 justify-center px-4">
+        {/* Desktop Menu - Scrollable on MD and up with better layout */}
+        <div className="hidden md:flex items-center gap-0.5 lg:gap-1 xl:gap-2 flex-1 justify-center px-2 overflow-x-auto no-scrollbar">
           {menuItems.map((item) => (
             <button
               key={item.id}
               onClick={() => setView(item.id)}
-              className={`flex items-center justify-center gap-1.5 text-[7px] lg:text-[8px] xl:text-[9px] font-black uppercase tracking-[0.1em] transition-all relative py-2 px-1.5 lg:px-2.5 group whitespace-nowrap ${
+              className={`flex items-center justify-center gap-0.5 lg:gap-1 text-[6px] lg:text-[7px] xl:text-[8px] font-black uppercase tracking-[0.08em] transition-all relative py-2 px-1 lg:px-2 group whitespace-nowrap flex-shrink-0 ${
                 currentView === item.id ? 'text-indigo-600' : 'text-slate-500 hover:text-slate-900 dark:hover:text-slate-100'
               }`}
               title={item.label}
             >
-              <span className={`transition-all opacity-70 group-hover:opacity-100 ${currentView === item.id ? 'opacity-100' : ''}`}>{item.icon}</span>
+              <span className={`transition-all opacity-70 group-hover:opacity-100 text-[14px] lg:text-[16px] ${currentView === item.id ? 'opacity-100' : ''}`}>{item.icon}</span>
               <span className="hidden lg:inline">{item.label}</span>
               {currentView === item.id && (
                 <span className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-indigo-600 to-transparent rounded-full" />

@@ -21,6 +21,7 @@ interface FormErrors {
 
 const ApplyForm: React.FC<ApplyFormProps> = ({ onSubmit, onCancel }) => {
   const [step, setStep] = useState(1);
+  const [submissionSuccess, setSubmissionSuccess] = useState(false);
   const [formData, setFormData] = useState({
     firstName: '', 
     lastName: '', 
@@ -181,12 +182,31 @@ const ApplyForm: React.FC<ApplyFormProps> = ({ onSubmit, onCancel }) => {
     }
 
     // All validation passed, submit the form
-    onSubmit(formData);
-    onCancel();
+    setSubmissionSuccess(true);
+    setTimeout(() => {
+      onSubmit(formData);
+      onCancel();
+    }, 3000);
   };
 
   return (
     <div className="min-h-screen bg-slate-50/50 py-12 md:py-32 px-6">
+      <AnimatePresence>
+        {submissionSuccess && (
+          <motion.div 
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="fixed top-6 left-1/2 -translate-x-1/2 z-[1000] bg-emerald-500 text-white px-6 py-4 rounded-xl font-black shadow-2xl flex items-center gap-3"
+          >
+            <CheckCircle2 size={24} />
+            <div>
+              <p className="font-black">We received your message!</p>
+              <p className="text-sm text-emerald-100">We'll get back to you via text or message within 2-3 hours.</p>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="flex justify-between items-end mb-16 md:mb-20">

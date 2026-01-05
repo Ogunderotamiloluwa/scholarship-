@@ -53,8 +53,17 @@ const Grants: React.FC<GrantsProps> = ({ onNavigate, onGrantSelect }) => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-white to-slate-50 dark:from-slate-950 dark:to-slate-900 pt-24">
       {/* Hero Section */}
-      <section className="px-6 py-20 bg-gradient-to-r from-indigo-600 to-blue-600 text-white">
-        <div className="max-w-7xl mx-auto">
+      <section className="relative px-6 py-20 bg-gradient-to-r from-indigo-600 to-blue-600 text-white overflow-hidden">
+        {/* Background Image */}
+        <div className="absolute inset-0 opacity-15">
+          <img 
+            src="https://images.unsplash.com/photo-1524178232363-1fb28f74b671?auto=format&fit=crop&q=80&w=1200"
+            alt="Grant opportunities"
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-indigo-600/80 to-blue-600/80"></div>
+        </div>
+        <div className="max-w-7xl mx-auto relative z-10">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
             <h1 className="heading-serif text-5xl md:text-6xl font-black mb-6 leading-tight">
               Verified Grants & Funding

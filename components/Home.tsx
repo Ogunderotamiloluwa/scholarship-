@@ -47,9 +47,9 @@ const Home: React.FC<HomeProps> = ({ onNavigate, onOpenStory }) => {
   return (
     <div className="overflow-x-hidden bg-white dark:bg-slate-950">
       {/* 1. ENHANCED HERO SECTION */}
-      <section className="relative min-h-screen md:h-[95vh] flex items-center bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950 overflow-hidden px-4">
+      <section className="relative min-h-screen md:h-screen flex items-center justify-center bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950 overflow-hidden px-4">
         {/* Animated Background Elements */}
-        <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute inset-0 overflow-hidden z-0">
           <div className="absolute -top-40 -right-40 w-96 h-96 bg-indigo-600/20 rounded-full blur-3xl animate-pulse"></div>
           <div className="absolute bottom-0 -left-40 w-96 h-96 bg-emerald-600/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
         </div>
@@ -61,43 +61,41 @@ const Home: React.FC<HomeProps> = ({ onNavigate, onOpenStory }) => {
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 1.5, ease: "easeOut" }}
-            className="absolute inset-0"
+            className="absolute inset-0 z-0"
           >
             <img src={STORIES[activeSlide].image} className="w-full h-full object-cover opacity-30" alt="Spotlight" />
             <div className="absolute inset-0 bg-gradient-to-b md:bg-gradient-to-r from-slate-950 via-slate-950/50 to-transparent"></div>
           </motion.div>
         </AnimatePresence>
         
-        <div className="relative z-10 max-w-7xl mx-auto w-full flex flex-col items-start pt-20 md:pt-0">
-          <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="max-w-4xl">
-            <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-gradient-to-r from-indigo-500/20 to-emerald-500/20 border border-indigo-400/50 text-indigo-200 text-[9px] md:text-[10px] font-black uppercase tracking-[0.3em] mb-8 backdrop-blur-sm hover:from-indigo-500/30 hover:to-emerald-500/30 transition-all">
+        <div className="relative z-20 max-w-7xl mx-auto w-full flex flex-col items-center justify-center px-4">
+          <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="max-w-5xl text-center">
+            <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-gradient-to-r from-indigo-500/20 to-emerald-500/20 border border-indigo-400/50 text-indigo-200 text-[9px] md:text-[10px] font-black uppercase tracking-[0.3em] mb-4 md:mb-6 backdrop-blur-sm hover:from-indigo-500/30 hover:to-emerald-500/30 transition-all">
               <ShieldCheck size={14} className="text-emerald-300 animate-pulse" /> SECURED US PORTAL 2026
             </div>
-            <h1 className="heading-serif text-5xl md:text-8xl font-black text-white leading-[1.1] md:leading-[1] tracking-tighter mb-8">
-              Advancing <br/><span className="italic text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-pink-200 to-emerald-200">Excellence & Impact</span>
+            <h1 className="heading-serif text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-black text-white leading-[1.1] md:leading-[1] tracking-tighter mb-3 md:mb-4">
+              Advancing <br className="hidden sm:block" /><span className="italic text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-pink-200 to-emerald-200">the Extraordinary.</span>
             </h1>
-            <p className="text-slate-300 text-lg md:text-xl font-light leading-relaxed mb-12 max-w-2xl border-l-4 border-indigo-500/50 pl-6 md:pl-8">
+            <p className="text-slate-300 text-xs sm:text-sm md:text-base lg:text-lg font-light leading-relaxed mb-6 md:mb-8 max-w-3xl mx-auto border-l-4 border-indigo-500/50 pl-4 md:pl-6">
               Managing $366M in endowment capital for America's brightest minds. We transform potential into groundbreaking research, policy innovation, and global leadership.
             </p>
             {/* DUAL CTA BUTTONS */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full sm:w-auto max-w-2xl">
+            <div className="flex flex-col sm:flex-row gap-3 w-full justify-center items-center">
               <motion.button 
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                onClick={() => onNavigate('SCHOLARSHIPS')} 
-                className="group px-8 py-5 bg-gradient-to-r from-indigo-400 to-indigo-500 text-white rounded-2xl font-black text-sm md:text-base shadow-2xl hover:shadow-indigo-500/50 transition-all flex items-center justify-center gap-3 active:scale-95"
+                onClick={() => onNavigate('APPLY')} 
+                className="group px-6 sm:px-10 py-3 sm:py-5 bg-white text-slate-950 rounded-xl sm:rounded-2xl font-black text-xs sm:text-sm md:text-lg shadow-2xl hover:bg-indigo-50 transition-all flex items-center justify-center gap-2 sm:gap-3 active:scale-95 w-full sm:w-auto"
               >
-                <Award size={18} />
-                Find Scholarships <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+                <span>Apply for 2026</span> <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
               </motion.button>
               <motion.button 
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                onClick={() => onNavigate('GRANTS')} 
-                className="group px-8 py-5 bg-gradient-to-r from-emerald-400 to-emerald-500 text-white rounded-2xl font-black text-sm md:text-base shadow-2xl hover:shadow-emerald-500/50 transition-all flex items-center justify-center gap-3 active:scale-95"
+                onClick={() => onNavigate('ABOUT')} 
+                className="group px-6 sm:px-10 py-3 sm:py-5 bg-slate-900/60 backdrop-blur-md text-white border border-white/10 rounded-xl sm:rounded-2xl font-black text-xs sm:text-sm md:text-lg hover:bg-white/10 transition-all active:scale-95 w-full sm:w-auto flex items-center justify-center gap-2 sm:gap-3"
               >
-                <Briefcase size={18} />
-                Browse Grants <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+                <span>Our Heritage</span> <Info size={16}/>
               </motion.button>
             </div>
           </motion.div>

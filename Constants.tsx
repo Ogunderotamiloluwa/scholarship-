@@ -970,7 +970,7 @@ export const CORPORATE_PARTNERS = [
   {
     id: 'corp-2',
     name: 'Microsoft',
-    logo: 'https://via.placeholder.com/200x100?text=Microsoft',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/Microsoft_logo_%282012%29.svg/1200px-Microsoft_logo_%282012%29.svg.png',
     matchingPercentage: 100,
     maxAnnualMatch: 500000,
     industry: 'Technology'
@@ -978,7 +978,7 @@ export const CORPORATE_PARTNERS = [
   {
     id: 'corp-3',
     name: 'Johnson & Johnson',
-    logo: 'https://via.placeholder.com/200x100?text=J&J',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Johnson_%26_Johnson_Logo.svg/1200px-Johnson_%26_Johnson_Logo.svg.png',
     matchingPercentage: 150,
     maxAnnualMatch: 750000,
     industry: 'Healthcare'
@@ -986,7 +986,7 @@ export const CORPORATE_PARTNERS = [
   {
     id: 'corp-4',
     name: 'Goldman Sachs',
-    logo: 'https://via.placeholder.com/200x100?text=Goldman+Sachs',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/Goldman_Sachs.svg/1200px-Goldman_Sachs.svg.png',
     matchingPercentage: 200,
     maxAnnualMatch: 1000000,
     industry: 'Finance'
@@ -994,7 +994,7 @@ export const CORPORATE_PARTNERS = [
   {
     id: 'corp-5',
     name: 'McKinsey & Company',
-    logo: 'https://via.placeholder.com/200x100?text=McKinsey',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/McKinsey_and_Company.svg/1200px-McKinsey_and_Company.svg.png',
     matchingPercentage: 150,
     maxAnnualMatch: 750000,
     industry: 'Consulting'
@@ -1002,7 +1002,7 @@ export const CORPORATE_PARTNERS = [
   {
     id: 'corp-6',
     name: 'Amazon',
-    logo: 'https://via.placeholder.com/200x100?text=Amazon',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Amazon_logo.svg/1200px-Amazon_logo.svg.png',
     matchingPercentage: 100,
     maxAnnualMatch: 500000,
     industry: 'Technology'
@@ -1010,7 +1010,7 @@ export const CORPORATE_PARTNERS = [
   {
     id: 'corp-7',
     name: 'Pfizer',
-    logo: 'https://via.placeholder.com/200x100?text=Pfizer',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Pfizer-logo.svg/1200px-Pfizer-logo.svg.png',
     matchingPercentage: 150,
     maxAnnualMatch: 750000,
     industry: 'Pharmaceuticals'
@@ -1018,7 +1018,7 @@ export const CORPORATE_PARTNERS = [
   {
     id: 'corp-8',
     name: 'Deloitte',
-    logo: 'https://via.placeholder.com/200x100?text=Deloitte',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Deloitte_Logo.svg/1200px-Deloitte_Logo.svg.png',
     matchingPercentage: 125,
     maxAnnualMatch: 625000,
     industry: 'Consulting'

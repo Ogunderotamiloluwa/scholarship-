@@ -19,6 +19,14 @@ const ResourceHub: React.FC<ResourceHubProps> = ({ initialPhase, onBack }) => {
     <div className="animate-in fade-in duration-700 min-h-screen bg-slate-950 text-white pb-20">
       {/* Immersive Dark Header */}
       <header className="relative pt-32 pb-24 px-6 overflow-hidden border-b border-white/5">
+        {/* Background Image */}
+        <div className="absolute inset-0 opacity-15">
+          <img 
+            src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&q=80&w=1200"
+            alt="Resource Hub"
+            className="w-full h-full object-cover"
+          />
+        </div>
         <div className="absolute top-0 left-0 w-full h-full bg-mesh opacity-50"></div>
         <div className="max-w-7xl mx-auto relative z-10">
           <button 

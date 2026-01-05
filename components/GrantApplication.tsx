@@ -2,12 +2,17 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   ArrowLeft, CheckCircle2, Eye, EyeOff, Mail, Lock, Phone, Globe,
-  User, Briefcase, FileText, Upload, AlertCircle, Check, ChevronRight
+  User, Briefcase, FileText, Upload, AlertCircle, Check, ChevronRight, X
 } from 'lucide-react';
 import { ViewState } from '../types';
 
 interface GrantApplicationProps {
   onNavigate: (view: ViewState) => void;
+}
+
+interface UploadedFile {
+  name: string;
+  file: File;
 }
 
 const GrantApplication: React.FC<GrantApplicationProps> = ({ onNavigate }) => {
@@ -20,6 +25,7 @@ const GrantApplication: React.FC<GrantApplicationProps> = ({ onNavigate }) => {
   const [country, setCountry] = useState('');
   const [grantCategory, setGrantCategory] = useState('');
   const [eligibilityConfirmed, setEligibilityConfirmed] = useState(false);
+  const [submissionSuccess, setSubmissionSuccess] = useState(false);
   const [applicationData, setApplicationData] = useState({
     purpose: '',
     amount: '',
@@ -27,7 +33,12 @@ const GrantApplication: React.FC<GrantApplicationProps> = ({ onNavigate }) => {
     impact: '',
     previousFunding: 'No'
   });
-  const [uploadedFiles, setUploadedFiles] = useState<string[]>([]);
+  const [uploadedFiles, setUploadedFiles] = useState<{ [key: string]: UploadedFile | null }>({
+    'ID / Passport': null,
+    'CV / Resume': null,
+    'Proposal (PDF)': null,
+    'Budget breakdown (Excel or PDF)': null
+  });
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const grantCategories = [
@@ -61,6 +72,65 @@ const GrantApplication: React.FC<GrantApplicationProps> = ({ onNavigate }) => {
     { number: 6, title: 'Upload Documents', description: 'Submit files' },
     { number: 7, title: 'Review & Submit', description: 'Final confirmation' }
   ];
+
+  const handleFileUpload = (docName: string) => {
+    // Create input element with proper configuration
+    const input = document.createElement('input');
+    input.setAttribute('type', 'file');
+    input.setAttribute('accept', '.pdf,.doc,.docx,.xls,.xlsx');
+    input.setAttribute('capture', 'environment'); // Allow camera on mobile
+    input.style.position = 'absolute';
+    input.style.left = '-9999px';
+    input.style.opacity = '0';
+    
+    input.addEventListener('change', function() {
+      const file = this.files?.[0];
+      if (file) {
+        // Validate file size (10MB max)
+        if (file.size > 10 * 1024 * 1024) {
+          setErrors(prev => ({ ...prev, [docName]: 'File size must be less than 10MB' }));
+          return;
+        }
+        
+        // Validate file type by extension
+        const filename = file.name.toLowerCase();
+        const validExtensions = ['.pdf', '.doc', '.docx', '.xls', '.xlsx'];
+        const hasValidExtension = validExtensions.some(ext => filename.endsWith(ext));
+        
+        if (!hasValidExtension) {
+          setErrors(prev => ({ ...prev, [docName]: 'Only PDF, DOC, DOCX, XLS, and XLSX files are allowed' }));
+          return;
+        }
+        
+        setUploadedFiles(prev => ({
+          ...prev,
+          [docName]: { name: file.name, file }
+        }));
+        setErrors(prev => {
+          const newErrors = { ...prev };
+          delete newErrors[docName];
+          return newErrors;
+        });
+      }
+    }, false);
+    
+    document.body.appendChild(input);
+    input.click();
+    
+    // Clean up after a delay to ensure click is processed
+    setTimeout(() => {
+      if (document.body.contains(input)) {
+        document.body.removeChild(input);
+      }
+    }, 100);
+  };
+
+  const removeFile = (docName: string) => {
+    setUploadedFiles(prev => ({
+      ...prev,
+      [docName]: null
+    }));
+  };
 
   const renderStep = () => {
     switch(step) {
@@ -169,11 +239,14 @@ const GrantApplication: React.FC<GrantApplicationProps> = ({ onNavigate }) => {
               <div>
                 <input
                   type="tel"
-                  placeholder="Phone Number (Optional)"
+                  placeholder="Phone Number *"
                   value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  className="w-full px-4 py-3 rounded-xl border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:outline-none focus:border-indigo-600 dark:focus:border-indigo-400"
+                  onChange={(e) => { setPhone(e.target.value); setErrors({}); }}
+                  className={`w-full px-4 py-3 rounded-xl border-2 bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:outline-none transition-all ${
+                    errors.phone ? 'border-red-500 focus:border-red-500' : 'border-slate-200 dark:border-slate-700 focus:border-indigo-600'
+                  }`}
                 />
+                {errors.phone && <p className="text-red-600 text-sm font-semibold mt-1 px-2">{errors.phone}</p>}
               </div>
 
               <div>
@@ -209,6 +282,8 @@ const GrantApplication: React.FC<GrantApplicationProps> = ({ onNavigate }) => {
                   else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) newErrors.email = 'Please enter a valid email';
                   if (!password.trim()) newErrors.password = 'Password is required';
                   else if (password.length < 6) newErrors.password = 'Password must be at least 6 characters';
+                  if (!phone.trim()) newErrors.phone = 'Phone number is required';
+                  else if (!/^[0-9\-\s\(\)\+]{10,}$/.test(phone.replace(/\s/g, ''))) newErrors.phone = 'Please enter a valid phone number';
                   if (!country) newErrors.country = 'Please select a country';
                   
                   if (Object.keys(newErrors).length > 0) {
@@ -441,12 +516,42 @@ const GrantApplication: React.FC<GrantApplicationProps> = ({ onNavigate }) => {
             <h2 className="text-2xl md:text-3xl font-black text-slate-900 dark:text-white">Upload Documents</h2>
             <p className="text-slate-600 dark:text-slate-400">Submit your required documents</p>
 
-            <div className="space-y-3">
+            {errors.documents && (
+              <div className="bg-red-50 dark:bg-red-900/20 border-2 border-red-200 dark:border-red-700 rounded-2xl p-4">
+                <p className="text-red-700 dark:text-red-300 font-black text-sm">❌ {errors.documents}</p>
+              </div>
+            )}
+
+            <div className="space-y-4">
               {requiredDocuments.map((doc) => (
-                <div key={doc} className="border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-xl p-4 text-center hover:border-indigo-600 transition-all cursor-pointer">
-                  <Upload size={24} className="text-slate-400 mx-auto mb-2" />
-                  <p className="font-semibold text-slate-900 dark:text-white text-sm">{doc}</p>
-                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Click to upload</p>
+                <div key={doc}>
+                  {uploadedFiles[doc] ? (
+                    <div className="border-2 border-emerald-300 dark:border-emerald-700 bg-emerald-50 dark:bg-emerald-900/20 rounded-xl p-4 flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <CheckCircle2 size={24} className="text-emerald-600 dark:text-emerald-400" />
+                        <div>
+                          <p className="font-semibold text-slate-900 dark:text-white text-sm">{doc}</p>
+                          <p className="text-xs text-slate-600 dark:text-slate-400">{uploadedFiles[doc].name}</p>
+                        </div>
+                      </div>
+                      <button
+                        onClick={() => removeFile(doc)}
+                        className="p-2 hover:bg-red-200 dark:hover:bg-red-900/30 rounded-lg transition-all"
+                      >
+                        <X size={18} className="text-red-600 dark:text-red-400" />
+                      </button>
+                    </div>
+                  ) : (
+                    <button
+                      onClick={() => handleFileUpload(doc)}
+                      className="w-full border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-xl p-4 text-center hover:border-indigo-600 dark:hover:border-indigo-400 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-all cursor-pointer group"
+                    >
+                      <Upload size={24} className="text-slate-400 group-hover:text-indigo-600 mx-auto mb-2 transition-colors" />
+                      <p className="font-semibold text-slate-900 dark:text-white text-sm">{doc}</p>
+                      <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Click to upload</p>
+                    </button>
+                  )}
+                  {errors[doc] && <p className="text-red-600 text-xs font-semibold mt-2 px-2">{errors[doc]}</p>}
                 </div>
               ))}
             </div>
@@ -465,7 +570,25 @@ const GrantApplication: React.FC<GrantApplicationProps> = ({ onNavigate }) => {
                 Back
               </button>
               <button
-                onClick={() => setStep(7)}
+                onClick={() => {
+                  const newErrors: Record<string, string> = {};
+                  const missingFiles: string[] = [];
+                  
+                  requiredDocuments.forEach(doc => {
+                    if (!uploadedFiles[doc]) {
+                      missingFiles.push(doc);
+                      newErrors[doc] = 'This document is required';
+                    }
+                  });
+                  
+                  if (missingFiles.length > 0) {
+                    newErrors.documents = `Please upload all required documents: ${missingFiles.join(', ')}`;
+                    setErrors(newErrors);
+                  } else {
+                    setErrors({});
+                    setStep(7);
+                  }
+                }}
                 className="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-xl font-black transition-all"
               >
                 Continue
@@ -519,8 +642,10 @@ const GrantApplication: React.FC<GrantApplicationProps> = ({ onNavigate }) => {
               </button>
               <button
                 onClick={() => {
-                  alert('Application submitted successfully! You will receive updates via email.');
-                  onNavigate('HOME');
+                  setSubmissionSuccess(true);
+                  setTimeout(() => {
+                    onNavigate('HOME');
+                  }, 3000);
                 }}
                 className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-xl font-black transition-all flex items-center justify-center gap-2"
               >
@@ -539,6 +664,24 @@ const GrantApplication: React.FC<GrantApplicationProps> = ({ onNavigate }) => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white dark:from-slate-950 dark:to-slate-900 pt-24 pb-40">
       <div className="max-w-2xl mx-auto px-4">
+        {/* Success Message */}
+        <AnimatePresence>
+          {submissionSuccess && (
+            <motion.div 
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              className="fixed top-6 left-1/2 -translate-x-1/2 z-[1000] bg-emerald-500 text-white px-6 py-4 rounded-xl font-black shadow-2xl flex items-center gap-3"
+            >
+              <CheckCircle2 size={24} />
+              <div>
+                <p className="font-black">We received your message!</p>
+                <p className="text-sm text-emerald-100">We'll get back to you via text or message within 2-3 hours.</p>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
         {/* Header */}
         <button
           onClick={() => onNavigate('HOME')}

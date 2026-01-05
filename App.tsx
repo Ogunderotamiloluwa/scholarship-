@@ -438,17 +438,37 @@ const MobileActionBar = ({ currentView, setView }: { currentView: ViewState, set
 
 const App: React.FC = () => {
   const [currentView, setCurrentView] = useState<ViewState>('HOME');
+  const [navigationHistory, setNavigationHistory] = useState<ViewState[]>(['HOME']);
   const [selectedStory, setSelectedStory] = useState<StoryContent | null>(null);
   const [selectedGrant, setSelectedGrant] = useState<GrantType | null>(null);
   const [activePhase, setActivePhase] = useState<ResourcePhase>(PHASES[0]);
   const [applyStep, setApplyStep] = useState(1);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [applyErrors, setApplyErrors] = useState<Record<string, string>>({});
+  const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' | 'info' } | null>(null);
   const [formData, setFormData] = useState({
     firstName: '', lastName: '', email: '', phone: '',
     studentEmail: '', studentNumber: '',
     gpa: 0, university: '', major: '', essay: ''
   });
+
+  // Handle navigation with history tracking
+  const handleViewChange = (view: ViewState) => {
+    if (view !== currentView) {
+      setNavigationHistory(prev => [...prev, view]);
+      setCurrentView(view);
+    }
+  };
+
+  // Handle back navigation - go back through history
+  const handleBackNavigation = () => {
+    if (navigationHistory.length > 1) {
+      const newHistory = navigationHistory.slice(0, -1);
+      const previousView = newHistory[newHistory.length - 1];
+      setNavigationHistory(newHistory);
+      setCurrentView(previousView);
+    }
+  };
 
   const [applicants, setApplicants] = useState<Applicant[]>([
     {
@@ -506,15 +526,19 @@ const App: React.FC = () => {
   };
 
   const handleApplySubmit = () => {
-    alert("Official Verification: BEACON-" + Math.floor(Math.random() * 90000 + 10000) + " has been transmitted to the Selection Board.");
-    setCurrentView('HOME');
-    setApplyStep(1);
+    const verificationCode = "BEACON-" + Math.floor(Math.random() * 90000 + 10000);
+    setToast({ message: `Official Verification: ${verificationCode} has been transmitted to the Selection Board.`, type: 'success' });
+    setTimeout(() => {
+      setCurrentView('HOME');
+      setApplyStep(1);
+      setToast(null);
+    }, 3000);
   };
 
   const renderView = () => {
     switch (currentView) {
       case 'HOME':
-        return <HomeView onNavigate={setCurrentView} onOpenStory={(story) => { setSelectedStory(story); setCurrentView('STORY_DETAIL'); }} />;
+        return <HomeView onNavigate={handleViewChange} onOpenStory={(story) => { setSelectedStory(story); handleViewChange('STORY_DETAIL'); }} />;
 
       case 'SCHOLARSHIPS':
         return (
@@ -625,7 +649,7 @@ const App: React.FC = () => {
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent" />
                 <div className="absolute bottom-24 left-0 right-0 px-6">
                    <div className="max-w-5xl mx-auto">
-                      <button onClick={() => setCurrentView('HOME')} className="mb-12 text-white/60 hover:text-white transition-colors flex items-center gap-3 font-black text-xs uppercase tracking-widest group"><ChevronRight size={16} className="rotate-180 group-hover:-translate-x-2 transition-transform" /> Portal Main</button>
+                      <button onClick={() => handleViewChange('HOME')} className="mb-12 text-white/60 hover:text-white transition-colors flex items-center gap-3 font-black text-xs uppercase tracking-widest group"><ChevronRight size={16} className="rotate-180 group-hover:-translate-x-2 transition-transform" /> Portal Main</button>
                       <h1 className="heading-serif text-6xl md:text-[10rem] font-black text-white leading-[0.85] tracking-tighter mb-12">{selectedStory.title}</h1>
                       <p className="text-3xl md:text-5xl text-slate-200 font-light leading-snug italic max-w-4xl">"{selectedStory.subtitle}"</p>
                    </div>
@@ -909,32 +933,32 @@ const App: React.FC = () => {
         );
 
       case 'GRANTS':
-        return <Grants onNavigate={setCurrentView} onGrantSelect={(grant) => { setSelectedGrant(grant); setCurrentView('GRANT_DETAIL'); }} />;
+        return <Grants onNavigate={handleViewChange} onGrantSelect={(grant) => { setSelectedGrant(grant); handleViewChange('GRANT_DETAIL'); }} />;
 
       case 'GRANT_DETAIL':
         if (!selectedGrant) return null;
-        return <GrantDetails grant={selectedGrant} onNavigate={setCurrentView} />;
+        return <GrantDetails grant={selectedGrant} onNavigate={handleViewChange} />;
 
       case 'GRANT_APPLICATION':
-        return <GrantApplication onNavigate={setCurrentView} />;
+        return <GrantApplication onNavigate={handleViewChange} />;
 
       case 'HOW_IT_WORKS':
-        return <HowItWorks onNavigate={setCurrentView} />;
+        return <HowItWorks onNavigate={handleViewChange} />;
 
       case 'NEWS':
-        return <News onNavigate={setCurrentView} />;
+        return <News onNavigate={handleViewChange} />;
 
       case 'EVENTS':
-        return <Events onNavigate={setCurrentView} />;
+        return <Events onNavigate={handleViewChange} />;
 
       case 'MEMBERS':
-        return <Members onNavigate={setCurrentView} />;
+        return <Members onNavigate={handleViewChange} />;
 
       case 'APPLICATION_TRACKER':
-        return <ApplicationTracker onNavigate={setCurrentView} />;
+        return <ApplicationTracker onNavigate={handleViewChange} />;
 
       case 'DONATE':
-        return <Donate onNavigate={setCurrentView} />;
+        return <Donate onNavigate={handleViewChange} />;
 
       case 'ADMIN':
         return <AdminDashboard applicants={applicants} />;
@@ -947,7 +971,7 @@ const App: React.FC = () => {
   return (
     <div className="min-h-screen bg-[#fcfcfc] selection:bg-indigo-100 selection:text-indigo-600">
       {/* DESKTOP NAVIGATION */}
-      <Navigation currentView={currentView} setView={setCurrentView} isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />
+      <Navigation currentView={currentView} setView={handleViewChange} isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} onBack={handleBackNavigation} />
 
       <main className="flex-grow pt-0 md:pt-0">
         <AnimatePresence mode="wait">
@@ -974,10 +998,10 @@ const App: React.FC = () => {
           <div className="text-center md:text-left">
             <h4 className="text-white font-black text-[10px] uppercase tracking-[0.4em] mb-10 text-indigo-400">Directory</h4>
             <ul className="space-y-6 text-xl md:text-2xl font-light italic">
-              <li><button onClick={() => setCurrentView('HOME')} className="hover:text-white transition-colors">Portal Home</button></li>
-              <li><button onClick={() => setCurrentView('SCHOLARSHIPS')} className="hover:text-white transition-colors">Grant Catalog</button></li>
-              <li><button onClick={() => setCurrentView('RESOURCE_HUB')} className="hover:text-white transition-colors">Blueprint</button></li>
-              <li><button onClick={() => setCurrentView('ABOUT')} className="hover:text-white transition-colors">Heritage</button></li>
+              <li><button onClick={() => handleViewChange('HOME')} className="hover:text-white transition-colors">Portal Home</button></li>
+              <li><button onClick={() => handleViewChange('SCHOLARSHIPS')} className="hover:text-white transition-colors">Grant Catalog</button></li>
+              <li><button onClick={() => handleViewChange('RESOURCE_HUB')} className="hover:text-white transition-colors">Blueprint</button></li>
+              <li><button onClick={() => handleViewChange('ABOUT')} className="hover:text-white transition-colors">Heritage</button></li>
             </ul>
           </div>
           <div className="text-center md:text-left">
@@ -998,7 +1022,42 @@ const App: React.FC = () => {
         </div>
       </footer>
 
-      <MobileActionBar currentView={currentView} setView={setCurrentView} />
+      <MobileActionBar currentView={currentView} setView={handleViewChange} />
+
+      {/* TOAST NOTIFICATION */}
+      <AnimatePresence>
+        {toast && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 20 }}
+            className={`fixed bottom-24 md:bottom-8 right-6 left-6 md:left-auto md:max-w-md z-[200] rounded-2xl p-6 shadow-2xl border-2 flex items-center gap-4 ${
+              toast.type === 'success' ? 'bg-emerald-50 border-emerald-200 text-emerald-900' :
+              toast.type === 'error' ? 'bg-red-50 border-red-200 text-red-900' :
+              'bg-blue-50 border-blue-200 text-blue-900'
+            }`}
+          >
+            <div className={`flex-shrink-0 text-2xl ${
+              toast.type === 'success' ? 'text-emerald-600' :
+              toast.type === 'error' ? 'text-red-600' :
+              'text-blue-600'
+            }`}>
+              {toast.type === 'success' ? '✓' : toast.type === 'error' ? '✕' : 'ℹ'}
+            </div>
+            <p className="text-sm md:text-base font-semibold flex-grow">{toast.message}</p>
+            <button
+              onClick={() => setToast(null)}
+              className={`flex-shrink-0 opacity-50 hover:opacity-100 transition-opacity ${
+                toast.type === 'success' ? 'text-emerald-600' :
+                toast.type === 'error' ? 'text-red-600' :
+                'text-blue-600'
+              }`}
+            >
+              ✕
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

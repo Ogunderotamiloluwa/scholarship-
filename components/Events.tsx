@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { ViewState } from '../types';
 import { EVENTS } from '../Constants';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Calendar, MapPin, Clock, Users, ArrowRight, Search, Filter, X, Check, Mail, Phone } from 'lucide-react';
+import { Calendar, MapPin, Clock, Users, ArrowRight, Search, Filter, X, Check, Mail, Phone, CheckCircle2 } from 'lucide-react';
 
 interface EventsProps {
   onNavigate: (view: ViewState) => void;
@@ -25,6 +25,7 @@ const Events: React.FC<EventsProps> = ({ onNavigate }) => {
   const [showContactForm, setShowContactForm] = useState(false);
   const [showRegistrationModal, setShowRegistrationModal] = useState(false);
   const [registrationSuccess, setRegistrationSuccess] = useState(false);
+  const [contactSuccess, setContactSuccess] = useState(false);
 
   const [formData, setFormData] = useState<RegistrationForm>({
     firstName: '',
@@ -91,17 +92,45 @@ const Events: React.FC<EventsProps> = ({ onNavigate }) => {
 
   const handleContactSubmit = () => {
     if (contactForm.name && contactForm.email && contactForm.message) {
-      alert('Thank you! We have received your message. We will get back to you within 24 hours.');
-      setContactForm({ name: '', email: '', phone: '', message: '', institution: '' });
-      setShowContactForm(false);
+      setContactSuccess(true);
+      setTimeout(() => {
+        setContactForm({ name: '', email: '', phone: '', message: '', institution: '' });
+        setShowContactForm(false);
+        setContactSuccess(false);
+      }, 3000);
     }
   };
 
   return (
     <div className="bg-white dark:bg-slate-950 overflow-hidden">
+      <AnimatePresence>
+        {contactSuccess && (
+          <motion.div 
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="fixed top-6 left-1/2 -translate-x-1/2 z-[1000] bg-emerald-500 text-white px-6 py-4 rounded-xl font-black shadow-2xl flex items-center gap-3"
+          >
+            <CheckCircle2 size={24} />
+            <div>
+              <p className="font-black">We received your message!</p>
+              <p className="text-sm text-emerald-100">We'll get back to you via text or message within 2-3 hours.</p>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
       {/* HERO SECTION */}
       <section className="relative min-h-[500px] flex items-center bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950 overflow-hidden px-4 pt-32 pb-16">
-        <div className="absolute inset-0 overflow-hidden">
+        {/* Background Image */}
+        <div className="absolute inset-0 opacity-20">
+          <img 
+            src="https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&q=80&w=1200"
+            alt="Events and networking"
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-slate-950/20 to-slate-950"></div>
+        </div>
+        <div className="absolute inset-0 overflow-hidden z-0">
           <div className="absolute -top-40 -right-40 w-96 h-96 bg-indigo-600/20 rounded-full blur-3xl animate-pulse"></div>
           <div className="absolute bottom-0 -left-40 w-96 h-96 bg-emerald-600/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
         </div>
