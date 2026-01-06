@@ -3,6 +3,7 @@ import { ViewState } from '../types';
 import { EVENTS } from '../Constants';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Calendar, MapPin, Clock, Users, ArrowRight, Search, Filter, X, Check, Mail, Phone, CheckCircle2 } from 'lucide-react';
+import FormSubmissionFeedback from './FormSubmissionFeedback';
 
 interface EventsProps {
   onNavigate: (view: ViewState) => void;
@@ -26,6 +27,8 @@ const Events: React.FC<EventsProps> = ({ onNavigate }) => {
   const [showRegistrationModal, setShowRegistrationModal] = useState(false);
   const [registrationSuccess, setRegistrationSuccess] = useState(false);
   const [contactSuccess, setContactSuccess] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [showFeedback, setShowFeedback] = useState(false);
 
   const [formData, setFormData] = useState<RegistrationForm>({
     firstName: '',
@@ -80,45 +83,45 @@ const Events: React.FC<EventsProps> = ({ onNavigate }) => {
         setRegistrationStep(3);
       }
     } else if (registrationStep === 3) {
-      // Final submission
-      setRegistrationSuccess(true);
+      // Final submission with loading and feedback
+      setIsLoading(true);
+      setShowFeedback(true);
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 4000);
       setTimeout(() => {
         setShowRegistrationModal(false);
         setRegistrationStep(1);
         setFormData({ firstName: '', lastName: '', email: '', phone: '', institution: '', major: '' });
-      }, 2000);
+      }, 7000);
     }
   };
 
   const handleContactSubmit = () => {
     if (contactForm.name && contactForm.email && contactForm.message) {
-      setContactSuccess(true);
+      setIsLoading(true);
+      setShowFeedback(true);
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 4000);
       setTimeout(() => {
         setContactForm({ name: '', email: '', phone: '', message: '', institution: '' });
         setShowContactForm(false);
-        setContactSuccess(false);
-      }, 3000);
+      }, 7000);
     }
   };
 
   return (
     <div className="bg-white dark:bg-slate-950 overflow-hidden">
-      <AnimatePresence>
-        {contactSuccess && (
-          <motion.div 
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            className="fixed top-6 left-1/2 -translate-x-1/2 z-[1000] bg-emerald-500 text-white px-6 py-4 rounded-xl font-black shadow-2xl flex items-center gap-3"
-          >
-            <CheckCircle2 size={24} />
-            <div>
-              <p className="font-black">We received your message!</p>
-              <p className="text-sm text-emerald-100">We'll get back to you via text or message within 2-3 hours.</p>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <FormSubmissionFeedback 
+        isVisible={showFeedback}
+        isLoading={isLoading}
+        onClose={() => {
+          setShowFeedback(false);
+        }}
+        title="Event Registration Confirmed!"
+        message="Thank you for registering for this event. We'll send you event details, reminders, and exclusive content to your email soon."
+      />
       {/* HERO SECTION */}
       <section className="relative min-h-[500px] flex items-center bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950 overflow-hidden px-4 pt-32 pb-16">
         {/* Background Image */}

@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
-import { ViewState } from '../types';
+import { ViewState, NewsItem } from '../types';
 import { NEWS_ITEMS, NEWS_CATEGORIES } from '../Constants';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowRight, Calendar, User, Eye, Share2, Search } from 'lucide-react';
+import { ArrowRight, Calendar, User, Eye, Share2, Search, Mail, Check } from 'lucide-react';
+import FormSubmissionFeedback from './FormSubmissionFeedback';
+import NewsArticle from './NewsArticle';
 
 interface NewsProps {
   onNavigate: (view: ViewState) => void;
@@ -11,6 +13,10 @@ interface NewsProps {
 const News: React.FC<NewsProps> = ({ onNavigate }) => {
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedArticle, setSelectedArticle] = useState<NewsItem | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [showFeedback, setShowFeedback] = useState(false);
+  const [subscribeEmail, setSubscribeEmail] = useState('');
   
   const filteredNews = NEWS_ITEMS.filter(article => {
     const matchesCategory = selectedCategory === 'All' || article.category === selectedCategory;
@@ -19,8 +25,31 @@ const News: React.FC<NewsProps> = ({ onNavigate }) => {
     return matchesCategory && matchesSearch;
   });
 
+  if (selectedArticle) {
+    return <NewsArticle article={selectedArticle} onNavigate={onNavigate} onBack={() => setSelectedArticle(null)} />;
+  }
+
+  const handleSubscribe = (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+    setShowFeedback(true);
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 4000);
+    setSubscribeEmail('');
+  };
+
   return (
     <div className="bg-white dark:bg-slate-950 overflow-hidden">
+      <FormSubmissionFeedback 
+        isVisible={showFeedback}
+        isLoading={isLoading}
+        onClose={() => {
+          setShowFeedback(false);
+        }}
+        title="Subscribed Successfully!"
+        message="Welcome to our newsletter! You'll receive updates about new scholarships, success stories, and important announcements."
+      />
       {/* HERO SECTION */}
       <section className="relative min-h-[500px] flex items-center bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950 overflow-hidden px-4 pt-32 pb-16">
         {/* Background Image */}
@@ -128,7 +157,10 @@ const News: React.FC<NewsProps> = ({ onNavigate }) => {
                           {filteredNews[0].views || 1200} views
                         </div>
                       </div>
-                      <button className="group inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 text-white rounded-xl font-bold transition-all shadow-lg w-fit">
+                      <button 
+                        onClick={() => setSelectedArticle(filteredNews[0])}
+                        className="group inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 text-white rounded-xl font-bold transition-all shadow-lg w-fit"
+                      >
                         Read Full Story
                         <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
                       </button>
@@ -147,7 +179,8 @@ const News: React.FC<NewsProps> = ({ onNavigate }) => {
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -20 }}
                       transition={{ delay: index * 0.05 }}
-                      className="group rounded-2xl overflow-hidden bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-indigo-400 dark:hover:border-indigo-500 transition-all duration-500 flex flex-col h-full hover:shadow-2xl"
+                      onClick={() => setSelectedArticle(article)}
+                      className="group rounded-2xl overflow-hidden bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-indigo-400 dark:hover:border-indigo-500 transition-all duration-500 flex flex-col h-full hover:shadow-2xl cursor-pointer"
                     >
                       {/* Image */}
                       <div className="overflow-hidden h-48 md:h-56 bg-slate-200 dark:bg-slate-700">
@@ -212,18 +245,28 @@ const News: React.FC<NewsProps> = ({ onNavigate }) => {
         <div className="max-w-5xl mx-auto text-center">
           <h2 className="text-4xl md:text-5xl font-black text-white mb-6">Don't Miss Any Updates</h2>
           <p className="text-indigo-100 text-lg mb-8 max-w-2xl mx-auto">
-            Subscribe to our newsletter to receive the latest scholarship opportunities and success stories.
+            Subscribe to our newsletter to receive the latest scholarship opportunities, success stories, and important announcements.
           </p>
-          <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <input 
-              type="email" 
-              placeholder="Enter your email..." 
-              className="px-6 py-3 rounded-xl bg-white text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-400 w-full sm:max-w-xs"
-            />
-            <button className="px-8 py-3 bg-white text-indigo-600 font-bold rounded-xl hover:bg-slate-100 transition-all shadow-lg">
+          <form onSubmit={handleSubscribe} className="flex flex-col sm:flex-row gap-3 justify-center">
+            <div className="relative flex-1 sm:max-w-xs">
+              <Mail size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-white/50" />
+              <input 
+                type="email" 
+                placeholder="Enter your email..." 
+                value={subscribeEmail}
+                onChange={(e) => setSubscribeEmail(e.target.value)}
+                required
+                className="w-full pl-12 pr-6 py-3 rounded-xl bg-white text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-400 transition-all"
+              />
+            </div>
+            <button 
+              type="submit"
+              className="px-8 py-3 bg-white text-indigo-600 font-bold rounded-xl hover:bg-slate-100 transition-all shadow-lg flex items-center justify-center gap-2"
+            >
+              <Check size={18} />
               Subscribe
             </button>
-          </div>
+          </form>
         </div>
       </section>
     </div>

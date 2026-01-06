@@ -3,6 +3,7 @@ import { ViewState } from '../types';
 import { motion } from 'framer-motion';
 import { Heart, DollarSign, Gift, TrendingUp, Zap, Award, Check, ArrowRight, Briefcase, FileText, Users, Shield } from 'lucide-react';
 import { CORPORATE_PARTNERS } from '../Constants';
+import FormSubmissionFeedback from './FormSubmissionFeedback';
 
 interface DonateProps {
   onNavigate?: (view: ViewState) => void;
@@ -10,8 +11,38 @@ interface DonateProps {
 
 const Donate: React.FC<DonateProps> = ({ onNavigate }) => {
   const [selectedAmount, setSelectedAmount] = useState<number | null>(null);
+  const [customAmount, setCustomAmount] = useState<string>('');
   const [donationType, setDonationType] = useState<'one-time' | 'monthly' | 'corporate'>('one-time');
   const [showCorporateForm, setShowCorporateForm] = useState(false);
+  const [donorEmail, setDonorEmail] = useState<string>('');
+  const [donorName, setDonorName] = useState<string>('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [showFeedback, setShowFeedback] = useState(false);
+
+  const handleDonateNow = (amount: number) => {
+    if (!donorName.trim()) {
+      alert('Please enter your name');
+      return;
+    }
+    if (!donorEmail.trim()) {
+      alert('Please enter your email');
+      return;
+    }
+    
+    setIsLoading(true);
+    setShowFeedback(true);
+    
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 4000);
+    
+    setTimeout(() => {
+      setDonorName('');
+      setDonorEmail('');
+      setSelectedAmount(null);
+      setCustomAmount('');
+    }, 7000);
+  };
 
   const presetAmounts = [25, 50, 100, 250, 500, 1000];
 
@@ -95,6 +126,15 @@ const Donate: React.FC<DonateProps> = ({ onNavigate }) => {
 
   return (
     <div className="bg-white dark:bg-slate-950 overflow-hidden">
+      <FormSubmissionFeedback 
+        isVisible={showFeedback}
+        isLoading={isLoading}
+        onClose={() => {
+          setShowFeedback(false);
+        }}
+        title={donationType === 'corporate' ? 'Thank You for Your Corporate Donation!' : 'Thank You for Your Donation!'}
+        message={donationType === 'corporate' ? 'We have received your corporate donation request. Our partnership team will contact you via email or phone to discuss matching options and recognition opportunities. Thank you for supporting our mission!' : `Your generous ${donationType === 'monthly' ? 'monthly' : 'one-time'} contribution has been received successfully. Our team will contact you via email at ${donorEmail} with next steps. Your donation will make a real difference in students' lives. Thank you!`}
+      />
       {/* HERO SECTION */}
       <section className="relative min-h-[550px] flex items-center bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950 overflow-hidden px-4 pt-32 pb-20">
         <div className="absolute inset-0 overflow-hidden">
@@ -168,7 +208,10 @@ const Donate: React.FC<DonateProps> = ({ onNavigate }) => {
             {presetAmounts.map((amount) => (
               <motion.button
                 key={amount}
-                onClick={() => setSelectedAmount(amount)}
+                onClick={() => {
+                  setSelectedAmount(amount);
+                  setCustomAmount('');
+                }}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 className={`p-6 md:p-8 rounded-2xl border-2 font-black text-lg md:text-2xl transition-all ${
@@ -191,15 +234,51 @@ const Donate: React.FC<DonateProps> = ({ onNavigate }) => {
               <input 
                 type="number" 
                 placeholder="Enter amount"
+                value={customAmount}
+                onChange={(e) => {
+                  setCustomAmount(e.target.value);
+                  setSelectedAmount(null);
+                }}
                 className="w-full pl-10 pr-6 py-4 md:py-5 border-2 border-slate-200 dark:border-slate-700 rounded-2xl bg-white dark:bg-slate-900 text-slate-900 dark:text-white text-xl font-bold focus:outline-none focus:border-indigo-500 dark:focus:border-indigo-400 transition-all"
               />
             </div>
           </div>
 
+          {/* Donor Information Form */}
+          <div className="bg-indigo-50 dark:bg-slate-900 rounded-2xl p-6 md:p-8 mb-12 border border-indigo-200 dark:border-indigo-900/30">
+            <h3 className="text-lg md:text-xl font-black text-slate-900 dark:text-white mb-6">Your Information</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+              <div>
+                <label className="block text-sm font-black text-slate-900 dark:text-white mb-2">Full Name *</label>
+                <input
+                  type="text"
+                  value={donorName}
+                  onChange={(e) => setDonorName(e.target.value)}
+                  placeholder="Enter your full name"
+                  className="w-full px-4 py-3 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:text-white text-sm"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-black text-slate-900 dark:text-white mb-2">Email Address *</label>
+                <input
+                  type="email"
+                  value={donorEmail}
+                  onChange={(e) => setDonorEmail(e.target.value)}
+                  placeholder="your.email@example.com"
+                  className="w-full px-4 py-3 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:text-white text-sm"
+                />
+              </div>
+            </div>
+          </div>
+
           {/* Donate Button */}
-          <button className="w-full py-6 md:py-8 bg-gradient-to-r from-indigo-600 to-emerald-600 hover:from-indigo-700 hover:to-emerald-700 text-white rounded-2xl md:rounded-3xl font-black text-lg md:text-2xl shadow-2xl flex items-center justify-center gap-3 transition-all transform hover:scale-105 active:scale-95">
+          <button 
+            onClick={() => handleDonateNow(customAmount ? parseFloat(customAmount) : (selectedAmount || 0))}
+            disabled={!selectedAmount && !customAmount}
+            className="w-full py-6 md:py-8 bg-gradient-to-r from-indigo-600 to-emerald-600 hover:from-indigo-700 hover:to-emerald-700 disabled:from-slate-400 disabled:to-slate-400 text-white rounded-2xl md:rounded-3xl font-black text-lg md:text-2xl shadow-2xl flex items-center justify-center gap-3 transition-all transform hover:scale-105 active:scale-95 disabled:cursor-not-allowed disabled:hover:scale-100"
+          >
             <Heart size={28} />
-            Donate Now
+            Donate ${customAmount || selectedAmount || '0'}{donationType === 'monthly' && '/month'}
             <ArrowRight size={24} />
           </button>
         </div>
@@ -430,7 +509,16 @@ const Donate: React.FC<DonateProps> = ({ onNavigate }) => {
                 </div>
               </div>
 
-              <button className="w-full py-4 md:py-5 bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 text-white rounded-xl md:rounded-2xl font-black text-lg shadow-lg hover:shadow-xl transition-all transform hover:scale-105 active:scale-95 flex items-center justify-center gap-2">
+              <button 
+                onClick={() => {
+                  setIsLoading(true);
+                  setShowFeedback(true);
+                  setTimeout(() => {
+                    setIsLoading(false);
+                  }, 4000);
+                }}
+                className="w-full py-4 md:py-5 bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 text-white rounded-xl md:rounded-2xl font-black text-lg shadow-lg hover:shadow-xl transition-all transform hover:scale-105 active:scale-95 flex items-center justify-center gap-2"
+              >
                 <Heart size={24} />
                 Submit Corporate Donation
               </button>

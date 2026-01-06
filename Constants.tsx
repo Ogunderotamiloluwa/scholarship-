@@ -600,8 +600,39 @@ export const NEWS_ITEMS = [
     id: 'news-1',
     title: 'Record 2,847 Scholars Funded in 2025: Our Biggest Year Yet',
     excerpt: 'The Beacon Foundation surpasses previous records, distributing $56.3 million in scholarships and grants to students and nonprofits across all 50 states.',
-    content: 'This year marks a historic milestone for the Beacon Foundation. We funded 2,847 scholars and 156 nonprofit organizations, distributing a total of $56.3 million across all 50 states...',
-    image: 'https://images.unsplash.com/photo-1523050335456-c6d860cb0d12?auto=format&fit=crop&q=80&w=1200',
+    content: [
+      {
+        heading: 'A Historic Milestone',
+        paragraphs: [
+          'In 2025, the Beacon Foundation achieved its most ambitious goal yet, funding 2,847 scholars and 156 nonprofit organizations across all 50 states. This landmark year represents a 43% increase from 2024 and reflects our unwavering commitment to expanding educational access and opportunity for deserving students and organizations.',
+          'With a total distribution of $56.3 million, we have supported students from diverse backgrounds pursuing education at every level—from undergraduate scholarships to doctoral research grants. This substantial growth demonstrates the increasing need for educational funding and the tremendous impact our donors and partners have made.'
+        ]
+      },
+      {
+        heading: 'Breaking Down the Numbers',
+        paragraphs: [
+          'Our 2025 funding included $32.4 million in direct student scholarships averaging $11,400 per recipient, and $23.9 million distributed to 156 nonprofit organizations focused on educational equity, workforce development, and community enrichment. These grants touched over 850,000 individuals indirectly through partner organizations.',
+          'Geographic diversity was a key focus this year, with 28% of funding directed to students in rural communities, 34% to first-generation college students, and 22% to students from families earning less than $50,000 annually. We also increased our support for STEM education, directing $18.7 million (33% of total) to students pursuing degrees in science, technology, engineering, and mathematics.'
+        ]
+      },
+      {
+        heading: 'Stories of Impact',
+        paragraphs: [
+          'Among our 2025 scholars is Maya Rodriguez, a first-generation college student from rural Texas who received a full scholarship to study environmental engineering at UT Austin. With Beacon support, Maya not only completed her degree debt-free but also founded a community organization bringing STEM education to rural schools.',
+          'Another standout scholar, James Chen from Detroit, used his Beacon Fellowship to conduct groundbreaking research on sustainable urban agriculture, work that is now being implemented in 12 cities across the Midwest.',
+          'These stories represent just a fraction of the life-changing opportunities our funding has enabled. Each scholar brings unique perspectives and tremendous potential to address society\'s greatest challenges.'
+        ]
+      },
+      {
+        heading: 'Looking Forward to 2026',
+        paragraphs: [
+          'As we enter 2026, we\'re setting an even more ambitious target: funding 3,200 scholars with $65 million in total awards. We\'re expanding our programs in emerging fields including renewable energy, public health, social entrepreneurship, and artificial intelligence.',
+          'We\'re also launching a new mentorship initiative pairing each scholarship recipient with a professional mentor, and expanding our international opportunities program to support scholars studying abroad.',
+          'The support of our donors, partners, and community members makes this growth possible. Together, we are building a future where talent and determination—not financial circumstances—determine educational opportunity.'
+        ]
+      }
+    ] as any,
+    image: 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&q=80&w=1200',
     category: 'Scholarships',
     date: '2026-01-15',
     author: 'Sarah Jenkins',
@@ -611,7 +642,38 @@ export const NEWS_ITEMS = [
     id: 'news-2',
     title: 'New Presidential Fellowship Opens Applications for STEM Leaders',
     excerpt: 'The Beacon Foundation launches its most competitive fellowship yet, offering $60,000 annually to doctoral students pursuing groundbreaking research in artificial intelligence and clean energy.',
-    content: 'The new Presidential Fellowship in STEM represents our commitment to funding the research that will shape the next decade. With an annual award of $60,000 plus research stipends...',
+    content: [
+      {
+        heading: 'Introducing the Presidential Fellowship',
+        paragraphs: [
+          'Today, we are thrilled to announce the launch of the Beacon Presidential Fellowship, our most prestigious award to date. This fellowship offers $60,000 annually, plus an additional $15,000 research stipend, mentorship from leading academics and industry innovators, and access to a global network of exceptional scholars.',
+          'The Presidential Fellowship targets doctoral students conducting cutting-edge research in artificial intelligence, machine learning, clean energy, quantum computing, and biotechnology—fields that will define the next decade of technological advancement and environmental sustainability.'
+        ]
+      },
+      {
+        heading: 'Fellowship Details and Requirements',
+        paragraphs: [
+          'Recipients will receive comprehensive support including full tuition coverage, a monthly stipend of $5,000, research funding up to $15,000 annually, conference travel support, and access to our Innovation Hub—a unique space for fellows to collaborate and advance their research.',
+          'To be eligible, applicants must be enrolled in a PhD or equivalent doctoral program at an accredited U.S. institution with a cumulative GPA of 3.7 or higher. International students are welcome to apply. Selection criteria include academic excellence, the significance and originality of proposed research, demonstrated commitment to social impact, and potential for leadership in their field.'
+        ]
+      },
+      {
+        heading: 'Why These Fields?',
+        paragraphs: [
+          'Artificial intelligence and clean energy represent the two most critical frontiers for human progress. AI has the potential to solve problems from disease diagnosis to climate modeling, while clean energy solutions are essential to achieving a sustainable future for our planet.',
+          'By investing in exceptional doctoral researchers in these fields, we are not only supporting individual scholars but advancing humanity\'s capacity to address global challenges. Our Presidential Fellows become ambassadors for innovation and agents of positive change in their communities and beyond.',
+          'Research shows that doctoral students often make their most impactful discoveries during their PhD years. By removing financial barriers, we enable these brilliant minds to focus entirely on their research and contribute breakthrough innovations that benefit all of society.'
+        ]
+      },
+      {
+        heading: 'Application Timeline and Next Steps',
+        paragraphs: [
+          'Applications are now open and will be accepted through March 31, 2026. Finalists will be selected by May 15, 2026, with announcements made June 1, 2026. Awards will be disbursed beginning in the fall semester of 2026.',
+          'Interested applicants should visit our website to complete the application, which includes academic transcripts, a statement of research purpose (1,000 words), letters of recommendation from academic advisors, and contact information for proposed mentors in your field.',
+          'We will host virtual information sessions on February 10, February 24, and March 10, 2026. These sessions will feature current Beacon Fellows discussing their experiences and a panel of selection committee members answering questions.'
+        ]
+      }
+    ] as any,
     image: 'https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&q=80&w=1200',
     category: 'Scholarships',
     date: '2026-01-10',
@@ -622,7 +684,39 @@ export const NEWS_ITEMS = [
     id: 'news-3',
     title: 'Beacon Scholar Wins Rhodes Scholarship: A Journey of Excellence',
     excerpt: 'Meet Alexandra Chen, a Beacon Scholar from MIT, who was just named a Rhodes Scholar for her groundbreaking work in sustainable energy systems.',
-    content: 'Alexandra Chen never imagined her research on solar panel efficiency would lead to a Rhodes Scholarship. As a Beacon Scholar, she received not only financial support but...',
+    content: [
+      {
+        heading: 'An Exceptional Achievement',
+        paragraphs: [
+          'We are delighted to announce that Alexandra Chen, a Beacon Scholar and MIT doctoral candidate, has been selected as a Rhodes Scholar. This prestigious honor recognizes her exceptional intellectual ability, character, commitment to service, and leadership potential.',
+          'Alexandra\'s journey exemplifies the transformative power of educational opportunity. As a Beacon Scholar, she has had the freedom to pursue ambitious research without the financial burden that has constrained so many talented students. Today, she stands at the pinnacle of academic achievement, having earned one of the world\'s most competitive and respected scholarships.'
+        ]
+      },
+      {
+        heading: 'Her Path to Excellence',
+        paragraphs: [
+          'Alexandra grew up in Los Angeles to immigrant parents—her mother a translator, her father a small business owner. Despite their modest means, both parents instilled in her a love of learning and a drive to make a meaningful impact on the world.',
+          'In high school, Alexandra excelled academically while working part-time at her father\'s business and volunteering as a tutor in her community. She was accepted to MIT but faced a difficult choice: attend MIT with $20,000 in annual unmet need, or attend a well-funded state school. When she learned about the Beacon Foundation through our partnership with MIT, she knew she could pursue her dream without being crushed by debt.',
+          'As a Beacon Scholar, Alexandra has pursued her passion for sustainable energy systems. Her research on next-generation solar panel efficiency has yielded three published papers in leading peer-reviewed journals, including one in the journal Solar Energy Materials and Solar Cells.'
+        ]
+      },
+      {
+        heading: 'Groundbreaking Research',
+        paragraphs: [
+          'Alexandra\'s doctoral research focuses on improving the efficiency of perovskite solar cells—a promising technology that could dramatically reduce the cost of solar energy and accelerate the global transition to renewable power.',
+          '"My ultimate goal is to help develop solar technologies that are affordable and accessible worldwide," Alexandra explains. "If we can increase efficiency while reducing costs, solar energy could power much of the world\'s electricity in 20 years instead of 50. That\'s the kind of timeline we need given the climate crisis we face."',
+          'Her research has caught the attention of leading energy companies and venture capital firms. Two companies have already expressed interest in licensing her patents, and she has been invited to speak at international renewable energy conferences.'
+        ]
+      },
+      {
+        heading: 'Looking Forward',
+        paragraphs: [
+          'As a Rhodes Scholar, Alexandra will spend two years at Oxford University studying energy policy and economics, further developing her capacity to influence global energy systems. After Oxford, she plans to launch her own sustainable energy venture aimed at bringing affordable solar technology to developing countries.',
+          '"I would not be where I am today without the Beacon Foundation," Alexandra reflects. "By removing the financial burden of education, Beacon gave me the freedom to dream big and pursue work that matters. I hope to use my platform to help other talented students from humble beginnings have the same opportunity."',
+          'Alexandra\'s success is a testament to the power of educational investment in exceptional talent. It\'s also a reminder of the countless other potential leaders out there—brilliant, driven, and ready to change the world—who just need a chance to pursue their potential.'
+        ]
+      }
+    ] as any,
     image: 'https://images.unsplash.com/photo-1576091160550-112173f31c77?auto=format&fit=crop&q=80&w=1200',
     category: 'Success Stories',
     date: '2026-01-05',
@@ -633,7 +727,36 @@ export const NEWS_ITEMS = [
     id: 'news-4',
     title: 'Federal Policy Update: New Education Equity Bill Impacts 2.5 Million Students',
     excerpt: 'The Higher Education Equity Act of 2026 passes Congress with support from Beacon-funded scholars and policy advocates. Major implications for student loan forgiveness and accessibility.',
-    content: 'After three years of advocacy, the Higher Education Equity Act has finally passed both chambers of Congress. This landmark legislation, which had strong support from our network...',
+    content: [
+      {
+        heading: 'A Major Victory for Education Equity',
+        paragraphs: [
+          'In a landmark moment for American education, the Higher Education Equity Act of 2026 has passed both chambers of Congress and is expected to be signed into law this week. This comprehensive legislation represents the culmination of three years of advocacy efforts by education advocates, nonprofit organizations, and—significantly—by Beacon-funded scholars.',
+          'The bill will directly benefit an estimated 2.5 million students currently burdened by student loan debt, provide $5 billion in new funding for minority-serving institutions, and establish new pathways for students in rural and economically disadvantaged communities to access higher education.'
+        ]
+      },
+      {
+        heading: 'Key Provisions of the Act',
+        paragraphs: [
+          'The Higher Education Equity Act includes several major provisions that will transform American higher education. Student Loan Forgiveness: Borrowers with federal student loans earning less than $65,000 annually will have up to $15,000 forgiven immediately. Income-Driven Repayment creates a new income-driven repayment plan capping monthly payments at 5% of discretionary income. Institutional Funding provides $5 billion in new federal funding for historically Black colleges and universities. Rural Education Initiative invests $2 billion in expanding broadband and educational infrastructure.',
+          'These provisions address systemic barriers that have limited educational access for millions of Americans. Together, they represent the most comprehensive education equity legislation passed by Congress in over a decade.'
+        ]
+      },
+      {
+        heading: 'The Role of Beacon Scholars',
+        paragraphs: [
+          'What makes this legislative victory especially meaningful is the role played by Beacon-funded scholars. Over the past three years, Beacon scholars have testified before Congress, met with elected officials, and mobilized their peers to advocate for systemic change.',
+          'Maya Rodriguez, a Beacon Scholar from Texas, testified before the Senate Education Committee about her experience with student debt and the transformative impact of scholarship funding. Her testimony was cited by three senators in floor speeches supporting the bill.'
+        ]
+      },
+      {
+        heading: 'What\'s Next?',
+        paragraphs: [
+          'President Biden is expected to sign the Higher Education Equity Act into law by Friday, January 17, 2026. Once enacted, federal agencies will begin implementing the provisions, with student loan forgiveness expected to begin processing in February 2026.',
+          'The Beacon Foundation is working with partner institutions to ensure that our scholars and their families are aware of these new benefits. We\'re also planning a national summit in June 2026 bringing together policy makers, advocates, and scholars to discuss implementation and next steps in the ongoing work toward education equity.'
+        ]
+      }
+    ] as any,
     image: 'https://images.unsplash.com/photo-1541339907198-e08756ebafe3?auto=format&fit=crop&q=80&w=1200',
     category: 'Policy',
     date: '2025-12-28',
@@ -644,7 +767,40 @@ export const NEWS_ITEMS = [
     id: 'news-5',
     title: 'Research Breakthrough: Beacon-Funded Scientists Publish in Nature Journal',
     excerpt: 'Three Beacon scholars collaborate on groundbreaking immunotherapy research, with their findings published in Nature Medicine, one of the world\'s most prestigious journals.',
-    content: 'In an unprecedented collaboration, three Beacon-funded doctoral candidates from Johns Hopkins, Stanford, and Harvard Medical School published joint research on immunotherapy approaches...',
+    content: [
+      {
+        heading: 'A Remarkable Collaborative Achievement',
+        paragraphs: [
+          'In an unprecedented collaboration, three Beacon-funded doctoral candidates from Johns Hopkins University, Stanford University, and Harvard Medical School have published joint research on novel immunotherapy approaches in Nature Medicine, one of the world\'s most prestigious scientific journals.',
+          'The paper, titled "Engineered Chimeric Antigen Receptors with Self-Assembling Nanoparticles: A New Paradigm for Adoptive Cell Therapy," represents a major breakthrough in cancer treatment and could eventually lead to more effective and less toxic treatments for thousands of patients.',
+          'The lead researchers—Dr. Priya Patel (Johns Hopkins), Dr. Michael Zhang (Stanford), and Dr. Alicia Thompson (Harvard)—began their collaboration through the Beacon Foundation\'s Research Collaborative Network, which brings together talented scholars pursuing related research questions.'
+        ]
+      },
+      {
+        heading: 'Understanding the Research',
+        paragraphs: [
+          'In simple terms, the researchers have developed a new approach to engineering T-cells—the immune cells responsible for fighting cancer—making them more effective at targeting and destroying cancer cells while minimizing damage to healthy cells.',
+          'Traditional CAR-T cell therapies have proven effective against certain blood cancers but have limitations in treating solid tumors like breast, pancreatic, and colorectal cancer. This research addresses those limitations by using self-assembling nanoparticles to deliver genetic instructions more efficiently, reducing the off-target effects that limit current therapies.',
+          '"This approach could eventually mean faster treatment timelines, better outcomes, and significantly fewer side effects," explains Dr. Patel, the lead author. "The real impact will be felt by cancer patients who finally have more options and better chances of survival."'
+        ]
+      },
+      {
+        heading: 'How Beacon Support Made This Possible',
+        paragraphs: [
+          'Each of the three lead researchers received a Beacon Doctoral Fellowship covering tuition, stipend, and research costs. Critically, by removing financial stress, these fellowships allowed the researchers to take intellectual risks and pursue ambitious research questions that might not otherwise have been funded.',
+          '"Without the Beacon Fellowship, I would have needed to pursue research with more immediate commercial potential to secure funding," Dr. Zhang notes. "This fellowship gave me the freedom to tackle a truly difficult problem that I believed in, not just the problem that was easiest to fund."',
+          'The Beacon Foundation also funded the initial collaboration and travel to conferences where the three researchers met and began discussing their overlapping interests.'
+        ]
+      },
+      {
+        heading: 'What\'s Next for This Research?',
+        paragraphs: [
+          'The researchers have filed for a patent on their nanoparticle approach and are currently seeking funding for human clinical trials, which could begin as early as 2027. Several major pharmaceutical companies and venture capital firms have already expressed interest in licensing and developing the technology.',
+          'More immediately, the three researchers are training additional graduate students in their methods and working with institutions worldwide to establish clinical trial sites. They\'ve also committed to making their research open-source, allowing other scientists to build on their work.',
+          'For the Beacon Foundation, this publication represents the kind of impact we aspire to achieve—exceptional talent, given freedom and resources, creating breakthroughs that benefit humanity. It\'s a reminder that educational investment today becomes life-saving innovation tomorrow.'
+        ]
+      }
+    ] as any,
     image: 'https://images.unsplash.com/photo-1530587191325-3db32d826c18?auto=format&fit=crop&q=80&w=1200',
     category: 'Research',
     date: '2025-12-20',
@@ -655,7 +811,45 @@ export const NEWS_ITEMS = [
     id: 'news-6',
     title: 'Beacon Foundation Partners with 15 New Universities to Expand Access',
     excerpt: 'Strategic expansion announcements bring the Beacon Foundation network to 215+ partner institutions, significantly increasing scholarship availability in rural and underserved communities.',
-    content: 'In a strategic expansion aimed at broadening access to higher education, the Beacon Foundation today announced partnerships with 15 additional universities, bringing our total network...',
+    content: [
+      {
+        heading: 'Major Expansion Announcement',
+        paragraphs: [
+          'The Beacon Foundation is pleased to announce strategic partnerships with 15 additional universities, bringing our total network of partner institutions to 215 colleges and universities across the United States.',
+          'This expansion represents a significant commitment to reaching talented students in rural and underserved communities who might otherwise lack access to scholarship information and funding. The new partners include flagship state universities in underserved regions, as well as emerging regional institutions known for serving first-generation and low-income students.'
+        ]
+      },
+      {
+        heading: 'The New Partner Institutions',
+        paragraphs: [
+          'New partners include University of Montana, Appalachian State University, Southern University and A&M College, New Mexico State University, South Dakota State University, and 10 additional institutions primarily serving rural and minority communities.',
+          'Each partnership includes funding for a dedicated Beacon coordinator on campus, expanded scholarship allocations, and professional development opportunities for campus staff working with scholarship recipients.',
+          '"These partnerships align perfectly with our mission," explains Foundation President Janet Williams. "While we\'re proud of our work with elite institutions, we recognize that exceptional talent exists everywhere in America—including in rural towns, small cities, and underserved communities. This expansion helps us reach more of that talent."'
+        ]
+      },
+      {
+        heading: 'Direct Impact on Student Access',
+        paragraphs: [
+          'Through these partnerships, we expect to increase our scholarship availability by 35%, reaching approximately 1,250 additional students annually. We\'ve specifically allocated increased funding for students in targeted regions where median family income falls below national averages and where scholarship information is less readily available.',
+          'Research shows that financial barriers are not the only obstacle to higher education for rural and low-income students. Many lack access to guidance counselors, college preparation resources, and information about available funding. By partnering with these institutions and providing on-campus coordination, we address both the financial and informational barriers to access.'
+        ]
+      },
+      {
+        heading: 'Supporting Student Success',
+        paragraphs: [
+          'Our partnerships go beyond simply providing scholarship funds. Each partnership includes mentorship programs, peer support networks, academic advising support, and professional development opportunities.',
+          'We\'ve also launched a new Rural Scholars Initiative, providing additional support for students from rural areas who often face unique challenges including isolation from family, higher rates of food and housing insecurity, and limited cultural and professional networks in their fields of study.',
+          'Through this initiative, we provide housing stipends, access to peer mentoring networks (including virtual communities connecting rural scholars across multiple institutions), and funding for students to attend professional conferences and leadership development programs.'
+        ]
+      },
+      {
+        heading: 'Looking Ahead',
+        paragraphs: [
+          'We\'re not stopping here. Our five-year strategic plan calls for partnerships with 250+ institutions, bringing Beacon support to students in every state and territory. We\'re also working with community colleges to establish transfer pathways, recognizing that many students begin their higher education journey at two-year institutions.',
+          'This expansion represents a fundamental belief: exceptional talent is equally distributed across America. Our responsibility is to remove the barriers that prevent that talent from flourishing. Through these new partnerships, we\'re doing exactly that.'
+        ]
+      }
+    ] as any,
     image: 'https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?auto=format&fit=crop&q=80&w=1200',
     category: 'Scholarships',
     date: '2025-12-10',

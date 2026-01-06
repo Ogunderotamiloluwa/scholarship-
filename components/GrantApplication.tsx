@@ -5,6 +5,7 @@ import {
   User, Briefcase, FileText, Upload, AlertCircle, Check, ChevronRight, X
 } from 'lucide-react';
 import { ViewState } from '../types';
+import FormSubmissionFeedback from './FormSubmissionFeedback';
 
 interface GrantApplicationProps {
   onNavigate: (view: ViewState) => void;
@@ -26,6 +27,8 @@ const GrantApplication: React.FC<GrantApplicationProps> = ({ onNavigate }) => {
   const [grantCategory, setGrantCategory] = useState('');
   const [eligibilityConfirmed, setEligibilityConfirmed] = useState(false);
   const [submissionSuccess, setSubmissionSuccess] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [showFeedback, setShowFeedback] = useState(false);
   const [applicationData, setApplicationData] = useState({
     purpose: '',
     amount: '',
@@ -642,10 +645,16 @@ const GrantApplication: React.FC<GrantApplicationProps> = ({ onNavigate }) => {
               </button>
               <button
                 onClick={() => {
-                  setSubmissionSuccess(true);
+                  setIsLoading(true);
+                  setShowFeedback(true);
+                  
+                  setTimeout(() => {
+                    setIsLoading(false);
+                  }, 4000);
+
                   setTimeout(() => {
                     onNavigate('HOME');
-                  }, 3000);
+                  }, 7000);
                 }}
                 className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-xl font-black transition-all flex items-center justify-center gap-2"
               >
@@ -663,25 +672,18 @@ const GrantApplication: React.FC<GrantApplicationProps> = ({ onNavigate }) => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white dark:from-slate-950 dark:to-slate-900 pt-24 pb-40">
-      <div className="max-w-2xl mx-auto px-4">
-        {/* Success Message */}
-        <AnimatePresence>
-          {submissionSuccess && (
-            <motion.div 
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              className="fixed top-6 left-1/2 -translate-x-1/2 z-[1000] bg-emerald-500 text-white px-6 py-4 rounded-xl font-black shadow-2xl flex items-center gap-3"
-            >
-              <CheckCircle2 size={24} />
-              <div>
-                <p className="font-black">We received your message!</p>
-                <p className="text-sm text-emerald-100">We'll get back to you via text or message within 2-3 hours.</p>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+      <FormSubmissionFeedback 
+        isVisible={showFeedback}
+        isLoading={isLoading}
+        onClose={() => {
+          setShowFeedback(false);
+          onNavigate('HOME');
+        }}
+        title="Grant Application Submitted!"
+        message="Thank you for submitting your grant application. Our team will review your information and contact you with next steps."
+      />
 
+      <div className="max-w-2xl mx-auto px-4">
         {/* Header */}
         <button
           onClick={() => onNavigate('HOME')}
