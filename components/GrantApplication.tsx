@@ -37,12 +37,6 @@ const GrantApplication: React.FC<GrantApplicationProps> = ({ onNavigate }) => {
     impact: '',
     previousFunding: 'No'
   });
-  const [uploadedFiles, setUploadedFiles] = useState<{ [key: string]: UploadedFile | null }>({
-    'ID / Passport': null,
-    'CV / Resume': null,
-    'Proposal (PDF)': null,
-    'Budget breakdown (Excel or PDF)': null
-  });
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const grantCategories = [
@@ -60,80 +54,17 @@ const GrantApplication: React.FC<GrantApplicationProps> = ({ onNavigate }) => {
     { item: 'Purpose matches the grant', checked: true }
   ];
 
-  const requiredDocuments = [
-    'ID / Passport',
-    'CV / Resume',
-    'Proposal (PDF)',
-    'Budget breakdown (Excel or PDF)'
-  ];
-
   const steps = [
     { number: 1, title: 'Grant Overview', description: 'Learn about this opportunity' },
     { number: 2, title: 'Create Account', description: 'Sign up or sign in' },
     { number: 3, title: 'Choose Category', description: 'Select grant type' },
     { number: 4, title: 'Check Eligibility', description: 'Verify requirements' },
     { number: 5, title: 'Application Form', description: 'Fill details' },
-    { number: 6, title: 'Upload Documents', description: 'Submit files' },
-    { number: 7, title: 'Review & Submit', description: 'Final confirmation' }
+    { number: 6, title: 'Review & Submit', description: 'Final confirmation' }
   ];
 
   const handleFileUpload = (docName: string) => {
-    // Create input element with proper configuration
-    const input = document.createElement('input');
-    input.setAttribute('type', 'file');
-    input.setAttribute('accept', '.pdf,.doc,.docx,.xls,.xlsx');
-    input.setAttribute('capture', 'environment'); // Allow camera on mobile
-    input.style.position = 'absolute';
-    input.style.left = '-9999px';
-    input.style.opacity = '0';
-    
-    input.addEventListener('change', function() {
-      const file = this.files?.[0];
-      if (file) {
-        // Validate file size (10MB max)
-        if (file.size > 10 * 1024 * 1024) {
-          setErrors(prev => ({ ...prev, [docName]: 'File size must be less than 10MB' }));
-          return;
-        }
-        
-        // Validate file type by extension
-        const filename = file.name.toLowerCase();
-        const validExtensions = ['.pdf', '.doc', '.docx', '.xls', '.xlsx'];
-        const hasValidExtension = validExtensions.some(ext => filename.endsWith(ext));
-        
-        if (!hasValidExtension) {
-          setErrors(prev => ({ ...prev, [docName]: 'Only PDF, DOC, DOCX, XLS, and XLSX files are allowed' }));
-          return;
-        }
-        
-        setUploadedFiles(prev => ({
-          ...prev,
-          [docName]: { name: file.name, file }
-        }));
-        setErrors(prev => {
-          const newErrors = { ...prev };
-          delete newErrors[docName];
-          return newErrors;
-        });
-      }
-    }, false);
-    
-    document.body.appendChild(input);
-    input.click();
-    
-    // Clean up after a delay to ensure click is processed
-    setTimeout(() => {
-      if (document.body.contains(input)) {
-        document.body.removeChild(input);
-      }
-    }, 100);
-  };
-
-  const removeFile = (docName: string) => {
-    setUploadedFiles(prev => ({
-      ...prev,
-      [docName]: null
-    }));
+    // File upload removed - only form fields needed
   };
 
   const renderStep = () => {
@@ -516,117 +447,40 @@ const GrantApplication: React.FC<GrantApplicationProps> = ({ onNavigate }) => {
 
       case 6:
         return (
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
-            <h2 className="text-2xl md:text-3xl font-black text-slate-900 dark:text-white">Upload Documents</h2>
-            <p className="text-slate-600 dark:text-slate-400">Submit your required documents</p>
-
-            {errors.documents && (
-              <div className="bg-red-50 dark:bg-red-900/20 border-2 border-red-200 dark:border-red-700 rounded-2xl p-4">
-                <p className="text-red-700 dark:text-red-300 font-black text-sm">❌ {errors.documents}</p>
-              </div>
-            )}
-
-            <div className="space-y-4">
-              {requiredDocuments.map((doc) => (
-                <div key={doc}>
-                  {uploadedFiles[doc] ? (
-                    <div className="border-2 border-emerald-300 dark:border-emerald-700 bg-emerald-50 dark:bg-emerald-900/20 rounded-xl p-4 flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <CheckCircle2 size={24} className="text-emerald-600 dark:text-emerald-400" />
-                        <div>
-                          <p className="font-semibold text-slate-900 dark:text-white text-sm">{doc}</p>
-                          <p className="text-xs text-slate-600 dark:text-slate-400">{uploadedFiles[doc].name}</p>
-                        </div>
-                      </div>
-                      <button
-                        onClick={() => removeFile(doc)}
-                        className="p-2 hover:bg-red-200 dark:hover:bg-red-900/30 rounded-lg transition-all"
-                      >
-                        <X size={18} className="text-red-600 dark:text-red-400" />
-                      </button>
-                    </div>
-                  ) : (
-                    <button
-                      onClick={() => handleFileUpload(doc)}
-                      className="w-full border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-xl p-4 text-center hover:border-indigo-600 dark:hover:border-indigo-400 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-all cursor-pointer group"
-                    >
-                      <Upload size={24} className="text-slate-400 group-hover:text-indigo-600 mx-auto mb-2 transition-colors" />
-                      <p className="font-semibold text-slate-900 dark:text-white text-sm">{doc}</p>
-                      <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Click to upload</p>
-                    </button>
-                  )}
-                  {errors[doc] && <p className="text-red-600 text-xs font-semibold mt-2 px-2">{errors[doc]}</p>}
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-8">
+            {/* Review Section */}
+            <div>
+              <h2 className="text-2xl md:text-3xl font-black text-slate-900 dark:text-white mb-6">Review Your Application</h2>
+              <div className="space-y-4 bg-slate-50 dark:bg-slate-900 rounded-2xl p-6 border border-slate-200 dark:border-slate-800">
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div>
+                    <p className="text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-2">Full Name</p>
+                    <p className="text-slate-900 dark:text-white text-lg font-bold">{fullName}</p>
+                  </div>
+                  <div>
+                    <p className="text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-2">Email</p>
+                    <p className="text-slate-900 dark:text-white text-lg font-bold">{email}</p>
+                  </div>
+                  <div>
+                    <p className="text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-2">Phone</p>
+                    <p className="text-slate-900 dark:text-white text-lg font-bold">{phone}</p>
+                  </div>
+                  <div>
+                    <p className="text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-2">Grant Category</p>
+                    <p className="text-slate-900 dark:text-white text-lg font-bold">{grantCategory}</p>
+                  </div>
+                  <div className="md:col-span-2">
+                    <p className="text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-2">Amount Requested</p>
+                    <p className="text-slate-900 dark:text-white text-lg font-bold">${applicationData.amount}</p>
+                  </div>
+                  <div className="md:col-span-2">
+                    <p className="text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-2">Purpose</p>
+                    <p className="text-slate-900 dark:text-white">{applicationData.purpose}</p>
+                  </div>
                 </div>
-              ))}
-            </div>
-
-            <div className="bg-blue-50 dark:bg-blue-900/20 border-2 border-blue-200 dark:border-blue-700 rounded-xl p-4">
-              <p className="text-sm text-blue-900 dark:text-blue-200">
-                <strong>File Requirements:</strong> PDF, DOC, XLS formats. Max 10MB per file.
-              </p>
-            </div>
-
-            <div className="flex gap-3">
-              <button
-                onClick={() => setStep(5)}
-                className="flex-1 border-2 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white py-3 rounded-xl font-black hover:bg-slate-100 dark:hover:bg-slate-800 transition-all"
-              >
-                Back
-              </button>
-              <button
-                onClick={() => {
-                  const newErrors: Record<string, string> = {};
-                  const missingFiles: string[] = [];
-                  
-                  requiredDocuments.forEach(doc => {
-                    if (!uploadedFiles[doc]) {
-                      missingFiles.push(doc);
-                      newErrors[doc] = 'This document is required';
-                    }
-                  });
-                  
-                  if (missingFiles.length > 0) {
-                    newErrors.documents = `Please upload all required documents: ${missingFiles.join(', ')}`;
-                    setErrors(newErrors);
-                  } else {
-                    setErrors({});
-                    setStep(7);
-                  }
-                }}
-                className="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-xl font-black transition-all"
-              >
-                Continue
-              </button>
-            </div>
-          </motion.div>
-        );
-
-      case 7:
-        return (
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
-            <h2 className="text-2xl md:text-3xl font-black text-slate-900 dark:text-white">Review & Submit</h2>
-            <p className="text-slate-600 dark:text-slate-400">Review your application before final submission</p>
-
-            <div className="bg-slate-100 dark:bg-slate-800 rounded-xl p-6 space-y-4">
-              <div className="border-b border-slate-300 dark:border-slate-700 pb-4">
-                <p className="text-xs uppercase font-black text-slate-500 dark:text-slate-400 mb-1">Personal Information</p>
-                <p className="text-slate-900 dark:text-white font-semibold">{fullName}</p>
-                <p className="text-slate-600 dark:text-slate-400 text-sm">{email}</p>
               </div>
 
-              <div className="border-b border-slate-300 dark:border-slate-700 pb-4">
-                <p className="text-xs uppercase font-black text-slate-500 dark:text-slate-400 mb-1">Grant Category</p>
-                <p className="text-slate-900 dark:text-white font-semibold">{grantCategory}</p>
-              </div>
-
-              <div>
-                <p className="text-xs uppercase font-black text-slate-500 dark:text-slate-400 mb-1">Amount Requested</p>
-                <p className="text-slate-900 dark:text-white font-semibold">{applicationData.amount}</p>
-              </div>
-            </div>
-
-            <div className="bg-emerald-50 dark:bg-emerald-900/20 border-2 border-emerald-200 dark:border-emerald-700 rounded-xl p-4">
-              <div className="flex items-start gap-3">
+              <div className="bg-emerald-50 dark:bg-emerald-900/20 border-2 border-emerald-200 dark:border-emerald-800 rounded-2xl p-4 mt-4 flex gap-3">
                 <CheckCircle2 size={20} className="text-emerald-600 dark:text-emerald-400 flex-shrink-0 mt-0.5" />
                 <div>
                   <h4 className="font-black text-emerald-900 dark:text-emerald-200 mb-1">Ready to Submit</h4>
@@ -639,7 +493,7 @@ const GrantApplication: React.FC<GrantApplicationProps> = ({ onNavigate }) => {
 
             <div className="flex gap-3">
               <button
-                onClick={() => setStep(6)}
+                onClick={() => setStep(5)}
                 disabled={isLoading}
                 className="flex-1 border-2 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white py-3 rounded-xl font-black hover:bg-slate-100 dark:hover:bg-slate-800 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               >
@@ -673,17 +527,9 @@ const GrantApplication: React.FC<GrantApplicationProps> = ({ onNavigate }) => {
                     submitFormData.append('timestamp', new Date().toISOString());
                     submitFormData.append('_gotcha', '');
                     
-                    // Add uploaded files
-                    Object.entries(uploadedFiles).forEach(([docName, uploadedFile]) => {
-                      if (uploadedFile) {
-                        submitFormData.append(docName, uploadedFile.file, uploadedFile.file.name);
-                      }
-                    });
-                    
                     console.log('📤 Submitting grant application form...');
-                    console.log('📋 Form data fields:', {
-                      fullName, email, phone, country, grantCategory,
-                      filesCount: Object.keys(uploadedFiles).length
+                    console.log('📋 Form data:', {
+                      fullName, email, phone, country, grantCategory
                     });
 
                     // Submit with mode: 'no-cors' to avoid CORS issues
@@ -710,13 +556,13 @@ const GrantApplication: React.FC<GrantApplicationProps> = ({ onNavigate }) => {
                 disabled={isLoading}
                 className="flex-1 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 disabled:from-emerald-400 disabled:to-teal-400 text-white py-3 md:py-4 rounded-lg md:rounded-xl font-black transition-all duration-200 flex items-center justify-center gap-2 shadow-lg hover:shadow-emerald-500/50 active:scale-95 disabled:cursor-not-allowed text-sm md:text-base"
               >
-                <CheckCircle2 size={18} className="md:size-20" />
+                <CheckCircle2 size={18} className="md:size-6" />
                 <span>{isLoading ? 'Sending to Email...' : 'Submit Application'}</span>
               </button>
             </div>
           </motion.div>
         );
-
+      
       default:
         return null;
     }
