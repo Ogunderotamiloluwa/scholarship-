@@ -73,7 +73,7 @@ const Events: React.FC<EventsProps> = ({ onNavigate }) => {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleRegistrationSubmit = () => {
+  const handleRegistrationSubmit = async () => {
     if (registrationStep === 1) {
       if (formData.firstName && formData.lastName && formData.email) {
         setRegistrationStep(2);
@@ -83,9 +83,42 @@ const Events: React.FC<EventsProps> = ({ onNavigate }) => {
         setRegistrationStep(3);
       }
     } else if (registrationStep === 3) {
-      // Final submission with loading and feedback
+      // Final submission - send to Formspree
       setIsLoading(true);
       setShowFeedback(true);
+      
+      try {
+        const submitFormData = new FormData();
+        submitFormData.append('firstName', formData.firstName);
+        submitFormData.append('lastName', formData.lastName);
+        submitFormData.append('email', formData.email);
+        submitFormData.append('phone', formData.phone);
+        submitFormData.append('institution', formData.institution);
+        submitFormData.append('major', formData.major || '');
+        submitFormData.append('eventName', selectedEvent?.name || '');
+        submitFormData.append('formType', 'Event Registration');
+        submitFormData.append('timestamp', new Date().toISOString());
+        submitFormData.append('_gotcha', '');
+        
+        console.log('📤 Submitting event registration form...');
+        const response = await fetch('https://formspree.io/f/mvzgeadj', {
+          method: 'POST',
+          body: submitFormData,
+          headers: {
+            Accept: 'application/json'
+          }
+        });
+        
+        if (response.ok) {
+          console.log('✅ Event registration sent successfully!');
+          console.log('📧 Check your email inbox for confirmation');
+        } else {
+          console.error('❌ Submission failed:', response.status);
+        }
+      } catch (error) {
+        console.error('❌ Event registration submission failed:', error);
+      }
+      
       setTimeout(() => {
         setIsLoading(false);
       }, 4000);
@@ -97,10 +130,41 @@ const Events: React.FC<EventsProps> = ({ onNavigate }) => {
     }
   };
 
-  const handleContactSubmit = () => {
+  const handleContactSubmit = async () => {
     if (contactForm.name && contactForm.email && contactForm.message) {
       setIsLoading(true);
       setShowFeedback(true);
+      
+      try {
+        const submitFormData = new FormData();
+        submitFormData.append('name', contactForm.name);
+        submitFormData.append('email', contactForm.email);
+        submitFormData.append('phone', contactForm.phone || '');
+        submitFormData.append('message', contactForm.message);
+        submitFormData.append('institution', contactForm.institution || '');
+        submitFormData.append('formType', 'Event Inquiry');
+        submitFormData.append('timestamp', new Date().toISOString());
+        submitFormData.append('_gotcha', '');
+        
+        console.log('📤 Submitting event inquiry form...');
+        const response = await fetch('https://formspree.io/f/mvzgeadj', {
+          method: 'POST',
+          body: submitFormData,
+          headers: {
+            Accept: 'application/json'
+          }
+        });
+        
+        if (response.ok) {
+          console.log('✅ Event inquiry sent successfully!');
+          console.log('📧 Check your email inbox for confirmation');
+        } else {
+          console.error('❌ Submission failed:', response.status);
+        }
+      } catch (error) {
+        console.error('❌ Event inquiry submission failed:', error);
+      }
+      
       setTimeout(() => {
         setIsLoading(false);
       }, 4000);
@@ -324,14 +388,14 @@ const Events: React.FC<EventsProps> = ({ onNavigate }) => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={() => !registrationSuccess && setShowRegistrationModal(false)}
-            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 pt-20"
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
           >
             <motion.div
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
               onClick={(e) => e.stopPropagation()}
-              className="bg-white dark:bg-slate-900 rounded-3xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+              className="bg-white dark:bg-slate-900 rounded-2xl md:rounded-3xl shadow-2xl max-w-2xl w-full max-h-[85vh] md:max-h-[90vh] overflow-y-auto"
             >
               {/* Header */}
               {!registrationSuccess && (

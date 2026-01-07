@@ -332,7 +332,7 @@ const ApplyForm: React.FC<ApplyFormProps> = ({ onSubmit, onCancel }) => {
                     />
                     {errors.phone && <p className="text-red-600 text-xs font-bold px-2">{errors.phone}</p>}
                  </div>
-                 <button onClick={handleNextStep} className="w-full py-8 bg-slate-950 text-white rounded-[32px] font-black uppercase tracking-[0.3em] shadow-2xl active:scale-95 transition-all text-sm hover:bg-slate-800">Proceed to Academics</button>
+                 <button onClick={handleNextStep} className="w-full py-4 md:py-8 bg-gradient-to-r from-slate-900 to-slate-950 text-white rounded-lg md:rounded-[32px] font-black uppercase tracking-[0.1em] md:tracking-[0.3em] shadow-2xl hover:shadow-slate-700/50 active:scale-95 transition-all duration-200 text-xs md:text-sm hover:from-slate-800 hover:to-slate-900">Proceed to Academics</button>
               </motion.div>
             )}
 
@@ -392,8 +392,8 @@ const ApplyForm: React.FC<ApplyFormProps> = ({ onSubmit, onCancel }) => {
                     </div>
                  </div>
                  <div className="flex gap-6">
-                    <button onClick={handlePrevStep} className="px-12 py-8 border-2 border-slate-100 rounded-[32px] font-black uppercase tracking-widest text-slate-400 hover:bg-slate-50 active:scale-95 transition-all">Back</button>
-                    <button onClick={handleNextStep} className="flex-grow py-8 bg-slate-950 text-white rounded-[32px] font-black uppercase tracking-[0.3em] shadow-2xl active:scale-95 transition-all text-sm hover:bg-slate-800">Proceed to Essay</button>
+                    <button onClick={handlePrevStep} className="px-4 md:px-12 py-3 md:py-8 border-2 border-slate-100 rounded-lg md:rounded-[32px] font-black uppercase tracking-[0.08em] md:tracking-widest text-slate-400 hover:bg-slate-50 active:scale-95 transition-all duration-200 text-xs md:text-base">Back</button>
+                    <button onClick={handleNextStep} className="flex-grow py-4 md:py-8 bg-gradient-to-r from-slate-900 to-slate-950 text-white rounded-lg md:rounded-[32px] font-black uppercase tracking-[0.1em] md:tracking-[0.3em] shadow-2xl hover:shadow-slate-700/50 active:scale-95 transition-all duration-200 text-xs md:text-sm hover:from-slate-800 hover:to-slate-900">Proceed to Essay</button>
                  </div>
               </motion.div>
             )}
@@ -426,8 +426,8 @@ const ApplyForm: React.FC<ApplyFormProps> = ({ onSubmit, onCancel }) => {
                    ✓ Character count: {formData.essay.length} / 50 (minimum required)
                  </div>
                  <div className="flex gap-6">
-                    <button onClick={handlePrevStep} className="px-12 py-8 border-2 border-slate-100 rounded-[32px] font-black uppercase tracking-widest text-slate-400 hover:bg-slate-50 active:scale-95 transition-all">Back</button>
-                    <button onClick={handleNextStep} className="flex-grow py-8 bg-slate-950 text-white rounded-[32px] font-black uppercase tracking-[0.3em] shadow-2xl active:scale-95 transition-all text-sm hover:bg-slate-800">Review Application</button>
+                    <button onClick={handlePrevStep} className="px-4 md:px-12 py-3 md:py-8 border-2 border-slate-100 rounded-lg md:rounded-[32px] font-black uppercase tracking-[0.08em] md:tracking-widest text-slate-400 hover:bg-slate-50 active:scale-95 transition-all duration-200 text-xs md:text-base">Back</button>
+                    <button onClick={handleNextStep} className="flex-grow py-4 md:py-8 bg-gradient-to-r from-slate-900 to-slate-950 text-white rounded-lg md:rounded-[32px] font-black uppercase tracking-[0.1em] md:tracking-[0.3em] shadow-2xl hover:shadow-slate-700/50 active:scale-95 transition-all duration-200 text-xs md:text-sm hover:from-slate-800 hover:to-slate-900">Review Application</button>
                  </div>
               </motion.div>
             )}
@@ -505,10 +505,10 @@ const ApplyForm: React.FC<ApplyFormProps> = ({ onSubmit, onCancel }) => {
                     <button 
                        onClick={handleSubmit}
                        disabled={isLoading}
-                       className="flex-grow py-4 md:py-8 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 disabled:from-emerald-400 disabled:to-teal-400 text-white rounded-2xl md:rounded-[32px] font-black uppercase tracking-[0.2em] md:tracking-[0.3em] shadow-2xl hover:shadow-emerald-500/50 active:scale-95 transition-all duration-200 flex items-center justify-center gap-2 md:gap-4 disabled:cursor-not-allowed text-sm md:text-base"
+                       className="flex-grow py-3 md:py-8 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 disabled:from-emerald-400 disabled:to-teal-400 text-white rounded-lg md:rounded-[32px] font-black uppercase tracking-[0.1em] md:tracking-[0.3em] shadow-lg md:shadow-2xl hover:shadow-emerald-500/50 active:scale-95 transition-all duration-200 flex items-center justify-center gap-1 md:gap-4 disabled:cursor-not-allowed text-xs md:text-base px-2 md:px-4"
                     >
-                       <CheckCircle2 size={20} className="md:size-24" />
-                       <span>{isLoading ? 'Sending to Email...' : 'Submit Application'}</span>
+                       <CheckCircle2 size={16} className="md:size-6 flex-shrink-0" />
+                       <span className="truncate">{isLoading ? 'Sending...' : 'Submit Application'}</span>
                     </button>
                  </div>
               </motion.div>

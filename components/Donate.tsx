@@ -398,7 +398,9 @@ const Donate: React.FC<DonateProps> = ({ onNavigate }) => {
                     ))}
                   </ul>
 
-                  <button className="mt-6 w-full py-3 md:py-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold transition-all transform hover:scale-105 active:scale-95">
+                  <button 
+                    onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+                    className="mt-6 w-full py-3 md:py-4 bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 text-white rounded-lg md:rounded-xl font-bold transition-all duration-200 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-indigo-500/50 text-sm md:text-base">
                     Learn More
                   </button>
                 </motion.div>
@@ -647,7 +649,9 @@ const Donate: React.FC<DonateProps> = ({ onNavigate }) => {
           <p className="text-white/80 text-lg md:text-xl mb-10 max-w-2xl mx-auto">
             Join thousands of donors transforming the lives of America's brightest minds.
           </p>
-          <button className="px-8 md:px-12 py-4 md:py-5 bg-white text-indigo-600 font-black rounded-2xl md:rounded-3xl hover:bg-slate-100 transition-all shadow-2xl text-lg">
+          <button 
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            className="px-6 md:px-12 py-3 md:py-5 bg-white text-indigo-600 font-black rounded-lg md:rounded-3xl hover:bg-slate-100 transition-all duration-200 shadow-2xl text-sm md:text-lg active:scale-95 transform hover:scale-105">
             Donate Now
           </button>
         </div>

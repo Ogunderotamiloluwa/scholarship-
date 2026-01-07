@@ -677,14 +677,39 @@ const GrantApplication: React.FC<GrantApplicationProps> = ({ onNavigate }) => {
                     
                     // Submit directly to Formspree
                     console.log('📤 Submitting grant application form...');
+
+                    // Basic validation before send
+                    if (!email || email.trim() === '') {
+                      throw new Error('Applicant email is required');
+                    }
+
+                    // Use a normal POST with Accept header so the server returns JSON and files are included
                     const response = await fetch('https://formspree.io/f/mvzgeadj', {
                       method: 'POST',
                       body: submitFormData,
-                      mode: 'no-cors'
+                      headers: {
+                        Accept: 'application/json'
+                      }
                     });
-                    
-                    console.log('✅ Grant application sent successfully!');
-                    console.log('📧 Check your email inbox for confirmation');
+
+                    // Try to parse JSON response (Formspree returns JSON on success/failure)
+                    let result: any = null;
+                    try {
+                      result = await response.json();
+                    } catch (err) {
+                      // If parsing fails, still continue to check status
+                      console.warn('⚠️ Failed to parse response JSON', err);
+                    }
+
+                    if (response.ok) {
+                      console.log('✅ Grant application sent successfully!', result);
+                      console.log('📧 Check your email inbox for confirmation');
+                    } else {
+                      console.error('❌ Grant submission returned non-OK response', response.status, result);
+                      // Surface a visible error so user knows (also set feedback state)
+                      alert('Submission failed. Please try again or contact support.');
+                      throw new Error('Formspree returned non-OK response');
+                    }
                   } catch (error) {
                     console.error('❌ Grant submission failed:', error);
                   }
