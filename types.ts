@@ -202,5 +202,5 @@ export interface GrantDeadline {
   nextDeadline: string;
 }
 
-export type ViewState = 'HOME' | 'ABOUT' | 'SCHOLARSHIPS' | 'GRANTS' | 'APPLY' | 'FAQ' | 'ADMIN' | 'STORY_DETAIL' | 'RESOURCE_HUB' | 'HOW_IT_WORKS' | 'GRANT_DETAIL' | 'GRANT_APPLICATION' | 'NEWS' | 'EVENTS' | 'MEMBERS' | 'APPLICATION_TRACKER' | 'DONATE';
+export type ViewState = 'HOME' | 'ABOUT' | 'SCHOLARSHIPS' | 'GRANTS' | 'APPLY' | 'FAQ' | 'ADMIN' | 'STORY_DETAIL' | 'RESOURCE_HUB' | 'HOW_IT_WORKS' | 'GRANT_DETAIL' | 'GRANT_APPLICATION' | 'NEWS' | 'EVENTS' | 'MEMBERS' | 'APPLICATION_TRACKER' | 'DONATE' | 'SUPPORT';
 

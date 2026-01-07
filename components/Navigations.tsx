@@ -22,7 +22,7 @@ const Navigation: React.FC<NavigationProps> = ({ currentView, setView, isMenuOpe
     { id: 'MEMBERS', label: 'Institutions', icon: <Landmark size={20} /> },
     { id: 'RESOURCE_HUB', label: 'Resources', icon: <BookOpen size={20} /> },
     { id: 'ABOUT', label: 'About', icon: <BookOpen size={20} /> },
-    { id: 'FAQ', label: 'Support', icon: <HelpCircle size={20} /> },
+    { id: 'SUPPORT', label: 'Support', icon: <HelpCircle size={20} /> },
   ];
 
   // Enhanced logo component

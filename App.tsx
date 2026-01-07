@@ -23,6 +23,7 @@ import Events from './components/Events';
 import Members from './components/Members';
 import ApplicationTracker from './components/ApplicationTracker';
 import Donate from './components/Donate';
+import Support from './components/Support';
 
 // --- SUB-COMPONENTS ---
 
@@ -31,7 +32,7 @@ const EligibilityTree: React.FC = () => {
   const [results, setResults] = useState<{ gpa: boolean; citizen: boolean; income: boolean } | null>(null);
 
   const questions = [
-    { id: 'gpa', text: 'Is your cumulative Weighted GPA above 3.50?', icon: <GraduationCap size={24}/> },
+    { id: 'gpa', text: 'Is your cumulative Weighted GPA above 2.50?', icon: <GraduationCap size={24}/> },
     { id: 'citizen', text: 'Are you a current resident or citizen of the United States?', icon: <ShieldCheck size={24}/> },
     { id: 'income', text: 'Does your annual household income fall below $95,000?', icon: <CheckCircle2 size={24}/> }
   ];
@@ -576,9 +577,9 @@ const App: React.FC = () => {
         return (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="pt-32 pb-40 px-6 max-w-7xl mx-auto">
              <div className="mb-20 space-y-8">
-                <div className="inline-flex items-center gap-2 px-3 py-1 bg-amber-500/10 rounded-full text-amber-600 text-[10px] font-black uppercase tracking-[0.3em] border border-amber-500/10">Catalog 2026-27</div>
-                <h2 className="heading-serif text-6xl md:text-[10rem] font-black tracking-tighter text-slate-900 leading-none">Grants.</h2>
-                <p className="text-slate-500 text-xl md:text-3xl font-light italic leading-relaxed max-w-3xl">Strategic awards for America's future academic and industry leadership.</p>
+                <div className="inline-flex items-center gap-2 px-3 py-1 bg-emerald-500/10 rounded-full text-emerald-600 text-[10px] font-black uppercase tracking-[0.3em] border border-emerald-500/10">2026-27 Opportunities</div>
+                <h2 className="heading-serif text-6xl md:text-[10rem] font-black tracking-tighter text-slate-900 leading-none">Scholarships.</h2>
+                <p className="text-slate-500 text-xl md:text-3xl font-light italic leading-relaxed max-w-3xl">Merit-based scholarships supporting exceptional students pursuing excellence in academics, leadership, and community impact.</p>
              </div>
              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
                 {SCHOLARSHIPS.map((s, i) => (
@@ -991,6 +992,9 @@ const App: React.FC = () => {
 
       case 'DONATE':
         return <Donate onNavigate={handleViewChange} />;
+
+      case 'SUPPORT':
+        return <Support onNavigate={handleViewChange} />;
 
       case 'ADMIN':
         return <AdminDashboard applicants={applicants} />;

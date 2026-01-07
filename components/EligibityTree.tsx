@@ -7,7 +7,7 @@ const EligibilityTree: React.FC = () => {
 
   const questions = [
     { key: 'usRes', q: 'Are you a US Citizen or permanent resident?', options: ['Yes', 'No'] },
-    { key: 'gpa', q: 'Is your current GPA 3.5 or higher?', options: ['Yes', 'No'] },
+    { key: 'gpa', q: 'Is your current GPA 2.5 or higher?', options: ['Yes', 'No'] },
     { key: 'need', q: 'Do you demonstrate significant financial need?', options: ['Yes', 'No'] },
   ];
 

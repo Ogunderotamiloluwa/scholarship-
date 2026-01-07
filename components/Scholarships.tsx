@@ -60,10 +60,10 @@ const Scholarships: React.FC<ScholarshipsProps> = ({ onNavigate }) => {
         <div className="relative z-10 max-w-7xl mx-auto w-full">
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="max-w-3xl">
             <h1 className="heading-serif text-5xl md:text-7xl font-black text-white leading-[1.1] tracking-tighter mb-6">
-              Scholarship <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-200 to-emerald-200">Opportunities</span>
+              How to Apply for <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-200 to-emerald-200">Scholarships & Grants</span>
             </h1>
             <p className="text-slate-300 text-lg md:text-xl font-light leading-relaxed mb-8">
-              Discover funding opportunities tailored to your academic goals and background. {SCHOLARSHIPS.length}+ active scholarships available.
+              Support for America's brightest minds. We help deserving students access educational funding regardless of financial background. {SCHOLARSHIPS.length}+ active scholarships available to help you achieve your dreams.
             </p>
           </motion.div>
         </div>

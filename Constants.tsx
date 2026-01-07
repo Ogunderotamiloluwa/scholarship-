@@ -91,7 +91,7 @@ export const SCHOLARSHIPS: ScholarshipType[] = [
     id: 'merit-presidential',
     name: 'Presidential Merit Award',
     amount: '$45,000 / Year',
-    eligibility: '3.90+ GPA, Leadership History',
+    eligibility: '2.5+ GPA, Leadership History',
     deadline: 'May 15, 2026',
     category: 'General',
     description: 'Flagship grant for high-achieving undergraduates entering top-tier US institutions.'
@@ -109,7 +109,7 @@ export const SCHOLARSHIPS: ScholarshipType[] = [
     id: 'nightingale-med',
     name: 'Nightingale Medical Grant',
     amount: '$55,000 / Year',
-    eligibility: 'Pre-Med, 3.85+ GPA',
+    eligibility: 'Pre-Med, 2.5+ GPA',
     deadline: 'June 10, 2026',
     category: 'Medical',
     description: 'Institutional support for future medical doctors specializing in research medicine.'
@@ -235,7 +235,7 @@ export const FAQS: FAQItem[] = [
   },
   {
     question: "What GPA do I need to qualify?",
-    answer: "Minimum GPA requirements vary by program. Most scholarships require 3.5+, while some business and social impact grants consider holistic factors beyond GPA. Check individual program requirements for details."
+    answer: "Minimum GPA requirements vary by program. Most scholarships require 2.5+, while some business and social impact grants consider holistic factors beyond GPA. Check individual program requirements for details."
   },
   {
     question: "How much funding can I receive?",
