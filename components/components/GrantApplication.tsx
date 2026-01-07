@@ -652,11 +652,6 @@ const GrantApplication: React.FC<GrantApplicationProps> = ({ onNavigate }) => {
                   setShowFeedback(true);
                   
                   try {
-                    // Validate email first
-                    if (!email || email.trim() === '') {
-                      throw new Error('Applicant email is required');
-                    }
-
                     // Create FormData object - matching the working test format
                     const submitFormData = new FormData();
                     submitFormData.append('fullName', fullName);
@@ -680,13 +675,8 @@ const GrantApplication: React.FC<GrantApplicationProps> = ({ onNavigate }) => {
                       }
                     });
                     
+                    // Submit directly to Formspree
                     console.log('📤 Submitting grant application form...');
-                    console.log('📋 Form data fields:', {
-                      fullName, email, phone, country, grantCategory,
-                      filesCount: Object.keys(uploadedFiles).length
-                    });
-
-                    // Submit with mode: 'no-cors' to avoid CORS issues
                     const response = await fetch('https://formspree.io/f/mvzgeadj', {
                       method: 'POST',
                       body: submitFormData,
