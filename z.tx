@@ -1,0 +1,5 @@
+godwin bobby@TOBILOBA MINGW64 ~/Desktop/universities (master)
+$ curl -X POST http://localhost:5000/api/test-email -H "Content-Type: application/json"
+{"success":true,"message":"Test email sent successfully","messageId":"<202601071411.67070775192@smtp-relay.mailin.fr>","email":"ogunderotamiloluwa@gmail.com"}
+
+it worked and i received the test email and i now need us to set up the endpoints for cumulating the forms so when i submit for each one specificly the form data is sent to the email needed

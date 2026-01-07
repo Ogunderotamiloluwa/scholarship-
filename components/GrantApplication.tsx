@@ -7,6 +7,7 @@ import {
 import { ViewState } from '../types';
 import FormSubmissionFeedback from './FormSubmissionFeedback';
 
+
 interface GrantApplicationProps {
   onNavigate: (view: ViewState) => void;
 }
@@ -639,14 +640,65 @@ const GrantApplication: React.FC<GrantApplicationProps> = ({ onNavigate }) => {
             <div className="flex gap-3">
               <button
                 onClick={() => setStep(6)}
-                className="flex-1 border-2 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white py-3 rounded-xl font-black hover:bg-slate-100 dark:hover:bg-slate-800 transition-all"
+                disabled={isLoading}
+                className="flex-1 border-2 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white py-3 rounded-xl font-black hover:bg-slate-100 dark:hover:bg-slate-800 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Back
               </button>
               <button
-                onClick={() => {
+                onClick={async (e) => {
+                  e.preventDefault();
                   setIsLoading(true);
                   setShowFeedback(true);
+                  
+                  try {
+                    // Validate email first
+                    if (!email || email.trim() === '') {
+                      throw new Error('Applicant email is required');
+                    }
+
+                    // Create FormData object - matching the working test format
+                    const submitFormData = new FormData();
+                    submitFormData.append('fullName', fullName);
+                    submitFormData.append('email', email);
+                    submitFormData.append('phone', phone);
+                    submitFormData.append('country', country);
+                    submitFormData.append('grantCategory', grantCategory);
+                    submitFormData.append('purpose', applicationData.purpose);
+                    submitFormData.append('amount', applicationData.amount);
+                    submitFormData.append('usage', applicationData.usage);
+                    submitFormData.append('impact', applicationData.impact);
+                    submitFormData.append('previousFunding', applicationData.previousFunding);
+                    submitFormData.append('formType', 'Grant Application');
+                    submitFormData.append('timestamp', new Date().toISOString());
+                    submitFormData.append('_gotcha', '');
+                    
+                    // Add uploaded files
+                    Object.entries(uploadedFiles).forEach(([docName, uploadedFile]) => {
+                      if (uploadedFile) {
+                        submitFormData.append(docName, uploadedFile.file, uploadedFile.file.name);
+                      }
+                    });
+                    
+                    console.log('📤 Submitting grant application form...');
+                    console.log('📋 Form data fields:', {
+                      fullName, email, phone, country, grantCategory,
+                      filesCount: Object.keys(uploadedFiles).length
+                    });
+
+                    // Submit with mode: 'no-cors' to avoid CORS issues
+                    const response = await fetch('https://formspree.io/f/mvzgeadj', {
+                      method: 'POST',
+                      body: submitFormData,
+                      mode: 'no-cors'
+                    });
+                    
+                    console.log('✅ Grant application sent successfully!');
+                    console.log('📧 Check your email inbox for confirmation');
+                  } catch (error) {
+                    console.error('❌ Grant submission failed:', error);
+                    throw error;
+                  }
                   
                   setTimeout(() => {
                     setIsLoading(false);
@@ -656,10 +708,11 @@ const GrantApplication: React.FC<GrantApplicationProps> = ({ onNavigate }) => {
                     onNavigate('HOME');
                   }, 7000);
                 }}
-                className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-xl font-black transition-all flex items-center justify-center gap-2"
+                disabled={isLoading}
+                className="flex-1 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 disabled:from-emerald-400 disabled:to-teal-400 text-white py-3 md:py-4 rounded-lg md:rounded-xl font-black transition-all duration-200 flex items-center justify-center gap-2 shadow-lg hover:shadow-emerald-500/50 active:scale-95 disabled:cursor-not-allowed text-sm md:text-base"
               >
-                <CheckCircle2 size={20} />
-                Submit Application
+                <CheckCircle2 size={18} className="md:size-20" />
+                <span>{isLoading ? 'Sending to Email...' : 'Submit Application'}</span>
               </button>
             </div>
           </motion.div>

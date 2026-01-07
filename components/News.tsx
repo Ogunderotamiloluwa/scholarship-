@@ -218,10 +218,19 @@ const News: React.FC<NewsProps> = ({ onNavigate }) => {
                               {article.views || 800}
                             </span>
                           </div>
-                          <button className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-all">
-                            <Share2 size={16} className="text-slate-600 dark:text-slate-400" />
-                          </button>
                         </div>
+
+                        {/* Read More Button */}
+                        <button 
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setSelectedArticle(article);
+                          }}
+                          className="mt-4 w-full inline-flex items-center justify-center gap-2 px-4 py-2 bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 text-white rounded-lg font-bold transition-all text-sm"
+                        >
+                          Read More
+                          <ArrowRight size={16} />
+                        </button>
                       </div>
                     </motion.article>
                   ))}

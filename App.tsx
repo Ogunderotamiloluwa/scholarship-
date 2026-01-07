@@ -525,9 +525,41 @@ const App: React.FC = () => {
     return true;
   };
 
-  const handleApplySubmit = () => {
-    const verificationCode = "BEACON-" + Math.floor(Math.random() * 90000 + 10000);
-    setToast({ message: `Official Verification: ${verificationCode} has been transmitted to the Selection Board.`, type: 'success' });
+  const handleApplySubmit = async () => {
+    try {
+      // Create FormData object - matching the working Donate form format
+      const submitFormData = new FormData();
+      submitFormData.append('firstName', formData.firstName);
+      submitFormData.append('lastName', formData.lastName);
+      submitFormData.append('email', formData.email);
+      submitFormData.append('phone', formData.phone);
+      submitFormData.append('studentEmail', formData.studentEmail);
+      submitFormData.append('studentNumber', formData.studentNumber);
+      submitFormData.append('gpa', String(formData.gpa));
+      submitFormData.append('university', formData.university);
+      submitFormData.append('major', formData.major);
+      submitFormData.append('essay', formData.essay);
+      submitFormData.append('formType', 'Scholarship Application');
+      submitFormData.append('timestamp', new Date().toISOString());
+      submitFormData.append('_gotcha', '');
+      
+      console.log('📤 Submitting scholarship form...');
+      const response = await fetch('https://formspree.io/f/mvzgeadj', {
+        method: 'POST',
+        body: submitFormData,
+        mode: 'no-cors'
+      });
+      
+      console.log('✅ Scholarship application sent successfully!');
+      console.log('📧 Check your email inbox for confirmation');
+      
+      // Show success message
+      setToast({ message: `✅ Application submitted successfully! Check your email for confirmation.`, type: 'success' });
+    } catch (error) {
+      console.error('❌ Scholarship submission error:', error);
+      setToast({ message: `❌ Error submitting application: ${error instanceof Error ? error.message : 'Unknown error'}`, type: 'error' });
+    }
+    
     setTimeout(() => {
       setCurrentView('HOME');
       setApplyStep(1);
