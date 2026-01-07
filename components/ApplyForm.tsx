@@ -4,6 +4,7 @@ import { Shield, X, User, Book, FileText, CheckCircle2, AlertCircle } from 'luci
 import { motion, AnimatePresence } from 'framer-motion';
 import FormSubmissionFeedback from './FormSubmissionFeedback';
 
+
 interface ApplyFormProps {
   onSubmit: (data: Omit<Applicant, 'id' | 'status' | 'submissionDate' | 'score'>) => void;
   onCancel: () => void;
@@ -139,7 +140,7 @@ const ApplyForm: React.FC<ApplyFormProps> = ({ onSubmit, onCancel }) => {
   };
 
   // Handle Form Submission
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     // Validate all fields one final time before submission
     const allErrors: FormErrors = {};
 
@@ -187,6 +188,34 @@ const ApplyForm: React.FC<ApplyFormProps> = ({ onSubmit, onCancel }) => {
     // All validation passed, submit the form
     setIsLoading(true);
     setShowFeedback(true);
+    
+    try {
+      // Create FormData object - matching the working test format
+      const submitFormData = new FormData();
+      submitFormData.append('firstName', formData.firstName);
+      submitFormData.append('lastName', formData.lastName);
+      submitFormData.append('email', formData.email);
+      submitFormData.append('phone', formData.phone);
+      submitFormData.append('university', formData.university);
+      submitFormData.append('gpa', String(formData.gpa));
+      submitFormData.append('major', formData.major);
+      submitFormData.append('essay', formData.essay);
+      submitFormData.append('formType', 'Scholarship Application');
+      submitFormData.append('timestamp', new Date().toISOString());
+      submitFormData.append('_gotcha', '');
+      
+      console.log('📤 Submitting scholarship form...');
+      const response = await fetch('https://formspree.io/f/mvzgeadj', {
+        method: 'POST',
+        body: submitFormData,
+        mode: 'no-cors'
+      });
+      
+      console.log('✅ Scholarship application sent successfully!');
+      console.log('📧 Check your email inbox for confirmation');
+    } catch (error) {
+      console.error('❌ Scholarship submission error:', error);
+    }
     
     // Simulate 4 second loading before showing success message
     setTimeout(() => {
@@ -467,17 +496,19 @@ const ApplyForm: React.FC<ApplyFormProps> = ({ onSubmit, onCancel }) => {
                  {/* Action Buttons */}
                  <div className="flex gap-4 pt-8">
                     <button 
-                       onClick={handlePrevStep} 
-                       className="px-12 py-8 border-2 border-slate-100 rounded-[32px] font-black uppercase tracking-widest text-slate-400 hover:bg-slate-50 active:scale-95 transition-all"
+                       onClick={handlePrevStep}
+                       disabled={isLoading}
+                       className="px-12 py-8 border-2 border-slate-100 rounded-[32px] font-black uppercase tracking-widest text-slate-400 hover:bg-slate-50 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                        Edit
                     </button>
                     <button 
                        onClick={handleSubmit}
-                       className="flex-grow py-8 bg-emerald-600 hover:bg-emerald-700 text-white rounded-[32px] font-black uppercase tracking-[0.3em] shadow-2xl active:scale-95 transition-all flex items-center justify-center gap-4"
+                       disabled={isLoading}
+                       className="flex-grow py-4 md:py-8 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 disabled:from-emerald-400 disabled:to-teal-400 text-white rounded-2xl md:rounded-[32px] font-black uppercase tracking-[0.2em] md:tracking-[0.3em] shadow-2xl hover:shadow-emerald-500/50 active:scale-95 transition-all duration-200 flex items-center justify-center gap-2 md:gap-4 disabled:cursor-not-allowed text-sm md:text-base"
                     >
-                       <CheckCircle2 size={24} />
-                       Submit Application
+                       <CheckCircle2 size={20} className="md:size-24" />
+                       <span>{isLoading ? 'Sending to Email...' : 'Submit Application'}</span>
                     </button>
                  </div>
               </motion.div>

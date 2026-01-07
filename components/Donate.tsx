@@ -5,6 +5,7 @@ import { Heart, DollarSign, Gift, TrendingUp, Zap, Award, Check, ArrowRight, Bri
 import { CORPORATE_PARTNERS } from '../Constants';
 import FormSubmissionFeedback from './FormSubmissionFeedback';
 
+
 interface DonateProps {
   onNavigate?: (view: ViewState) => void;
 }
@@ -16,10 +17,11 @@ const Donate: React.FC<DonateProps> = ({ onNavigate }) => {
   const [showCorporateForm, setShowCorporateForm] = useState(false);
   const [donorEmail, setDonorEmail] = useState<string>('');
   const [donorName, setDonorName] = useState<string>('');
+  const [donorPhone, setDonorPhone] = useState<string>('');
   const [isLoading, setIsLoading] = useState(false);
   const [showFeedback, setShowFeedback] = useState(false);
 
-  const handleDonateNow = (amount: number) => {
+  const handleDonateNow = async (amount: number) => {
     if (!donorName.trim()) {
       alert('Please enter your name');
       return;
@@ -28,9 +30,38 @@ const Donate: React.FC<DonateProps> = ({ onNavigate }) => {
       alert('Please enter your email');
       return;
     }
+    if (!donorPhone.trim()) {
+      alert('Please enter your phone number');
+      return;
+    }
     
     setIsLoading(true);
     setShowFeedback(true);
+    
+    try {
+      // Create FormData object - matching the working test format
+      const submitFormData = new FormData();
+      submitFormData.append('donorName', donorName);
+      submitFormData.append('email', donorEmail);
+      submitFormData.append('phone', donorPhone);
+      submitFormData.append('amount', String(amount));
+      submitFormData.append('donationType', donationType);
+      submitFormData.append('formType', 'Donation');
+      submitFormData.append('timestamp', new Date().toISOString());
+      submitFormData.append('_gotcha', '');
+      
+      console.log('📤 Submitting donation form...');
+      const response = await fetch('https://formspree.io/f/mvzgeadj', {
+        method: 'POST',
+        body: submitFormData,
+        mode: 'no-cors'
+      });
+      
+      console.log('✅ Donation sent successfully!');
+      console.log('📧 Check your email inbox for confirmation');
+    } catch (error) {
+      console.error('❌ Donation submission failed:', error);
+    }
     
     setTimeout(() => {
       setIsLoading(false);
@@ -52,21 +83,24 @@ const Donate: React.FC<DonateProps> = ({ onNavigate }) => {
       title: 'One-Time Donation',
       description: 'Make a single contribution to support scholarships this year.',
       selected: donationType === 'one-time',
-      onClick: () => { setDonationType('one-time'); setShowCorporateForm(false); }
+      onClick: () => { setDonationType('one-time'); setShowCorporateForm(false); },
+      number: 1
     },
     {
       icon: TrendingUp,
       title: 'Monthly Giving',
       description: 'Become a sustaining partner with recurring monthly donations.',
       selected: donationType === 'monthly',
-      onClick: () => { setDonationType('monthly'); setShowCorporateForm(false); }
+      onClick: () => { setDonationType('monthly'); setShowCorporateForm(false); },
+      number: 2
     },
     {
       icon: Briefcase,
       title: 'Corporate Giving',
       description: 'Company donations, matching gifts, and strategic partnerships.',
       selected: donationType === 'corporate',
-      onClick: () => { setDonationType('corporate'); setShowCorporateForm(true); }
+      onClick: () => { setDonationType('corporate'); setShowCorporateForm(true); },
+      number: 3
     }
   ];
 
@@ -174,12 +208,21 @@ const Donate: React.FC<DonateProps> = ({ onNavigate }) => {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: index * 0.1 }}
-                  className={`p-8 md:p-10 rounded-3xl border-2 transition-all transform hover:scale-105 active:scale-95 ${
+                  className={`p-8 md:p-10 rounded-3xl border-2 transition-all transform hover:scale-105 active:scale-95 relative ${
                     method.selected
                       ? 'bg-indigo-600 text-white border-indigo-600 shadow-2xl'
                       : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white hover:border-indigo-500 dark:hover:border-indigo-500'
                   }`}
                 >
+                  {/* Number Badge */}
+                  <div className={`absolute top-4 right-4 w-8 h-8 rounded-full flex items-center justify-center font-black text-sm ${
+                    method.selected 
+                      ? 'bg-white text-indigo-600' 
+                      : 'bg-indigo-600 text-white'
+                  }`}>
+                    {method.number}
+                  </div>
+                  
                   <Icon size={36} className={`mb-4 ${method.selected ? 'text-white' : 'text-indigo-600'}`} />
                   <h3 className="text-2xl font-black mb-3 text-left">{method.title}</h3>
                   <p className={`text-left text-sm md:text-base ${method.selected ? 'text-indigo-100' : 'text-slate-600 dark:text-slate-400'}`}>
@@ -268,18 +311,28 @@ const Donate: React.FC<DonateProps> = ({ onNavigate }) => {
                   className="w-full px-4 py-3 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:text-white text-sm"
                 />
               </div>
+              <div>
+                <label className="block text-sm font-black text-slate-900 dark:text-white mb-2">Phone Number *</label>
+                <input
+                  type="tel"
+                  value={donorPhone}
+                  onChange={(e) => setDonorPhone(e.target.value)}
+                  placeholder="+1 (555) 000-0000"
+                  className="w-full px-4 py-3 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:text-white text-sm"
+                />
+              </div>
             </div>
           </div>
 
           {/* Donate Button */}
           <button 
             onClick={() => handleDonateNow(customAmount ? parseFloat(customAmount) : (selectedAmount || 0))}
-            disabled={!selectedAmount && !customAmount}
-            className="w-full py-6 md:py-8 bg-gradient-to-r from-indigo-600 to-emerald-600 hover:from-indigo-700 hover:to-emerald-700 disabled:from-slate-400 disabled:to-slate-400 text-white rounded-2xl md:rounded-3xl font-black text-lg md:text-2xl shadow-2xl flex items-center justify-center gap-3 transition-all transform hover:scale-105 active:scale-95 disabled:cursor-not-allowed disabled:hover:scale-100"
+            disabled={(!selectedAmount && !customAmount) || isLoading}
+            className="w-full py-4 md:py-8 bg-gradient-to-r from-indigo-600 to-emerald-600 hover:from-indigo-700 hover:to-emerald-700 disabled:from-slate-400 disabled:to-slate-400 text-white rounded-2xl md:rounded-3xl font-black text-base md:text-2xl shadow-2xl hover:shadow-indigo-500/50 flex items-center justify-center gap-2 md:gap-3 transition-all duration-200 transform hover:scale-105 active:scale-95 disabled:cursor-not-allowed disabled:hover:scale-100"
           >
-            <Heart size={28} />
-            Donate ${customAmount || selectedAmount || '0'}{donationType === 'monthly' && '/month'}
-            <ArrowRight size={24} />
+            <Heart size={24} className="md:size-28" />
+            <span>{isLoading ? 'Sending to Email...' : `Donate $${customAmount || selectedAmount || '0'}${donationType === 'monthly' ? '/month' : ''}`}</span>
+            {!isLoading && <ArrowRight size={20} className="md:size-24" />}
           </button>
         </div>
       </section>
