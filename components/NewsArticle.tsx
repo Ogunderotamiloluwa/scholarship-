@@ -158,7 +158,7 @@ const NewsArticle: React.FC<NewsArticleProps> = ({ article, onNavigate, onBack }
           <img
             src={article.image}
             alt={article.title}
-            className="w-full h-96 md:h-[500px] object-cover"
+            className="w-full h-60 md:h-80 lg:h-[500px] object-cover"
           />
         </motion.div>
 

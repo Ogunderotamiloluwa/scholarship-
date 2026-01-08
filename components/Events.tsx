@@ -187,7 +187,7 @@ const Events: React.FC<EventsProps> = ({ onNavigate }) => {
         message="Thank you for registering for this event. We'll send you event details, reminders, and exclusive content to your email soon."
       />
       {/* HERO SECTION */}
-      <section className="relative min-h-[500px] flex items-center bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950 overflow-hidden px-4 pt-32 pb-16">
+      <section className="relative min-h-[500px] flex items-center bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950 overflow-hidden px-4 pt-20 md:pt-32 pb-12 md:pb-16">
         {/* Background Image */}
         <div className="absolute inset-0 opacity-20">
           <img 
@@ -395,7 +395,7 @@ const Events: React.FC<EventsProps> = ({ onNavigate }) => {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
               onClick={(e) => e.stopPropagation()}
-              className="bg-white dark:bg-slate-900 rounded-2xl md:rounded-3xl shadow-2xl max-w-2xl w-full max-h-[95vh] md:max-h-[90vh] overflow-y-auto overflow-x-hidden flex flex-col"
+              className="bg-white dark:bg-slate-900 rounded-2xl md:rounded-3xl shadow-2xl max-w-2xl w-full max-h-[90vh] md:max-h-[85vh] md:max-h-[85vh] overflow-y-auto overflow-x-hidden flex flex-col"
             >
               {/* Header */}
               {!registrationSuccess && (
@@ -597,7 +597,7 @@ const Events: React.FC<EventsProps> = ({ onNavigate }) => {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
               onClick={(e) => e.stopPropagation()}
-              className="bg-white dark:bg-slate-900 rounded-3xl shadow-2xl max-w-2xl w-full max-h-[95vh] overflow-y-auto flex flex-col"
+              className="bg-white dark:bg-slate-900 rounded-3xl shadow-2xl max-w-2xl w-full max-h-[90vh] md:max-h-[85vh] overflow-y-auto flex flex-col"
             >
               {/* Header */}
               <div className="flex items-center justify-between p-6 border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">

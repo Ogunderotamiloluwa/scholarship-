@@ -170,7 +170,7 @@ const News: React.FC<NewsProps> = ({ onNavigate }) => {
               )}
 
               {/* Grid of Other Articles */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
                 <AnimatePresence mode="wait">
                   {filteredNews.slice(1).map((article, index) => (
                     <motion.article

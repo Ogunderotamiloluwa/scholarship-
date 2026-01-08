@@ -128,6 +128,45 @@ const Home: React.FC<HomeProps> = ({ onNavigate, onOpenStory }) => {
         </div>
       </section>
 
+      {/* NEW: IMPACT STATISTICS SECTION */}
+      <section className="py-20 md:py-32 px-6 bg-white dark:bg-slate-950 border-b border-slate-200 dark:border-slate-800">
+        <div className="max-w-7xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <h2 className="heading-serif text-4xl md:text-5xl font-black text-slate-900 dark:text-white mb-4">Our Impact</h2>
+            <p className="text-xl text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">Transforming lives through education and opportunity</p>
+          </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 md:gap-8">
+            {[
+              { number: "$366M", label: "In Endowment Capital", icon: DollarSign },
+              { number: "50K+", label: "Scholars Funded", icon: GraduationCap },
+              { number: "98%", label: "Success Rate", icon: TrendingUp },
+              { number: "150+", label: "Partner Universities", icon: Landmark }
+            ].map((stat, idx) => (
+              <motion.div
+                key={idx}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: idx * 0.1 }}
+                className="text-center p-8 rounded-2xl bg-gradient-to-br from-slate-50 to-white dark:from-slate-900/50 dark:to-slate-950 border border-slate-200 dark:border-slate-800 hover:shadow-xl transition-all"
+              >
+                <div className="w-14 h-14 rounded-full bg-gradient-to-br from-indigo-600 to-emerald-600 flex items-center justify-center text-white mx-auto mb-4">
+                  <stat.icon size={28} />
+                </div>
+                <h3 className="text-3xl md:text-4xl font-black text-slate-900 dark:text-white mb-2">{stat.number}</h3>
+                <p className="text-slate-600 dark:text-slate-400 font-semibold">{stat.label}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* NEW: FEATURED OPPORTUNITIES - SCHOLARSHIPS & GRANTS */}
       <section className="py-24 md:py-40 px-6 bg-gradient-to-b from-slate-50 to-white dark:from-slate-900 dark:to-slate-950">
         <div className="max-w-7xl mx-auto">
@@ -297,7 +336,7 @@ const Home: React.FC<HomeProps> = ({ onNavigate, onOpenStory }) => {
             <h2 className="heading-serif text-6xl md:text-7xl font-black text-slate-900 dark:text-white leading-[1.1] tracking-tighter">
               Merit <br/>Redefined.
             </h2>
-            <p className="text-slate-600 dark:text-slate-300 text-xl md:text-2xl font-light leading-relaxed max-w-lg">
+            <p className="text-slate-600 dark:text-slate-300 text-lg md:text-xl lg:text-2xl font-light leading-relaxed max-w-lg">
               For over a decade, we've been the silent engine behind America's most transformative research breakthroughs. Every award undergoes rigorous, independent verification.
             </p>
             <ul className="space-y-4">
@@ -335,7 +374,7 @@ const Home: React.FC<HomeProps> = ({ onNavigate, onOpenStory }) => {
             <h2 className="heading-serif text-6xl md:text-7xl font-black text-slate-900 dark:text-white tracking-tighter leading-[1.1] mb-6">
               Institutional<br/>Excellence.
             </h2>
-            <p className="text-slate-600 dark:text-slate-300 text-xl md:text-2xl font-light italic max-w-2xl">
+            <p className="text-slate-600 dark:text-slate-300 text-lg md:text-xl lg:text-2xl font-light italic max-w-2xl">
               A visual journey through scholarship, determination, and transformative research.
             </p>
           </motion.div>
@@ -370,7 +409,7 @@ const Home: React.FC<HomeProps> = ({ onNavigate, onOpenStory }) => {
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
           <div className="space-y-12">
             <h2 className="heading-serif text-6xl md:text-[8rem] font-black text-slate-950 dark:text-white tracking-tighter leading-[0.85]">Smart <br/>Scan.</h2>
-            <p className="text-slate-500 dark:text-slate-400 text-xl md:text-2xl leading-relaxed font-light">Evaluate your profile against our board's selection logic in real-time. Secured and private for all US institutions.</p>
+            <p className="text-slate-500 dark:text-slate-400 text-lg md:text-xl lg:text-2xl leading-relaxed font-light">Evaluate your profile against our board's selection logic in real-time. Secured and private for all US institutions.</p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                {[
                  { i: ShieldCheck, t: "Board Verified", d: "Updated for 2026 Cycle." },

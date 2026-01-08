@@ -14,6 +14,7 @@ interface SupportProps {
 
 const Support: React.FC<SupportProps> = ({ onNavigate }) => {
   const [expandedFaq, setExpandedFaq] = useState<number | null>(null);
+  const [expandedGuide, setExpandedGuide] = React.useState<number | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeTab, setActiveTab] = useState<'faq' | 'guides' | 'contact'>('faq');
 
@@ -317,29 +318,35 @@ const Support: React.FC<SupportProps> = ({ onNavigate }) => {
               {guides.map((guide) => (
                 <motion.div
                   key={guide.id}
-                  whileHover={{ y: -5 }}
-                  className="bg-white dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-800 rounded-3xl p-8 hover:shadow-xl transition-all"
+                  whileHover={{ y: expandedGuide !== guide.id ? -5 : 0 }}
+                  className={"transition-all duration-300 " + (expandedGuide === guide.id ? "col-span-1 md:col-span-2" : "")}
                 >
-                  <div className="w-14 h-14 bg-indigo-100 dark:bg-indigo-900/30 rounded-xl flex items-center justify-center text-indigo-600 dark:text-indigo-400 mb-6">
-                    {guide.icon}
-                  </div>
-                  <h3 className="text-2xl font-black text-slate-900 dark:text-white mb-3">
-                    {guide.title}
-                  </h3>
-                  <p className="text-slate-600 dark:text-slate-400 mb-6 leading-relaxed">
-                    {guide.description}
-                  </p>
-                  <p className="text-slate-700 dark:text-slate-300 mb-6 leading-relaxed text-sm">
-                    {guide.content}
-                  </p>
-                  <button className="w-full py-3 bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 text-white rounded-xl font-bold flex items-center justify-center gap-2 transition-all active:scale-95">
-                    <span>Read Full Guide</span>
-                    <ArrowRight size={18} />
-                  </button>
-                </motion.div>
-              ))}
-            </motion.div>
-          )}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
           {/* CONTACT TAB */}
           {activeTab === 'contact' && (
