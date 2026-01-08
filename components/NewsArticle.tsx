@@ -11,6 +11,15 @@ interface NewsArticleProps {
 
 const NewsArticle: React.FC<NewsArticleProps> = ({ article, onNavigate, onBack }) => {
   const [liked, setLiked] = React.useState(false);
+  const [commentCount, setCommentCount] = React.useState(43);
+  const [shareCount, setShareCount] = React.useState(156);
+  const [showCommentModal, setShowCommentModal] = React.useState(false);
+  const [newComment, setNewComment] = React.useState("");
+  const [comments, setComments] = React.useState<any[]>([
+    { id: 1, author: "Sarah Ahmed", text: "This article is incredibly insightful and well-written. Thank you for sharing!", timestamp: "2 hours ago" },
+    { id: 2, author: "James Wilson", text: "Great perspective on this important topic. Really helped me understand better.", timestamp: "5 hours ago" },
+    { id: 3, author: "Mia Johnson", text: "Sharing this with my team. Excellent work!", timestamp: "8 hours ago" }
+  ]);
   const [likeCount, setLikeCount] = React.useState(1100);
 
   // Parse content as array of paragraphs
@@ -33,6 +42,24 @@ const NewsArticle: React.FC<NewsArticleProps> = ({ article, onNavigate, onBack }
       setLikeCount(likeCount - 1);
     }
     setLiked(!liked);
+  };
+
+  const handleComment = () => {
+    setShowCommentModal(!showCommentModal);
+  };
+
+  const handleAddComment = () => {
+    if (newComment.trim()) {
+      const comment = {
+        id: comments.length + 1,
+        author: "You",
+        text: newComment,
+        timestamp: "just now"
+      };
+      setComments([comment, ...comments]);
+      setCommentCount(commentCount + 1);
+      setNewComment("");
+    }
   };
 
   const handleShare = () => {
@@ -189,9 +216,9 @@ const NewsArticle: React.FC<NewsArticleProps> = ({ article, onNavigate, onBack }
               <Heart size={20} fill={liked ? 'currentColor' : 'none'} />
               {liked ? 'Liked' : 'Like'} ({(likeCount / 1000).toFixed(1)}K)
             </button>
-            <button className="flex items-center gap-2 px-6 py-3 rounded-xl font-bold bg-white dark:bg-slate-800 text-slate-900 dark:text-white hover:shadow-lg transition-all transform hover:scale-105 active:scale-95">
+            <button onClick={handleComment} className="flex items-center gap-2 px-6 py-3 rounded-xl font-bold bg-white dark:bg-slate-800 text-slate-900 dark:text-white hover:shadow-lg transition-all transform hover:scale-105 active:scale-95">
               <MessageCircle size={20} />
-              Comment (43)
+              Comment ({commentCount})
             </button>
             <button 
               onClick={handleShare}
@@ -244,6 +271,76 @@ const NewsArticle: React.FC<NewsArticleProps> = ({ article, onNavigate, onBack }
                   {new Date(related.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                 </div>
               </button>
+            ))}
+          </div>
+        </motion.div>
+
+        {/* Comments Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.35 }}
+          className="my-12 bg-slate-50 dark:bg-slate-900/50 rounded-3xl p-8 md:p-12 border border-slate-200 dark:border-slate-800"
+        >
+          <h3 className="text-2xl md:text-3xl font-black text-slate-900 dark:text-white mb-8">Comments ({commentCount})</h3>
+          
+          {showCommentModal && (
+            <div className="mb-8 bg-white dark:bg-slate-800 rounded-2xl p-6 border-2 border-indigo-200 dark:border-indigo-900">
+              <h4 className="font-black text-slate-900 dark:text-white mb-4">Share Your Thoughts</h4>
+              <textarea
+                value={newComment}
+                onChange={(e) => setNewComment(e.target.value)}
+                placeholder="Write your thoughtful comment here..."
+                className="w-full px-4 py-3 rounded-xl border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:outline-none focus:border-indigo-600 resize-none"
+                rows={4}
+              />
+              <div className="flex gap-3 mt-4">
+                <button
+                  onClick={handleAddComment}
+                  disabled={!newComment.trim()}
+                  className="flex-1 px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  Post Comment
+                </button>
+                <button
+                  onClick={handleComment}
+                  className="px-6 py-3 bg-slate-200 dark:bg-slate-700 text-slate-900 dark:text-white font-bold rounded-xl hover:bg-slate-300 dark:hover:bg-slate-600 transition-all"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          )}
+
+          {!showCommentModal && (
+            <button
+              onClick={handleComment}
+              className="w-full px-6 py-3 mb-8 bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 font-bold rounded-xl hover:bg-indigo-200 dark:hover:bg-indigo-900/50 transition-all"
+            >
+              Add a Comment
+            </button>
+          )}
+
+          <div className="space-y-6">
+            {comments.map((comment) => (
+              <div key={comment.id} className="bg-white dark:bg-slate-800 rounded-xl p-6 border border-slate-200 dark:border-slate-700 hover:border-indigo-200 dark:hover:border-indigo-900 transition-all">
+                <div className="flex items-start gap-4">
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-indigo-600 to-emerald-600 flex items-center justify-center text-white font-black text-lg flex-shrink-0">
+                    {comment.author[0]}
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex items-center justify-between mb-2">
+                      <h5 className="font-bold text-slate-900 dark:text-white">{comment.author}</h5>
+                      <span className="text-xs text-slate-500 dark:text-slate-400">{comment.timestamp}</span>
+                    </div>
+                    <p className="text-slate-700 dark:text-slate-300 text-base leading-relaxed">{comment.text}</p>
+                    <div className="flex gap-4 mt-3">
+                      <button className="text-xs font-bold text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Ì±ç Like</button>
+                      <button className="text-xs font-bold text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Ì≤¨ Reply</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
             ))}
           </div>
         </motion.div>

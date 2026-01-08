@@ -395,7 +395,7 @@ const Events: React.FC<EventsProps> = ({ onNavigate }) => {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
               onClick={(e) => e.stopPropagation()}
-              className="bg-white dark:bg-slate-900 rounded-2xl md:rounded-3xl shadow-2xl max-w-2xl w-full max-h-[85vh] md:max-h-[90vh] overflow-y-auto"
+              className="bg-white dark:bg-slate-900 rounded-2xl md:rounded-3xl shadow-2xl max-w-2xl w-full max-h-[95vh] md:max-h-[90vh] overflow-y-auto overflow-x-hidden flex flex-col"
             >
               {/* Header */}
               {!registrationSuccess && (
