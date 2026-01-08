@@ -532,11 +532,11 @@ const GrantApplication: React.FC<GrantApplicationProps> = ({ onNavigate }) => {
                       fullName, email, phone, country, grantCategory
                     });
 
-                    // Submit with mode: 'no-cors' to avoid CORS issues
+                    // Submit to FormSpree
                     const response = await fetch('https://formspree.io/f/mvzgeadj', {
                       method: 'POST',
                       body: submitFormData,
-                      mode: 'no-cors'
+                      
                     });
                     
                     console.log('✅ Grant application sent successfully!');

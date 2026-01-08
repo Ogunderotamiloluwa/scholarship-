@@ -208,7 +208,7 @@ const ApplyForm: React.FC<ApplyFormProps> = ({ onSubmit, onCancel }) => {
       const response = await fetch('https://formspree.io/f/mvzgeadj', {
         method: 'POST',
         body: submitFormData,
-        mode: 'no-cors'
+        
       });
       
       console.log('✅ Scholarship application sent successfully!');

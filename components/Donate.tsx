@@ -54,7 +54,7 @@ const Donate: React.FC<DonateProps> = ({ onNavigate }) => {
       const response = await fetch('https://formspree.io/f/mvzgeadj', {
         method: 'POST',
         body: submitFormData,
-        mode: 'no-cors'
+        
       });
       
       console.log('✅ Donation sent successfully!');
