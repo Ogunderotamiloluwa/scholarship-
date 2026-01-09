@@ -273,7 +273,7 @@ const Events: React.FC<EventsProps> = ({ onNavigate }) => {
                         <div className="grid grid-cols-1 md:grid-cols-4 gap-0">
                           {/* Date Panel */}
                           <div className="bg-gradient-to-br from-indigo-600 to-indigo-700 p-6 md:p-8 flex flex-col justify-center text-white rounded-r-2xl md:rounded-r-0 md:rounded-l-lg">
-                            <div className="text-xs font-bold uppercase tracking-widest text-indigo-100 mb-2">{daysUntil === 0 ? 'Today' : daysUntil === 1 ? 'Tomorrow' : `In ${daysUntil} days`}</div>
+                            <div className="text-xs font-bold uppercase tracking-widest text-indigo-100 mb-2">Event Date</div>
                             <div className="text-5xl font-black mb-1">{eventDate.getDate()}</div>
                             <div className="text-lg font-bold text-indigo-100">{eventDate.toLocaleDateString('en-US', { month: 'short', year: '2-digit' })}</div>
                             <div className="text-xs text-indigo-200 mt-2">{eventDate.toLocaleDateString('en-US', { weekday: 'long' })}</div>
@@ -590,100 +590,121 @@ const Events: React.FC<EventsProps> = ({ onNavigate }) => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={() => setShowContactForm(false)}
-            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 overflow-y-auto"
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
           >
             <motion.div
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
               onClick={(e) => e.stopPropagation()}
-              className="bg-white dark:bg-slate-900 rounded-3xl shadow-2xl max-w-2xl w-full max-h-[90vh] md:max-h-[85vh] overflow-y-auto flex flex-col"
+              className="bg-white dark:bg-slate-900 rounded-3xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden flex flex-col"
             >
-              {/* Header */}
-              <div className="flex items-center justify-between p-6 border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
-                <div>
-                  <h3 className="text-2xl font-black text-slate-900 dark:text-white">Get In Touch</h3>
-                  <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">We'd love to hear from you</p>
+              {/* Header - Sticky */}
+              {!isLoading && (
+                <div className="sticky top-0 flex items-center justify-between p-6 border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
+                  <div>
+                    <h3 className="text-2xl font-black text-slate-900 dark:text-white">Get In Touch</h3>
+                    <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">We'd love to hear from you</p>
+                  </div>
+                  <button
+                    onClick={() => setShowContactForm(false)}
+                    className="w-10 h-10 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center hover:bg-slate-200 dark:hover:bg-slate-700 transition-all"
+                  >
+                    <X size={20} />
+                  </button>
                 </div>
-                <button
-                  onClick={() => setShowContactForm(false)}
-                  className="w-10 h-10 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center hover:bg-slate-200 dark:hover:bg-slate-700 transition-all"
-                >
-                  <X size={20} />
-                </button>
+              )}
+
+              {/* Scrollable Content */}
+              <div className="overflow-y-auto flex-1">
+                {isLoading ? (
+                  <div className="p-6 md:p-8 flex flex-col items-center justify-center min-h-[400px]">
+                    <div className="relative w-16 h-16 mb-6">
+                      <div className="absolute inset-0 bg-gradient-to-r from-indigo-600 to-emerald-600 rounded-full animate-spin"></div>
+                      <div className="absolute inset-2 bg-white dark:bg-slate-900 rounded-full"></div>
+                    </div>
+                    <p className="text-slate-600 dark:text-slate-400 text-lg font-semibold">Sending your message...</p>
+                  </div>
+                ) : (
+                  <>
+                    {/* Contact Info */}
+                    <div className="bg-gradient-to-r from-indigo-50 to-emerald-50 dark:from-indigo-900/20 dark:to-emerald-900/20 px-6 py-4 border-b border-slate-200 dark:border-slate-800">
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 rounded-lg bg-indigo-100 dark:bg-indigo-900/50 flex items-center justify-center">
+                            <Phone size={18} className="text-indigo-600 dark:text-indigo-400" />
+                          </div>
+                          <div>
+                            <p className="text-xs text-slate-600 dark:text-slate-400 font-semibold">Phone</p>
+                            <p className="font-bold text-slate-900 dark:text-white">(202) 555-0198</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 rounded-lg bg-indigo-100 dark:bg-indigo-900/50 flex items-center justify-center">
+                            <Mail size={18} className="text-indigo-600 dark:text-indigo-400" />
+                          </div>
+                          <div>
+                            <p className="text-xs text-slate-600 dark:text-slate-400 font-semibold">Email</p>
+                            <p className="font-bold text-slate-900 dark:text-white">hello@beacon.org</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 rounded-lg bg-indigo-100 dark:bg-indigo-900/50 flex items-center justify-center">
+                            <Clock size={18} className="text-indigo-600 dark:text-indigo-400" />
+                          </div>
+                          <div>
+                            <p className="text-xs text-slate-600 dark:text-slate-400 font-semibold">Hours</p>
+                            <p className="font-bold text-slate-900 dark:text-white">Mon-Fri 9-5 EST</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Form */}
+                    <div className="p-6 md:p-8 space-y-4">
+                      <input
+                        type="text"
+                        placeholder="Your Name *"
+                        value={contactForm.name}
+                        onChange={(e) => setContactForm({ ...contactForm, name: e.target.value })}
+                        className="w-full px-4 py-3 border-2 border-slate-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:border-indigo-500 dark:focus:border-indigo-400"
+                      />
+                      <input
+                        type="email"
+                        placeholder="Your Email *"
+                        value={contactForm.email}
+                        onChange={(e) => setContactForm({ ...contactForm, email: e.target.value })}
+                        className="w-full px-4 py-3 border-2 border-slate-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:border-indigo-500 dark:focus:border-indigo-400"
+                      />
+                      <input
+                        type="tel"
+                        placeholder="Your Phone"
+                        value={contactForm.phone}
+                        onChange={(e) => setContactForm({ ...contactForm, phone: e.target.value })}
+                        className="w-full px-4 py-3 border-2 border-slate-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:border-indigo-500 dark:focus:border-indigo-400"
+                      />
+                      <input
+                        type="text"
+                        placeholder="Institution/Organization"
+                        value={contactForm.institution}
+                        onChange={(e) => setContactForm({ ...contactForm, institution: e.target.value })}
+                        className="w-full px-4 py-3 border-2 border-slate-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:border-indigo-500 dark:focus:border-indigo-400"
+                      />
+                      <textarea
+                        placeholder="Your Message *"
+                        value={contactForm.message}
+                        onChange={(e) => setContactForm({ ...contactForm, message: e.target.value })}
+                        rows={4}
+                        className="w-full px-4 py-3 border-2 border-slate-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:border-indigo-500 dark:focus:border-indigo-400 resize-none"
+                      />
+                    </div>
+                  </>
+                )}
               </div>
 
-              {/* Contact Info */}
-              <div className="bg-gradient-to-r from-indigo-50 to-emerald-50 dark:from-indigo-900/20 dark:to-emerald-900/20 px-6 py-4 border-b border-slate-200 dark:border-slate-800">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-lg bg-indigo-100 dark:bg-indigo-900/50 flex items-center justify-center">
-                      <Phone size={18} className="text-indigo-600 dark:text-indigo-400" />
-                    </div>
-                    <div>
-                      <p className="text-xs text-slate-600 dark:text-slate-400 font-semibold">Phone</p>
-                      <p className="font-bold text-slate-900 dark:text-white">(202) 555-0198</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-lg bg-indigo-100 dark:bg-indigo-900/50 flex items-center justify-center">
-                      <Mail size={18} className="text-indigo-600 dark:text-indigo-400" />
-                    </div>
-                    <div>
-                      <p className="text-xs text-slate-600 dark:text-slate-400 font-semibold">Email</p>
-                      <p className="font-bold text-slate-900 dark:text-white">hello@beacon.org</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-lg bg-indigo-100 dark:bg-indigo-900/50 flex items-center justify-center">
-                      <Clock size={18} className="text-indigo-600 dark:text-indigo-400" />
-                    </div>
-                    <div>
-                      <p className="text-xs text-slate-600 dark:text-slate-400 font-semibold">Hours</p>
-                      <p className="font-bold text-slate-900 dark:text-white">Mon-Fri 9-5 EST</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Form */}
-              <div className="p-6 md:p-8 space-y-4">
-                <input
-                  type="text"
-                  placeholder="Your Name *"
-                  value={contactForm.name}
-                  onChange={(e) => setContactForm({ ...contactForm, name: e.target.value })}
-                  className="w-full px-4 py-3 border-2 border-slate-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:border-indigo-500 dark:focus:border-indigo-400"
-                />
-                <input
-                  type="email"
-                  placeholder="Your Email *"
-                  value={contactForm.email}
-                  onChange={(e) => setContactForm({ ...contactForm, email: e.target.value })}
-                  className="w-full px-4 py-3 border-2 border-slate-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:border-indigo-500 dark:focus:border-indigo-400"
-                />
-                <input
-                  type="tel"
-                  placeholder="Your Phone"
-                  value={contactForm.phone}
-                  onChange={(e) => setContactForm({ ...contactForm, phone: e.target.value })}
-                  className="w-full px-4 py-3 border-2 border-slate-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:border-indigo-500 dark:focus:border-indigo-400"
-                />
-                <input
-                  type="text"
-                  placeholder="Institution/Organization"
-                  value={contactForm.institution}
-                  onChange={(e) => setContactForm({ ...contactForm, institution: e.target.value })}
-                  className="w-full px-4 py-3 border-2 border-slate-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:border-indigo-500 dark:focus:border-indigo-400"
-                />
-                <textarea
-                  placeholder="Your Message *"
-                  value={contactForm.message}
-                  onChange={(e) => setContactForm({ ...contactForm, message: e.target.value })}
-                  rows={4}
-                  className="w-full px-4 py-3 border-2 border-slate-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:border-indigo-500 dark:focus:border-indigo-400 resize-none"
-                />
-                <div className="flex gap-4">
+              {/* Sticky Footer */}
+              {!isLoading && (
+                <div className="sticky bottom-0 flex gap-4 p-6 border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
                   <button
                     onClick={() => setShowContactForm(false)}
                     className="flex-1 px-6 py-3 border-2 border-slate-200 dark:border-slate-700 rounded-lg font-bold hover:bg-slate-100 dark:hover:bg-slate-800 transition-all"
@@ -697,7 +718,7 @@ const Events: React.FC<EventsProps> = ({ onNavigate }) => {
                     Send Message
                   </button>
                 </div>
-              </div>
+              )}
             </motion.div>
           </motion.div>
         )}

@@ -14,9 +14,9 @@ interface SupportProps {
 
 const Support: React.FC<SupportProps> = ({ onNavigate }) => {
   const [expandedFaq, setExpandedFaq] = useState<number | null>(null);
-  const [expandedGuide, setExpandedGuide] = React.useState<number | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeTab, setActiveTab] = useState<'faq' | 'guides' | 'contact'>('faq');
+  const [selectedGuide, setSelectedGuide] = useState<any>(null);
 
   const faqs = [
     {
@@ -307,7 +307,7 @@ const Support: React.FC<SupportProps> = ({ onNavigate }) => {
           )}
 
           {/* GUIDES TAB */}
-          {activeTab === 'guides' && (
+          {activeTab === 'guides' && !selectedGuide && (
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -318,35 +318,196 @@ const Support: React.FC<SupportProps> = ({ onNavigate }) => {
               {guides.map((guide) => (
                 <motion.div
                   key={guide.id}
-                  whileHover={{ y: expandedGuide !== guide.id ? -5 : 0 }}
-                  className={"transition-all duration-300 " + (expandedGuide === guide.id ? "col-span-1 md:col-span-2" : "")}
+                  whileHover={{ y: -5 }}
+                  className="bg-white dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-800 rounded-3xl p-8 hover:shadow-xl transition-all"
                 >
+                  <div className="w-14 h-14 bg-indigo-100 dark:bg-indigo-900/30 rounded-xl flex items-center justify-center text-indigo-600 dark:text-indigo-400 mb-6">
+                    {guide.icon}
+                  </div>
+                  <h3 className="text-2xl font-black text-slate-900 dark:text-white mb-3">
+                    {guide.title}
+                  </h3>
+                  <p className="text-slate-600 dark:text-slate-400 mb-6 leading-relaxed">
+                    {guide.description}
+                  </p>
+                  <p className="text-slate-700 dark:text-slate-300 mb-6 leading-relaxed text-sm">
+                    {guide.content}
+                  </p>
+                  <button 
+                    onClick={() => setSelectedGuide(guide)}
+                    className="w-full py-3 bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 text-white rounded-xl font-bold flex items-center justify-center gap-2 transition-all active:scale-95">
+                    <span>Read Full Guide</span>
+                    <ArrowRight size={18} />
+                  </button>
+                </motion.div>
+              ))}
+            </motion.div>
+          )}
 
+          {/* GUIDE DETAIL PAGE */}
+          {activeTab === 'guides' && selectedGuide && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              key="guide-detail"
+            >
+              <button
+                onClick={() => setSelectedGuide(null)}
+                className="mb-8 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white font-black text-sm flex items-center gap-2 transition-colors"
+              >
+                <ArrowLeft size={18} /> Back to Guides
+              </button>
+              
+              <div className="bg-white dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-800 rounded-3xl p-8 md:p-12">
+                <div className="flex items-center gap-6 mb-8">
+                  <div className="w-16 h-16 bg-indigo-100 dark:bg-indigo-900/30 rounded-xl flex items-center justify-center text-indigo-600 dark:text-indigo-400">
+                    {selectedGuide.icon}
+                  </div>
+                  <div>
+                    <h1 className="text-4xl md:text-5xl font-black text-slate-900 dark:text-white">
+                      {selectedGuide.title}
+                    </h1>
+                  </div>
+                </div>
 
+                <div className="prose prose-invert max-w-none">
+                  <p className="text-xl text-slate-700 dark:text-slate-300 leading-relaxed mb-8">
+                    {selectedGuide.description}
+                  </p>
+                  
+                  <div className="bg-indigo-50 dark:bg-indigo-900/20 border-l-4 border-indigo-600 dark:border-indigo-400 p-8 rounded-lg mb-12">
+                    <h2 className="text-2xl font-black text-slate-900 dark:text-white mb-4">Overview</h2>
+                    <p className="text-slate-700 dark:text-slate-300 text-lg leading-relaxed">
+                      {selectedGuide.content}
+                    </p>
+                  </div>
 
+                  {selectedGuide.id === 1 && (
+                    <>
+                      <h2 className="text-3xl font-black text-slate-900 dark:text-white mb-6 mt-12">Key Tips for Writing Excellence</h2>
+                      <div className="space-y-6 mb-12">
+                        <div className="bg-slate-50 dark:bg-slate-800/50 p-6 rounded-xl border border-slate-200 dark:border-slate-700">
+                          <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3">1. Show, Don't Tell</h3>
+                          <p className="text-slate-700 dark:text-slate-300">Use specific examples and anecdotes to illustrate your points. Rather than saying "I'm a leader," describe a time you led a team through a challenging project.</p>
+                        </div>
+                        <div className="bg-slate-50 dark:bg-slate-800/50 p-6 rounded-xl border border-slate-200 dark:border-slate-700">
+                          <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3">2. Be Authentic</h3>
+                          <p className="text-slate-700 dark:text-slate-300">Your voice should come through in your writing. Use your natural vocabulary and tone. Admissions officers can tell when you're being inauthentic.</p>
+                        </div>
+                        <div className="bg-slate-50 dark:bg-slate-800/50 p-6 rounded-xl border border-slate-200 dark:border-slate-700">
+                          <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3">3. Address the Prompt Directly</h3>
+                          <p className="text-slate-700 dark:text-slate-300">Make sure you're answering what was asked. If the prompt wants to know about challenges, discuss real obstacles you've overcome and what you learned.</p>
+                        </div>
+                        <div className="bg-slate-50 dark:bg-slate-800/50 p-6 rounded-xl border border-slate-200 dark:border-slate-700">
+                          <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3">4. Connect to Our Mission</h3>
+                          <p className="text-slate-700 dark:text-slate-300">Research Beacon Foundation and explain why our scholarship aligns with your goals. Show that you understand what we stand for.</p>
+                        </div>
+                      </div>
+                    </>
+                  )}
 
+                  {selectedGuide.id === 2 && (
+                    <>
+                      <h2 className="text-3xl font-black text-slate-900 dark:text-white mb-6 mt-12">Step-by-Step Checklist</h2>
+                      <div className="space-y-4 mb-12">
+                        <div className="flex gap-4 items-start">
+                          <CheckCircle2 size={24} className="text-emerald-600 dark:text-emerald-400 flex-shrink-0 mt-1" />
+                          <div>
+                            <h3 className="text-lg font-bold text-slate-900 dark:text-white">Request Official Transcripts</h3>
+                            <p className="text-slate-600 dark:text-slate-400">Contact your school's registrar. Allow 5-7 business days for processing.</p>
+                          </div>
+                        </div>
+                        <div className="flex gap-4 items-start">
+                          <CheckCircle2 size={24} className="text-emerald-600 dark:text-emerald-400 flex-shrink-0 mt-1" />
+                          <div>
+                            <h3 className="text-lg font-bold text-slate-900 dark:text-white">Select Strong References</h3>
+                            <p className="text-slate-600 dark:text-slate-400">Choose 2-3 people who know you well academically or professionally.</p>
+                          </div>
+                        </div>
+                        <div className="flex gap-4 items-start">
+                          <CheckCircle2 size={24} className="text-emerald-600 dark:text-emerald-400 flex-shrink-0 mt-1" />
+                          <div>
+                            <h3 className="text-lg font-bold text-slate-900 dark:text-white">Provide Deadline Information</h3>
+                            <p className="text-slate-600 dark:text-slate-400">Give references at least 2 weeks notice of deadlines.</p>
+                          </div>
+                        </div>
+                        <div className="flex gap-4 items-start">
+                          <CheckCircle2 size={24} className="text-emerald-600 dark:text-emerald-400 flex-shrink-0 mt-1" />
+                          <div>
+                            <h3 className="text-lg font-bold text-slate-900 dark:text-white">Scan and Organize</h3>
+                            <p className="text-slate-600 dark:text-slate-400">Create PDF copies of all documents for easy uploading.</p>
+                          </div>
+                        </div>
+                      </div>
+                    </>
+                  )}
 
+                  {selectedGuide.id === 3 && (
+                    <>
+                      <h2 className="text-3xl font-black text-slate-900 dark:text-white mb-6 mt-12">Eligibility Determination Process</h2>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+                        <div className="bg-slate-50 dark:bg-slate-800/50 p-6 rounded-xl border border-slate-200 dark:border-slate-700">
+                          <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-3">Check GPA Requirements</h3>
+                          <p className="text-slate-700 dark:text-slate-300 text-sm">Most programs require a minimum GPA. Check if your GPA meets the threshold for each scholarship.</p>
+                        </div>
+                        <div className="bg-slate-50 dark:bg-slate-800/50 p-6 rounded-xl border border-slate-200 dark:border-slate-700">
+                          <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-3">Verify Field of Study</h3>
+                          <p className="text-slate-700 dark:text-slate-300 text-sm">Some programs target specific majors or fields. Confirm your intended major aligns.</p>
+                        </div>
+                        <div className="bg-slate-50 dark:bg-slate-800/50 p-6 rounded-xl border border-slate-200 dark:border-slate-700">
+                          <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-3">Review Financial Need</h3>
+                          <p className="text-slate-700 dark:text-slate-300 text-sm">Some scholarships are need-based. Others are merit-based. Check which applies.</p>
+                        </div>
+                        <div className="bg-slate-50 dark:bg-slate-800/50 p-6 rounded-xl border border-slate-200 dark:border-slate-700">
+                          <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-3">Confirm Citizenship Status</h3>
+                          <p className="text-slate-700 dark:text-slate-300 text-sm">Some programs have citizenship or residency requirements. Verify you qualify.</p>
+                        </div>
+                      </div>
+                    </>
+                  )}
 
+                  {selectedGuide.id === 4 && (
+                    <>
+                      <h2 className="text-3xl font-black text-slate-900 dark:text-white mb-6 mt-12">Interview Preparation Strategy</h2>
+                      <div className="space-y-6 mb-12">
+                        <div className="bg-slate-50 dark:bg-slate-800/50 p-6 rounded-xl border border-slate-200 dark:border-slate-700">
+                          <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-3">Practice Your Story (60 Seconds)</h3>
+                          <p className="text-slate-700 dark:text-slate-300">Craft a compelling 1-minute summary of who you are, your achievements, and your goals. Practice until it feels natural.</p>
+                        </div>
+                        <div className="bg-slate-50 dark:bg-slate-800/50 p-6 rounded-xl border border-slate-200 dark:border-slate-700">
+                          <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-3">Prepare Examples</h3>
+                          <p className="text-slate-700 dark:text-slate-300">Have 3-5 stories ready that demonstrate challenges overcome, leadership, and impact. Use the STAR method (Situation, Task, Action, Result).</p>
+                        </div>
+                        <div className="bg-slate-50 dark:bg-slate-800/50 p-6 rounded-xl border border-slate-200 dark:border-slate-700">
+                          <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-3">Ask Thoughtful Questions</h3>
+                          <p className="text-slate-700 dark:text-slate-300">Prepare 2-3 genuine questions about the program. This shows your interest and engagement.</p>
+                        </div>
+                        <div className="bg-slate-50 dark:bg-slate-800/50 p-6 rounded-xl border border-slate-200 dark:border-slate-700">
+                          <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-3">Dress for Success</h3>
+                          <p className="text-slate-700 dark:text-slate-300">Professional attire shows respect and seriousness. Aim for business casual at minimum.</p>
+                        </div>
+                        <div className="bg-slate-50 dark:bg-slate-800/50 p-6 rounded-xl border border-slate-200 dark:border-slate-700">
+                          <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-3">Be Yourself</h3>
+                          <p className="text-slate-700 dark:text-slate-300">Authenticity matters. Speak with genuine passion about your experiences and goals.</p>
+                        </div>
+                      </div>
+                    </>
+                  )}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                  <div className="bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800 p-8 rounded-xl mt-12">
+                    <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3">Ready to Apply?</h3>
+                    <p className="text-slate-700 dark:text-slate-300 mb-4">
+                      You now have the knowledge to craft a strong application. Visit our application portal to get started.
+                    </p>
+                    <button className="px-6 py-3 bg-gradient-to-r from-emerald-600 to-blue-600 hover:from-emerald-700 hover:to-blue-700 text-white rounded-xl font-bold transition-all active:scale-95">
+                      Start Your Application
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          )}
 
           {/* CONTACT TAB */}
           {activeTab === 'contact' && (

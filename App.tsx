@@ -123,111 +123,363 @@ const HomeView: React.FC<{ onNavigate: (v: ViewState) => void, onOpenStory: (s: 
 
   return (
     <div className="overflow-x-hidden bg-white">
-      {/* 1. HERO SECTION - Mobile Optimized & Visibility Fixed */}
-      <section className="relative h-screen md:h-[90vh] flex items-center bg-slate-950 overflow-hidden px-4">
+      {/* 1. HERO SECTION - Advanced Mobile Optimized */}
+      <section className="relative min-h-screen md:min-h-[100vh] flex flex-col items-center justify-center bg-gradient-to-br from-slate-950 via-slate-900 to-slate-800 overflow-hidden px-4 sm:px-6 md:px-8 py-12 md:py-20">
+        {/* Animated Background with Gradient Blobs */}
+        <div className="absolute inset-0 overflow-hidden">
+          <motion.div className="absolute -top-40 -right-40 w-80 h-80 bg-indigo-600/20 rounded-full blur-3xl" animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.6, 0.3] }} transition={{ duration: 8, repeat: Infinity }} />
+          <motion.div className="absolute -bottom-40 -left-40 w-96 h-96 bg-emerald-600/10 rounded-full blur-3xl" animate={{ scale: [1.2, 1, 1.2], opacity: [0.2, 0.4, 0.2] }} transition={{ duration: 10, repeat: Infinity, delay: 1 }} />
+        </div>
+
         <AnimatePresence mode="wait">
           <motion.div 
             key={activeSlide}
-            initial={{ opacity: 0, scale: 1.1 }}
+            initial={{ opacity: 0, scale: 1.05 }}
             animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 2, ease: "easeOut" }}
-            className="absolute inset-0"
+            exit={{ opacity: 0, scale: 0.95 }}
+            transition={{ duration: 2.5, ease: "easeOut" }}
+            className="absolute inset-0 z-0"
           >
-            <img src={STORIES[activeSlide].image} className="w-full h-full object-cover opacity-50" alt="Spotlight" />
-            <div className="absolute inset-0 bg-gradient-to-b md:bg-gradient-to-r from-slate-950 via-slate-950/70 to-transparent"></div>
+            <img src={STORIES[activeSlide].image} className="w-full h-full object-cover opacity-40" alt="Spotlight" />
+            <div className="absolute inset-0 bg-gradient-to-b from-slate-950/90 via-slate-900/60 to-slate-950/80 md:bg-gradient-to-br md:from-slate-950/85 md:via-slate-900/50 md:to-slate-950/75"></div>
           </motion.div>
         </AnimatePresence>
-        
-        {/* Adjusted content position for perfect visibility on all devices */}
-        <div className="relative z-10 max-w-7xl mx-auto w-full flex flex-col items-start pt-10 md:pt-0 -mt-10 md:-mt-16">
-          <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="max-w-4xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-indigo-500/20 border border-indigo-400/30 text-indigo-300 text-[9px] md:text-[10px] font-black uppercase tracking-[0.3em] mb-8 backdrop-blur-md">
-              <ShieldCheck size={12} className="text-emerald-400" /> PORTAL SECURED 2026
-            </div>
-            <h1 className="heading-serif text-5xl md:text-[8rem] font-black text-white leading-[1.1] md:leading-[0.9] tracking-tighter mb-8">
-              Advancing <br/><span className="italic text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-indigo-200 to-emerald-200 leading-tight">the Extraordinary.</span>
+
+        {/* Main Content - Flexbox for better control */}
+        <div className="relative z-10 max-w-6xl mx-auto w-full flex-1 flex flex-col justify-center">
+          <motion.div initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="max-w-5xl space-y-6 md:space-y-8 lg:space-y-10">
+            {/* Security Badge */}
+            <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.3 }} className="inline-flex items-center gap-2 md:gap-3 px-3 md:px-5 py-2 md:py-3 rounded-full bg-gradient-to-r from-indigo-500/20 to-emerald-500/20 border border-indigo-400/40 backdrop-blur-xl group hover:border-indigo-400/60 transition-all w-fit">
+              <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></div>
+              <span className="text-indigo-300 text-[8px] sm:text-[9px] md:text-[10px] font-black uppercase tracking-[0.3em]">Portal Active 2026</span>
+            </motion.div>
+
+            {/* Main Headline */}
+            <h1 className="heading-serif text-5xl sm:text-6xl md:text-7xl xl:text-8xl 2xl:text-[9rem] font-black text-white leading-[1.15] sm:leading-[1.12] md:leading-[1.0] lg:leading-[0.95] tracking-tighter">
+              Advancing<br className="hidden sm:block" />
+              <span className="italic text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-indigo-300 to-emerald-300 drop-shadow-lg">the Extraordinary.</span>
             </h1>
-            <p className="text-slate-300 text-lg md:text-2xl font-light leading-relaxed mb-10 max-w-2xl border-l-4 border-indigo-500 pl-6 md:pl-8">
-              Managing $366M in endowment capital for America's most promising minds. We provide the architecture for global impact.
+
+            {/* Subheading with Border */}
+            <p className="text-slate-200 text-sm sm:text-base md:text-lg lg:text-xl font-light leading-relaxed max-w-3xl border-l-4 border-indigo-400/60 pl-3 sm:pl-4 md:pl-6 lg:pl-8 backdrop-blur-sm">
+              We are a trusted 501(c)(3) foundation managing <span className="font-bold text-white">$366M+ in endowment capital</span> dedicated to identifying and supporting America's most promising minds, regardless of financial circumstances.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
-              <button onClick={() => onNavigate('APPLY')} className="group px-10 py-5 bg-white text-slate-950 rounded-2xl font-black text-sm md:text-lg shadow-2xl hover:bg-indigo-50 transition-all flex items-center justify-center gap-3 active:scale-95">
-                Apply for 2026 <ArrowRight size={18} />
-              </button>
-              <button onClick={() => onNavigate('ABOUT')} className="px-10 py-5 bg-slate-900/60 backdrop-blur-md text-white border border-white/10 rounded-2xl font-black text-sm md:text-lg hover:bg-white/10 transition-all active:scale-95 flex items-center justify-center gap-2">
-                Our Heritage <Info size={18}/>
-              </button>
+
+            {/* Three Core Value Statements */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4 lg:gap-5 pt-2 md:pt-4">
+              {[
+                { icon: Award, title: "Merit-Based", desc: "Rigorous selection process" },
+                { icon: Globe, title: "Nationwide Impact", desc: "All 50 states served" },
+                { icon: Shield, title: "Fully Verified", desc: "IRS 501(c)(3) certified" }
+              ].map((item, i) => (
+                <motion.div key={i} initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 + i * 0.1 }} className="flex items-start gap-2 sm:gap-3 p-3 md:p-4 lg:p-5 rounded-lg md:rounded-xl lg:rounded-2xl bg-white/5 backdrop-blur-md border border-white/10 hover:border-white/20 hover:bg-white/10 transition-all">
+                  <item.icon size={18} className="text-indigo-300 flex-shrink-0 mt-0.5 md:mt-1" />
+                  <div className="min-w-0">
+                    <div className="text-xs sm:text-sm md:text-base font-black text-white tracking-tight">{item.title}</div>
+                    <div className="text-[11px] sm:text-xs md:text-sm text-slate-300 font-light mt-0.5 md:mt-1">{item.desc}</div>
+                  </div>
+                </motion.div>
+              ))}
             </div>
+
+            {/* CTA Buttons */}
+            <div className="flex flex-col xs:flex-row gap-2.5 md:gap-4 w-full pt-2 md:pt-4 lg:pt-6">
+              <motion.button 
+                onClick={() => onNavigate('APPLY')} 
+                whileHover={{ scale: 1.05, boxShadow: "0 20px 60px rgba(79, 70, 229, 0.4)" }}
+                whileTap={{ scale: 0.95 }}
+                className="group px-6 sm:px-8 md:px-10 py-3 sm:py-4 md:py-5 lg:py-6 bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-500 hover:to-indigo-600 text-white rounded-xl sm:rounded-2xl md:rounded-3xl font-black text-xs sm:text-sm md:text-base lg:text-lg shadow-2xl transition-all flex items-center justify-center gap-2 md:gap-3 whitespace-nowrap"
+              >
+                <span>Apply Now</span>
+                <motion.div animate={{ x: [0, 6, 0] }} transition={{ duration: 2, repeat: Infinity }}>
+                  <ArrowRight size={16} className="sm:size-[18px] md:size-[20px]" />
+                </motion.div>
+              </motion.button>
+              <motion.button 
+                onClick={() => onNavigate('ABOUT')} 
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="px-6 sm:px-8 md:px-10 py-3 sm:py-4 md:py-5 lg:py-6 bg-white/10 backdrop-blur-md text-white border-2 border-white/20 hover:border-white/40 hover:bg-white/15 rounded-xl sm:rounded-2xl md:rounded-3xl font-black text-xs sm:text-sm md:text-base lg:text-lg transition-all flex items-center justify-center gap-2 md:gap-3 whitespace-nowrap"
+              >
+                <span>Learn More</span>
+                <Info size={16} className="sm:size-[18px] md:size-[20px]"/>
+              </motion.button>
+            </div>
+          </motion.div>
+
+          {/* Scroll Indicator */}
+          <motion.div animate={{ y: [0, 10, 0] }} transition={{ duration: 3, repeat: Infinity }} className="absolute -bottom-4 sm:-bottom-8 md:bottom-4 lg:bottom-8 left-1/2 -translate-x-1/2 hidden lg:flex flex-col items-center gap-1.5 text-white/40">
+            <span className="text-xs font-black uppercase tracking-widest">Scroll to Explore</span>
+            <ChevronDown size={18} />
           </motion.div>
         </div>
       </section>
 
-      {/* 2. PARTNER MARQUEE */}
-      <section className="py-8 bg-white border-b border-slate-50 overflow-hidden">
-        <div className="animate-marquee whitespace-nowrap flex py-2 opacity-40 font-black text-xl md:text-3xl text-slate-900 uppercase tracking-tighter">
-          {[...partners, ...partners].map((p, i) => <span key={i} className="mx-12">{p}</span>)}
-        </div>
-      </section>
-
-      {/* 3. CORE STATISTICS */}
-      <section className="py-20 md:py-32 bg-white px-6">
-        <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-12">
-          {[
-            { v: "$366M", l: "Reserves", i: Landmark },
-            { v: "1,240+", l: "Scholars", i: Users },
-            { v: "94%", l: "Success", i: GraduationCap },
-            { v: "501(c)3", l: "IRS Verified", i: Scale }
-          ].map((s, i) => (
-            <div key={i} className="text-center md:text-left space-y-4 group">
-              <div className="w-12 h-12 bg-indigo-50 rounded-2xl flex items-center justify-center text-indigo-600 mx-auto md:mx-0 group-hover:rotate-12 transition-transform"><s.i size={24}/></div>
-              <div className="text-4xl md:text-6xl font-black tracking-tighter text-slate-950">{s.v}</div>
-              <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{s.l}</div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* 4. HERITAGE & IMAGES - Fixed visibility and interaction */}
-      <section className="py-24 md:py-40 px-6 bg-slate-50 overflow-hidden">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
-          <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} className="relative cursor-pointer group" onClick={() => onNavigate('ABOUT')}>
-            <img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&q=80&w=1200" className="relative z-10 rounded-[48px] md:rounded-[64px] shadow-2xl aspect-square object-cover" alt="Scholar" />
-            <div className="absolute -bottom-10 -right-4 md:-right-10 z-20 bg-white p-8 rounded-[40px] shadow-2xl border border-slate-100 max-w-[280px]">
-              <div className="font-black text-lg text-slate-900 mb-2 flex items-center gap-2"><Fingerprint className="text-indigo-600" size={20}/> Radical Intent</div>
-              <p className="text-sm text-slate-500 italic leading-relaxed">"Talent is universal. Opportunity is not. We are the bridge between the two."</p>
-              <div className="mt-4 text-[10px] font-black text-indigo-600 uppercase tracking-widest flex items-center gap-2">Read Mission <ArrowRight size={12}/></div>
-            </div>
-          </motion.div>
-          <div className="space-y-12">
-            <div className="inline-flex items-center gap-2 px-3 py-1 bg-white text-indigo-600 rounded-full text-[10px] font-black uppercase tracking-widest border border-slate-100 shadow-sm"><Sparkles size={12} /> Founded 2012</div>
-            <h2 className="heading-serif text-6xl md:text-[8rem] font-black text-slate-900 leading-none tracking-tighter">Merit <br/>Defined.</h2>
-            <p className="text-slate-500 text-xl md:text-2xl font-light leading-relaxed">We remove the financial barriers between talent and institutional resources. Since 2012, we have redefined how brilliance is supported.</p>
-            <button onClick={() => onNavigate('ABOUT')} className="flex items-center gap-3 text-slate-950 font-black uppercase text-xs tracking-widest hover:gap-6 transition-all group">
-              Read Our Full Heritage <ArrowRight size={18} className="text-indigo-600" />
-            </button>
+      {/* 2. PARTNER MARQUEE - Enhanced */}
+      <section className="py-12 md:py-16 bg-gradient-to-r from-white via-slate-50 to-white border-y border-slate-200 overflow-hidden relative">
+        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-indigo-500/5 to-transparent pointer-events-none"></div>
+        <div className="relative">
+          <p className="text-center text-slate-500 text-xs md:text-sm font-black uppercase tracking-[0.3em] mb-8">Trusted by Leading Institutions</p>
+          <div className="animate-marquee whitespace-nowrap flex py-3 font-black text-lg md:text-2xl text-slate-700 uppercase tracking-tighter">
+            {[...partners, ...partners].map((p, i) => <span key={i} className="mx-8 md:mx-16 hover:text-indigo-600 transition-colors">{p}</span>)}
           </div>
         </div>
       </section>
 
-      {/* 5. GALLERY SECTION */}
-      <section className="py-24 md:py-40 bg-white px-6">
+      {/* 3. WHAT WE DO - Advanced Section */}
+      <section className="py-20 md:py-32 px-4 md:px-8 bg-white">
         <div className="max-w-7xl mx-auto">
-          <div className="mb-20 text-center md:text-left">
-            <h2 className="heading-serif text-6xl md:text-[8rem] font-black text-slate-900 leading-none tracking-tighter">Institutional <br/>Life.</h2>
-            <p className="text-slate-500 text-xl font-light mt-6 italic">A curated record of scholarship meets determination across the nation.</p>
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-16 md:mb-24">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-50 border border-indigo-100 mb-6">
+              <Zap size={16} className="text-indigo-600" />
+              <span className="text-indigo-600 text-xs md:text-sm font-black uppercase tracking-[0.3em]">How We Transform Lives</span>
+            </div>
+            <h2 className="heading-serif text-5xl md:text-7xl lg:text-[9rem] font-black text-slate-900 leading-tight md:leading-[1.1] lg:leading-[0.9] tracking-tighter mb-8">
+              What We<br className="hidden sm:block" /> Actually Do.
+            </h2>
+            <p className="text-slate-600 text-lg md:text-2xl font-light leading-relaxed max-w-4xl italic">
+              Beyond scholarships. We're an ecosystem of support that identifies talent, removes barriers, and creates pathways to extraordinary impact.
+            </p>
+          </motion.div>
+
+          {/* Core Services Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
+            {[
+              {
+                icon: Award,
+                title: "Scholarship Distribution",
+                desc: "We distribute $20-60k annually to exceptional students through merit-based competitive selection.",
+                points: ["1,200+ active scholars", "All 50 states", "0% service fees"]
+              },
+              {
+                icon: Briefcase,
+                title: "Grant Administration",
+                desc: "Managing $366M+ endowment supporting nonprofits, research institutions, and social enterprises.",
+                points: ["$50k-$500k grants", "Verified opportunities", "Expert mentorship"]
+              },
+              {
+                icon: Users,
+                title: "Mentor Network",
+                desc: "Connecting scholars with industry leaders, academics, and successful alumni for guidance and networking.",
+                points: ["1:1 mentoring", "Career coaching", "Industry access"]
+              },
+              {
+                icon: BookOpen,
+                title: "Resource Library",
+                desc: "Comprehensive guides, tools, and templates for applications, essays, interviews, and career planning.",
+                points: ["24/7 access", "Expert content", "Community forum"]
+              },
+              {
+                icon: BarChart3,
+                title: "Application Tracking",
+                desc: "Real-time portal to monitor your applications, scores, and status updates across all programs.",
+                points: ["Live updates", "Secure portal", "Mobile app"]
+              },
+              {
+                icon: Heart,
+                title: "Support Community",
+                desc: "Access to FAQs, expert advisors, events, and a community of fellow scholars nationwide.",
+                points: ["24/7 support", "Monthly events", "Peer network"]
+              }
+            ].map((service, i) => (
+              <motion.div 
+                key={i}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 }}
+                className="group p-8 md:p-10 rounded-[40px] bg-gradient-to-br from-white to-slate-50 border-2 border-slate-100 shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2"
+              >
+                <div className="w-16 h-16 bg-gradient-to-br from-indigo-50 to-indigo-100 rounded-3xl flex items-center justify-center text-indigo-600 mb-6 group-hover:scale-110 transition-transform">
+                  <service.icon size={32} />
+                </div>
+                <h3 className="text-2xl md:text-3xl font-black text-slate-900 mb-3 group-hover:text-indigo-600 transition-colors">{service.title}</h3>
+                <p className="text-slate-600 text-base md:text-lg font-light leading-relaxed mb-6">{service.desc}</p>
+                <ul className="space-y-2">
+                  {service.points.map((point, j) => (
+                    <li key={j} className="flex items-center gap-3 text-slate-500 text-sm md:text-base">
+                      <CheckCircle2 size={16} className="text-emerald-500 flex-shrink-0" />
+                      <span>{point}</span>
+                    </li>
+                  ))}
+                </ul>
+              </motion.div>
+            ))}
           </div>
+        </div>
+      </section>
+
+      {/* 4. CORE STATISTICS - Enhanced Grid */}
+      <section className="py-20 md:py-32 bg-gradient-to-br from-slate-900 to-slate-950 px-4 md:px-8 text-white overflow-hidden relative">
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute top-0 right-0 w-96 h-96 bg-indigo-500 rounded-full blur-3xl"></div>
+        </div>
+        <div className="relative z-10 max-w-7xl mx-auto">
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-16 md:mb-24">
+            <h2 className="heading-serif text-5xl md:text-7xl lg:text-[9rem] font-black leading-tight md:leading-[1.1] lg:leading-[0.9] tracking-tighter mb-6">
+              By The Numbers.
+            </h2>
+            <p className="text-slate-300 text-lg md:text-2xl font-light max-w-3xl mx-auto">Transforming thousands of lives through strategic investment in human potential.</p>
+          </motion.div>
+
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
+            {[
+              { v: "$366M", l: "Endowment", i: Landmark, delay: 0 },
+              { v: "1,240+", l: "Scholars Supported", i: Users, delay: 0.1 },
+              { v: "94%", l: "Success Rate", i: GraduationCap, delay: 0.2 },
+              { v: "50", l: "States Served", i: Globe, delay: 0.3 }
+            ].map((s, i) => (
+              <motion.div 
+                key={i}
+                initial={{ opacity: 0, scale: 0.8 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: s.delay }}
+                className="group p-6 md:p-10 rounded-[32px] bg-white/5 backdrop-blur-md border border-white/10 hover:border-white/30 text-center transition-all hover:bg-white/10"
+              >
+                <div className="w-14 h-14 md:w-16 md:h-16 bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-[20px] flex items-center justify-center text-white mx-auto mb-4 md:mb-6 group-hover:rotate-12 transition-transform">
+                  <s.i size={28} />
+                </div>
+                <div className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tighter mb-2 bg-gradient-to-r from-amber-200 to-emerald-200 bg-clip-text text-transparent">{s.v}</div>
+                <div className="text-[11px] md:text-sm font-black text-slate-300 uppercase tracking-[0.2em]">{s.l}</div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 5. HERITAGE SECTION - Redesigned */}
+      <section className="py-20 md:py-32 px-4 md:px-8 bg-white">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 md:gap-20 items-center">
+          <motion.div 
+            initial={{ opacity: 0, x: -40 }} 
+            whileInView={{ opacity: 1, x: 0 }} 
+            viewport={{ once: true }}
+            className="relative cursor-pointer group order-2 lg:order-1"
+            onClick={() => onNavigate('ABOUT')}
+          >
+            <div className="absolute -inset-4 bg-gradient-to-r from-indigo-200/20 to-emerald-200/20 rounded-[64px] blur-2xl group-hover:blur-3xl transition-all opacity-0 group-hover:opacity-100"></div>
+            <img 
+              src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&q=80&w=1200" 
+              className="relative z-10 rounded-[48px] md:rounded-[64px] shadow-2xl aspect-square object-cover group-hover:shadow-2xl transition-shadow" 
+              alt="Scholar"
+            />
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="absolute -bottom-8 -right-8 md:-bottom-12 md:-right-12 z-20 bg-white p-6 md:p-8 rounded-[32px] md:rounded-[40px] shadow-2xl border-2 border-slate-100 max-w-[280px] md:max-w-xs"
+            >
+              <div className="font-black text-lg md:text-xl text-slate-900 mb-2 md:mb-3 flex items-center gap-2">
+                <Sparkles size={20} className="text-indigo-600" /> Our Mission
+              </div>
+              <p className="text-sm md:text-base text-slate-600 leading-relaxed">"Talent is universal. Opportunity is not. We bridge that gap."</p>
+            </motion.div>
+          </motion.div>
+
+          <motion.div 
+            initial={{ opacity: 0, x: 40 }} 
+            whileInView={{ opacity: 1, x: 0 }} 
+            viewport={{ once: true }}
+            className="space-y-8 md:space-y-10 order-1 lg:order-2"
+          >
+            <div>
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-50 border border-emerald-100 mb-6">
+                <Sparkles size={16} className="text-emerald-600" />
+                <span className="text-emerald-600 text-xs md:text-sm font-black uppercase tracking-[0.3em]">Founded 2012</span>
+              </div>
+              <h2 className="heading-serif text-5xl md:text-7xl lg:text-[9rem] font-black text-slate-900 leading-tight md:leading-[1.1] lg:leading-[0.9] tracking-tighter">
+                Merit<br />Defined.
+              </h2>
+            </div>
+
+            <div className="space-y-6 md:space-y-8">
+              <p className="text-slate-600 text-lg md:text-xl font-light leading-relaxed border-l-4 border-indigo-600 pl-6 md:pl-8">
+                Since 2012, we've reimagined how brilliance is supported. By removing financial barriers between exceptional talent and institutional resources, we've enabled over 1,240 scholars to pursue their dreams without compromising their financial security.
+              </p>
+
+              <div className="grid grid-cols-2 gap-4 md:gap-6">
+                {[
+                  { label: "Years Active", value: "14" },
+                  { label: "Scholarships Awarded", value: "1,240+" },
+                  { label: "Total Funding", value: "$366M+" },
+                  { label: "Success Rate", value: "94%" }
+                ].map((stat, i) => (
+                  <div key={i} className="p-4 md:p-6 rounded-[24px] bg-slate-50 border border-slate-200">
+                    <div className="text-2xl md:text-3xl font-black text-indigo-600 mb-1">{stat.value}</div>
+                    <div className="text-xs md:text-sm font-bold text-slate-500 uppercase tracking-widest">{stat.label}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <motion.button 
+              onClick={() => onNavigate('ABOUT')} 
+              whileHover={{ gap: "24px" }}
+              className="inline-flex items-center gap-3 text-slate-950 font-black uppercase text-xs md:text-sm tracking-[0.2em] hover:text-indigo-600 transition-all group"
+            >
+              <span>Read Our Full Heritage</span>
+              <ArrowRight size={18} className="text-indigo-600" />
+            </motion.button>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* 6. GALLERY SECTION - Enhanced */}
+      <section className="py-20 md:py-32 bg-gradient-to-b from-slate-50 to-white px-4 md:px-8">
+        <div className="max-w-7xl mx-auto">
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-16 md:mb-24">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-50 border border-blue-100 mb-6">
+              <ImageIcon size={16} className="text-blue-600" />
+              <span className="text-blue-600 text-xs md:text-sm font-black uppercase tracking-[0.3em]">Scholar Stories</span>
+            </div>
+            <h2 className="heading-serif text-5xl md:text-7xl lg:text-[9rem] font-black text-slate-900 leading-tight md:leading-[1.1] lg:leading-[0.9] tracking-tighter mb-6">
+              Institutional<br />Life.
+            </h2>
+            <p className="text-slate-600 text-lg md:text-2xl font-light italic">A visual record of scholarship, determination, and institutional excellence across the nation.</p>
+          </motion.div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
             {curatedGallery.map((img, idx) => (
-              <motion.div key={idx} whileHover={{ y: -10 }} onClick={() => onNavigate('ABOUT')} className="group relative overflow-hidden rounded-[40px] shadow-xl bg-slate-100 aspect-square cursor-pointer">
-                <img src={img.url} className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-[1s]" alt={img.title} />
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity p-8 flex flex-col justify-end">
-                   <div className="text-xl font-black text-white mb-2">{img.title}</div>
-                   <div className="text-[10px] font-black text-indigo-400 uppercase tracking-widest flex items-center gap-2">Read Detail <ArrowRight size={12}/></div>
+              <motion.div 
+                key={idx} 
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: idx * 0.05 }}
+                whileHover={{ y: -12 }} 
+                onClick={() => onNavigate('ABOUT')} 
+                className="group relative overflow-hidden rounded-[40px] shadow-xl bg-slate-100 aspect-square cursor-pointer border border-slate-200/50"
+              >
+                <img src={img.url} className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-1000" alt={img.title} />
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 p-8 flex flex-col justify-end">
+                  <div className="text-xl md:text-2xl font-black text-white mb-2">{img.title}</div>
+                  <div className="text-[10px] font-black text-indigo-300 uppercase tracking-widest flex items-center gap-2">Read More <ArrowRight size={14}/></div>
                 </div>
               </motion.div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* 7. CTA SECTION - Advanced */}
+      <section className="py-16 md:py-24 px-4 md:px-8 bg-gradient-to-r from-indigo-600 via-purple-600 to-emerald-600 overflow-hidden relative">
+        <div className="absolute inset-0 opacity-20">
+          <motion.div className="absolute top-0 right-0 w-96 h-96 bg-white rounded-full blur-3xl" animate={{ scale: [1, 1.2, 1] }} transition={{ duration: 8, repeat: Infinity }} />
+        </div>
+        <div className="relative z-10 max-w-5xl mx-auto text-center">
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+            <h3 className="heading-serif text-4xl md:text-6xl lg:text-7xl font-black text-white mb-6 tracking-tighter leading-tight">Ready to Transform Your Future?</h3>
+            <p className="text-white/90 text-lg md:text-xl font-light mb-10 max-w-2xl mx-auto">Join over 1,240 scholars who have accessed life-changing opportunities through our foundation.</p>
+            <motion.button 
+              onClick={() => onNavigate('APPLY')}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="px-12 py-5 md:py-6 bg-white text-indigo-600 rounded-3xl font-black text-lg md:text-xl shadow-2xl hover:shadow-xl transition-all inline-flex items-center gap-3"
+            >
+              Apply Today
+              <ArrowRight size={22} />
+            </motion.button>
+          </motion.div>
         </div>
       </section>
     </div>
