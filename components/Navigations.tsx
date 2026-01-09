@@ -16,12 +16,13 @@ const Navigation: React.FC<NavigationProps> = ({ currentView, setView, isMenuOpe
   const menuItems: { id: ViewState; label: string; icon: JSX.Element }[] = [
     { id: 'HOME', label: 'Home', icon: <Zap size={20} /> },
     { id: 'SCHOLARSHIPS', label: 'Scholarships', icon: <Award size={20} /> },
+    { id: 'INSTITUTIONS', label: 'Universities', icon: <Landmark size={20} /> },
     { id: 'GRANTS', label: 'Grants', icon: <Briefcase size={20} /> },
+    { id: 'SCHOLARSHIP_HUB', label: 'Hub', icon: <BookOpen size={20} /> },
+    { id: 'INTERNSHIP_OPPORTUNITIES', label: 'Internships', icon: <Briefcase size={20} /> },
+    { id: 'COMMUNITY_EVENTS', label: 'Events', icon: <Calendar size={20} /> },
     { id: 'NEWS', label: 'News', icon: <FileText size={20} /> },
-    { id: 'EVENTS', label: 'Events', icon: <Calendar size={20} /> },
-    { id: 'MEMBERS', label: 'Institutions', icon: <Landmark size={20} /> },
     { id: 'RESOURCE_HUB', label: 'Resources', icon: <BookOpen size={20} /> },
-    { id: 'ABOUT', label: 'About', icon: <BookOpen size={20} /> },
     { id: 'SUPPORT', label: 'Support', icon: <HelpCircle size={20} /> },
   ];
 

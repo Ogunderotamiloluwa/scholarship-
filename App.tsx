@@ -20,10 +20,15 @@ import GrantDetails from './components/GrantDetails';
 import GrantApplication from './components/GrantApplication';
 import News from './components/News';
 import Events from './components/Events';
-import Members from './components/Members';
 import ApplicationTracker from './components/ApplicationTracker';
 import Donate from './components/Donate';
 import Support from './components/Support';
+import ScholarshipHoldersHub from './components/ScholarshipHoldersHub';
+import CommunityEvents from './components/CommunityEvents';
+import InternshipOpportunities from './components/InternshipOpportunities';
+import InternshipDetail from './components/InternshipDetail';
+import EventDetail from './components/EventDetail';
+import Institutions from './components/Institutions';
 
 // --- SUB-COMPONENTS ---
 
@@ -694,6 +699,8 @@ const App: React.FC = () => {
   const [navigationHistory, setNavigationHistory] = useState<ViewState[]>(['HOME']);
   const [selectedStory, setSelectedStory] = useState<StoryContent | null>(null);
   const [selectedGrant, setSelectedGrant] = useState<GrantType | null>(null);
+  const [selectedInternship, setSelectedInternship] = useState<any>(null);
+  const [selectedEvent, setSelectedEvent] = useState<any>(null);
   const [activePhase, setActivePhase] = useState<ResourcePhase>(PHASES[0]);
   const [applyStep, setApplyStep] = useState(1);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -1236,8 +1243,8 @@ const App: React.FC = () => {
       case 'EVENTS':
         return <Events onNavigate={handleViewChange} />;
 
-      case 'MEMBERS':
-        return <Members onNavigate={handleViewChange} />;
+      case 'INSTITUTIONS':
+        return <Institutions onNavigate={handleViewChange} />;
 
       case 'APPLICATION_TRACKER':
         return <ApplicationTracker onNavigate={handleViewChange} />;
@@ -1247,6 +1254,21 @@ const App: React.FC = () => {
 
       case 'SUPPORT':
         return <Support onNavigate={handleViewChange} />;
+
+      case 'SCHOLARSHIP_HUB':
+        return <ScholarshipHoldersHub onNavigate={handleViewChange} />;
+
+      case 'COMMUNITY_EVENTS':
+        return <CommunityEvents onNavigate={handleViewChange} setSelectedEvent={setSelectedEvent} />;
+
+      case 'INTERNSHIP_OPPORTUNITIES':
+        return <InternshipOpportunities onNavigate={handleViewChange} setSelectedInternship={setSelectedInternship} />;
+
+      case 'INTERNSHIP_DETAIL':
+        return <InternshipDetail internship={selectedInternship} onNavigate={handleViewChange} onBack={handleBackNavigation} />;
+
+      case 'EVENT_DETAIL':
+        return <EventDetail event={selectedEvent} onNavigate={handleViewChange} onBack={handleBackNavigation} />;
 
       case 'ADMIN':
         return <AdminDashboard applicants={applicants} />;
