@@ -31,7 +31,7 @@ const CommunityEvents: React.FC<CommunityEventsProps> = ({ onNavigate, setSelect
       date: 'November 5, 2025',
       location: 'Budapest Congress Center, Budapest',
       description: 'Celebrate achievement and inspire futures at our annual Excellence Award Gala. An elegant evening honoring academic brilliance, fostering meaningful connections, and showcasing the transformative impact of the Stipendium Hungaricum programme.',
-      imageUrl: 'https://images.unsplash.com/photo-1519671482677-504be0271f95?auto=format&fit=crop&q=80&w=800',
+      imageUrl: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&q=80&w=800',
       attendees: 300,
       category: 'gala',
       highlights: [
@@ -49,7 +49,7 @@ const CommunityEvents: React.FC<CommunityEventsProps> = ({ onNavigate, setSelect
       date: 'June 18, 2025',
       location: 'Europa Ship, Budapest',
       description: 'We Connect, We Belong. An unforgettable evening with nearly 300 guests united by a shared story: Hungary. Celebrating community, connection, and the global impact of these scholarship programmes.',
-      imageUrl: 'https://images.unsplash.com/photo-1511632765486-a01980e01a18?auto=format&fit=crop&q=80&w=800',
+      imageUrl: 'https://images.unsplash.com/photo-1519671482749-fd09be7ccebf?auto=format&fit=crop&q=80&w=800',
       attendees: 280,
       category: 'networking',
       highlights: [
@@ -67,7 +67,7 @@ const CommunityEvents: React.FC<CommunityEventsProps> = ({ onNavigate, setSelect
       date: 'September 2025',
       location: 'Multiple University Locations',
       description: 'Welcome the new cohort of Stipendium Hungaricum students coming from around the world. An inclusive and celebratory event designed to help new students feel at home and connect with their peers.',
-      imageUrl: 'https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&q=80&w=800',
+      imageUrl: '/images/edwin-andrade-4V1dC_eoCwg-unsplash.jpg?auto=format&fit=crop&q=80&w=800',
       attendees: 500,
       category: 'welcome',
       highlights: [
@@ -86,7 +86,7 @@ const CommunityEvents: React.FC<CommunityEventsProps> = ({ onNavigate, setSelect
       date: 'May 2025',
       location: 'Various University Venues',
       description: 'Celebrate the achievements of graduating Stipendium Hungaricum scholars. Reflect on memories, celebrate accomplishments, and say goodbye to friends made during studies.',
-      imageUrl: 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&q=80&w=800',
+      imageUrl: 'https://images.unsplash.com/photo-1511632765486-a01980e01a18?auto=format&fit=crop&q=80&w=800',
       attendees: 400,
       category: 'farewell',
       highlights: [
@@ -104,7 +104,7 @@ const CommunityEvents: React.FC<CommunityEventsProps> = ({ onNavigate, setSelect
       date: 'October 2025',
       location: 'Budapest Central Park',
       description: 'Experience diverse cultures with food, music, dance, and art from around the world. Celebrate the multicultural community of scholarship holders.',
-      imageUrl: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&q=80&w=800',
+      imageUrl: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?auto=format&fit=crop&q=80&w=800',
       attendees: 600,
       category: 'cultural',
       highlights: [
@@ -122,7 +122,7 @@ const CommunityEvents: React.FC<CommunityEventsProps> = ({ onNavigate, setSelect
       date: 'April 2025',
       location: 'National Sports Complex',
       description: 'Compete in various sports and recreational activities. Build team spirit and friendships through athletic competition.',
-      imageUrl: 'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?auto=format&fit=crop&q=80&w=800',
+      imageUrl: '/images/grant-business.jpg?auto=format&fit=crop&q=80&w=800',
       attendees: 350,
       category: 'sports',
       highlights: [
@@ -171,13 +171,13 @@ const CommunityEvents: React.FC<CommunityEventsProps> = ({ onNavigate, setSelect
   const featuredEvents = events.filter(e => e.isFeatured);
 
   return (
-    <div className="min-h-screen bg-white dark:bg-slate-950 py-16 px-4 md:px-6">
+    <div className="min-h-screen bg-white dark:bg-slate-950 px-4 md:px-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mb-12 text-center"
+          className="pt-24 pb-8 md:pt-32 md:pb-12 text-center"
         >
           <h1 className="text-4xl md:text-5xl font-black text-slate-950 dark:text-white mb-4 tracking-tight">
             Community Events & Celebrations
@@ -188,7 +188,7 @@ const CommunityEvents: React.FC<CommunityEventsProps> = ({ onNavigate, setSelect
         </motion.div>
 
         {/* Featured Events Section */}
-        <div className="mb-16">
+        <div className="mb-16 pb-8">
           <h2 className="text-3xl font-black text-slate-950 dark:text-white mb-8">Featured Events</h2>
           <div className="grid md:grid-cols-2 gap-6">
             {featuredEvents.map((event, idx) => (
@@ -209,6 +209,8 @@ const CommunityEvents: React.FC<CommunityEventsProps> = ({ onNavigate, setSelect
                     src={event.imageUrl}
                     alt={event.title}
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                    loading="lazy"
+                    decoding="async"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-900/70 to-transparent"></div>
                 </div>
@@ -281,6 +283,8 @@ const CommunityEvents: React.FC<CommunityEventsProps> = ({ onNavigate, setSelect
                   src={event.imageUrl}
                   alt={event.title}
                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                  loading="lazy"
+                  decoding="async"
                 />
               </div>
 

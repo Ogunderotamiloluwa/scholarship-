@@ -54,7 +54,6 @@ const Home: React.FC<HomeProps> = ({ onNavigate, onOpenStory }) => {
           <div className="absolute bottom-0 -left-40 w-96 h-96 bg-emerald-600/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
         </div>
 
-        <AnimatePresence mode="wait">
           <motion.div 
             key={activeSlide}
             initial={{ opacity: 0, scale: 1.05 }}
@@ -66,7 +65,6 @@ const Home: React.FC<HomeProps> = ({ onNavigate, onOpenStory }) => {
             <img src={STORIES[activeSlide].image} className="w-full h-full object-cover opacity-30" alt="Spotlight" />
             <div className="absolute inset-0 bg-gradient-to-b md:bg-gradient-to-r from-slate-950 via-slate-950/50 to-transparent"></div>
           </motion.div>
-        </AnimatePresence>
         
         <div className="relative z-20 max-w-7xl mx-auto w-full flex flex-col items-center justify-center px-4">
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="max-w-5xl text-center">
@@ -303,7 +301,7 @@ const Home: React.FC<HomeProps> = ({ onNavigate, onOpenStory }) => {
           >
             <div className="relative z-10 rounded-[48px] md:rounded-[64px] overflow-hidden shadow-2xl aspect-[4/5]">
               <img 
-                src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&q=80&w=1200" 
+                src="/images/thisisengineering-TXxiFuQLBKQ-unsplash.jpg" 
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
                 alt="Scholarship" 
               />
@@ -431,7 +429,7 @@ const Home: React.FC<HomeProps> = ({ onNavigate, onOpenStory }) => {
       {/* 6. FINAL CTA */}
       <section className="py-20 md:py-40 px-6 bg-slate-950 relative overflow-hidden">
         <div className="absolute inset-0 opacity-10 pointer-events-none">
-           <img src="https://images.unsplash.com/photo-1541339907198-e08756defe73?auto=format&fit=crop&q=80&w=1600" className="w-full h-full object-cover" />
+           <img src="/images/vadim-sherbakov-d6ebY-faOO0-unsplash.jpg" className="w-full h-full object-cover" />
         </div>
         <div className="max-w-4xl mx-auto bg-white/5 backdrop-blur-3xl rounded-[40px] md:rounded-[80px] p-10 md:p-32 text-center text-white border border-white/10 shadow-2xl relative z-10 group">
           <div className="absolute top-0 right-0 p-10 opacity-5 -translate-y-10 group-hover:translate-y-0 transition-transform duration-[2s]"><Landmark className="w-[300px] h-[300px] md:w-[400px] md:h-[400px]" /></div>

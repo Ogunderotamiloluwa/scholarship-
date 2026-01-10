@@ -46,7 +46,7 @@ const Scholarships: React.FC<ScholarshipsProps> = ({ onNavigate }) => {
         {/* Background Image */}
         <div className="absolute inset-0 opacity-20">
           <img 
-            src="https://images.unsplash.com/photo-1523050335456-c6d860cb0d12?auto=format&fit=crop&q=80&w=1200"
+            src="/images/leon-wu-LLfRMRT-9AY-unsplash.jpg"
             alt="Scholarship opportunities"
             className="w-full h-full object-cover"
           />

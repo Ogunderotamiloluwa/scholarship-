@@ -191,7 +191,7 @@ const Events: React.FC<EventsProps> = ({ onNavigate }) => {
         {/* Background Image */}
         <div className="absolute inset-0 opacity-20">
           <img 
-            src="https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&q=80&w=1200"
+            src="/images/kenny-eliason-zFSo6bnZJTw-unsplash.jpg"
             alt="Events and networking"
             className="w-full h-full object-cover"
           />

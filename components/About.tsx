@@ -10,7 +10,7 @@ const About: React.FC = () => {
       <section className="relative bg-slate-950 text-white py-40 px-6 overflow-hidden">
         <div className="absolute inset-0 z-0">
           <img 
-            src="https://images.unsplash.com/photo-1541339907198-e08756ebafe3?auto=format&fit=crop&q=80&w=1600" 
+            src="/images/edwin-andrade-4V1dC_eoCwg-unsplash.jpg" 
             alt="University Campus" 
             className="w-full h-full object-cover opacity-20"
           />
@@ -56,7 +56,7 @@ const About: React.FC = () => {
           <div className="relative">
              <div className="absolute -inset-10 bg-indigo-50 rounded-[100px] rotate-3 shadow-inner" />
              <img 
-               src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&q=80&w=1200" 
+               src="/images/leon-wu-LLfRMRT-9AY-unsplash.jpg" 
                alt="Graduation Day" 
                className="rounded-[80px] shadow-2xl relative z-10" 
              />

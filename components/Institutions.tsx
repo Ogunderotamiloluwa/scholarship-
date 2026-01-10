@@ -47,7 +47,7 @@ const Institutions: React.FC<InstitutionsProps> = ({ onNavigate }) => {
       city: 'Budapest',
       country: 'Hungary',
       coordinates: { lat: 47.4745, lng: 19.0504 },
-      imageUrl: 'https://images.unsplash.com/photo-1541123603104-802226a56c04?auto=format&fit=crop&q=80&w=600',
+      imageUrl: '/images/mikael-kristenson-3aVlWP-7bg8-unsplash.jpg',
       description: 'Leading technical university with world-class engineering and technology programs',
       programs: ['Engineering', 'Computer Science', 'Architecture', 'Business'],
       studentCount: 12500,
@@ -67,7 +67,7 @@ const Institutions: React.FC<InstitutionsProps> = ({ onNavigate }) => {
       city: 'Budapest',
       country: 'Hungary',
       coordinates: { lat: 47.4979, lng: 19.0402 },
-      imageUrl: 'https://images.unsplash.com/photo-1568992687844-70efb0d20f23?auto=format&fit=crop&q=80&w=600',
+      imageUrl: '/images/mikael-kristenson-3aVlWP-7bg8-unsplash (1).jpg',
       description: 'Hungary\'s premier research university specializing in sciences and humanities',
       programs: ['Physics', 'Chemistry', 'Biology', 'Mathematics', 'Humanities'],
       studentCount: 10200,
@@ -87,7 +87,7 @@ const Institutions: React.FC<InstitutionsProps> = ({ onNavigate }) => {
       city: 'Debrecen',
       country: 'Hungary',
       coordinates: { lat: 47.5316, lng: 21.6273 },
-      imageUrl: 'https://images.unsplash.com/photo-1606332008032-b2e7b8ac0e0e?auto=format&fit=crop&q=80&w=600',
+      imageUrl: '/images/kenny-eliason-zFSo6bnZJTw-unsplash (1).jpg',
       description: 'Second-largest university in Hungary with strong medical and agricultural programs',
       programs: ['Medicine', 'Veterinary', 'Agriculture', 'Engineering', 'Law'],
       studentCount: 9800,
@@ -107,7 +107,7 @@ const Institutions: React.FC<InstitutionsProps> = ({ onNavigate }) => {
       city: 'Budapest',
       country: 'Hungary',
       coordinates: { lat: 47.4761, lng: 19.0425 },
-      imageUrl: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&q=80&w=600',
+      imageUrl: '/images/kenny-eliason-zFSo6bnZJTw-unsplash.jpg',
       description: 'Premier business and economics university with international recognition',
       programs: ['Business', 'Economics', 'International Relations', 'Management'],
       studentCount: 8500,
@@ -127,7 +127,7 @@ const Institutions: React.FC<InstitutionsProps> = ({ onNavigate }) => {
       city: 'Szeged',
       country: 'Hungary',
       coordinates: { lat: 46.2530, lng: 20.1414 },
-      imageUrl: 'https://images.unsplash.com/photo-1517486808906-f3fa2b2f5e8d?auto=format&fit=crop&q=80&w=600',
+      imageUrl: '/images/javier-trueba-iQPr1XkF5F0-unsplash.jpg',
       description: 'Historical university with excellent programs in medicine, law, and humanities',
       programs: ['Medicine', 'Law', 'Arts', 'Dentistry', 'Pharmacy'],
       studentCount: 7600,
@@ -143,6 +143,22 @@ const Institutions: React.FC<InstitutionsProps> = ({ onNavigate }) => {
     }
   ];
 
+  // Unique people-focused images for US institutions
+  const usInstitutionImages = [
+    '/images/linkedin-sales-solutions-NpyF7rjqmq4-unsplash.jpg',
+    '/images/md-duran-1VqHRwxcCCw-unsplash.jpg',
+    '/images/vitalik-nqyK3NuwC6E-unsplash.jpg',
+    '/images/mimi-thian-vdXMSiX-n6M-unsplash.jpg',
+    'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&q=80&w=800',
+    'https://images.unsplash.com/photo-1460925895917-aeb19be489c7?auto=format&fit=crop&q=80&w=800',
+    'https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&q=80&w=800',
+    'https://images.unsplash.com/photo-1519671482749-fd09be7ccebf?auto=format&fit=crop&q=80&w=800',
+    'https://images.unsplash.com/photo-1541339907198-e08756ebafe3?auto=format&fit=crop&q=80&w=800',
+    'https://images.unsplash.com/photo-1530587191325-3db32d826c18?auto=format&fit=crop&q=80&w=800',
+    'https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&q=80&w=800',
+    'https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&q=80&w=800'
+  ];
+
   // Convert US institutions to University format for unified display
   const institutionsAsUniversities: UnifiedInstitution[] = MEMBER_INSTITUTIONS.map((inst, idx) => ({
     id: `institution-${idx}`,
@@ -150,7 +166,7 @@ const Institutions: React.FC<InstitutionsProps> = ({ onNavigate }) => {
     city: inst.city,
     country: 'United States',
     coordinates: { lat: 40 + Math.random() * 20, lng: -120 + Math.random() * 40 },
-    imageUrl: 'https://images.unsplash.com/photo-1517457373614-b7152f800a81?auto=format&fit=crop&q=80&w=600',
+    imageUrl: usInstitutionImages[idx % usInstitutionImages.length],
     description: 'Leading educational institution in the United States',
     programs: ['Engineering', 'Business', 'Liberal Arts', 'STEM'],
     studentCount: inst.studentPopulation,

@@ -57,9 +57,11 @@ const Grants: React.FC<GrantsProps> = ({ onNavigate, onGrantSelect }) => {
         {/* Background Image */}
         <div className="absolute inset-0 opacity-15">
           <img 
-            src="https://images.unsplash.com/photo-1524178232363-1fb28f74b671?auto=format&fit=crop&q=80&w=1200"
+            src="/images/rut-miit-3EMw3T-ZjkE-unsplash.jpg"
             alt="Grant opportunities"
             className="w-full h-full object-cover"
+            loading="eager"
+            decoding="async"
           />
           <div className="absolute inset-0 bg-gradient-to-r from-indigo-600/80 to-blue-600/80"></div>
         </div>
@@ -196,6 +198,8 @@ const Grants: React.FC<GrantsProps> = ({ onNavigate, onGrantSelect }) => {
                           src={grant.image}
                           alt={grant.name}
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                          loading="lazy"
+                          decoding="async"
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-slate-950/60 to-transparent"></div>
                         

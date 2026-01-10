@@ -57,7 +57,7 @@ const InternshipOpportunities: React.FC<InternshipOpportunitiesProps> = ({ onNav
         'Mentorship from senior data scientists',
         'Potential job offer upon completion'
       ],
-      imageUrl: 'https://images.unsplash.com/photo-1516321318423-f06f70d504f0?auto=format&fit=crop&q=80&w=600',
+      imageUrl: '/images/thisisengineering-TXxiFuQLBKQ-unsplash.jpg',
       applicationDeadline: '2025-04-30',
       startDate: 'June 2025',
       isPaid: true,
@@ -82,7 +82,7 @@ const InternshipOpportunities: React.FC<InternshipOpportunitiesProps> = ({ onNav
         'Networking with banking professionals',
         'Certificate of completion'
       ],
-      imageUrl: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&q=80&w=600',
+      imageUrl: '/images/kenny-eliason-zFSo6bnZJTw-unsplash.jpg',
       applicationDeadline: '2025-05-15',
       startDate: 'July 2025',
       isPaid: true,
@@ -107,7 +107,7 @@ const InternshipOpportunities: React.FC<InternshipOpportunitiesProps> = ({ onNav
         'Code review mentorship',
         'Full-time job consideration'
       ],
-      imageUrl: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&q=80&w=600',
+      imageUrl: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&q=80&w=800',
       applicationDeadline: '2025-04-15',
       startDate: 'May 2025',
       isPaid: true,
@@ -132,7 +132,7 @@ const InternshipOpportunities: React.FC<InternshipOpportunitiesProps> = ({ onNav
         'Industry networking',
         'Flexible hours'
       ],
-      imageUrl: 'https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&q=80&w=600',
+      imageUrl: 'https://images.unsplash.com/photo-1460925895917-aeb19be489c7?auto=format&fit=crop&q=80&w=600',
       applicationDeadline: '2025-04-20',
       startDate: 'May 2025',
       isPaid: true,
@@ -157,7 +157,7 @@ const InternshipOpportunities: React.FC<InternshipOpportunitiesProps> = ({ onNav
         'Professional law library access',
         'Networking with legal professionals'
       ],
-      imageUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=600',
+      imageUrl: '/images/vitalik-nqyK3NuwC6E-unsplash.jpg?auto=format&fit=crop&q=80&w=600',
       applicationDeadline: '2025-05-01',
       startDate: 'June 2025',
       isPaid: true,
@@ -209,7 +209,7 @@ const InternshipOpportunities: React.FC<InternshipOpportunitiesProps> = ({ onNav
         'Laboratory access',
         'Full-time employment potential'
       ],
-      imageUrl: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&q=80&w=600',
+      imageUrl: '/images/joshua-hoehne-iggWDxHTAUQ-unsplash.jpg?auto=format&fit=crop&q=80&w=600',
       applicationDeadline: '2025-05-05',
       startDate: 'June 2025',
       isPaid: true,
@@ -259,7 +259,7 @@ const InternshipOpportunities: React.FC<InternshipOpportunitiesProps> = ({ onNav
         'Environmental networking',
         'Published research potential'
       ],
-      imageUrl: 'https://images.unsplash.com/photo-1517093427937-8fcff927fcde?auto=format&fit=crop&q=80&w=600',
+      imageUrl: '/images/linkedin-sales-solutions-NpyF7rjqmq4-unsplash.jpg?auto=format&fit=crop&q=80&w=600',
       applicationDeadline: '2025-04-25',
       startDate: 'May 2025',
       isPaid: true,
@@ -284,7 +284,7 @@ const InternshipOpportunities: React.FC<InternshipOpportunitiesProps> = ({ onNav
         'Patient interaction experience',
         'Reference for medical school'
       ],
-      imageUrl: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&q=80&w=600',
+      imageUrl: '/images/md-duran-1VqHRwxcCCw-unsplash.jpg?auto=format&fit=crop&q=80&w=600',
       applicationDeadline: '2025-05-30',
       startDate: 'July 2025',
       isPaid: true,
@@ -309,7 +309,7 @@ const InternshipOpportunities: React.FC<InternshipOpportunitiesProps> = ({ onNav
         'Networking with suppliers',
         'Career advancement potential'
       ],
-      imageUrl: 'https://images.unsplash.com/photo-1503387762519-52582b742d40?auto=format&fit=crop&q=80&w=600',
+      imageUrl: '/images/rut-miit-3EMw3T-ZjkE-unsplash.jpg?auto=format&fit=crop&q=80&w=600',
       applicationDeadline: '2025-05-12',
       startDate: 'June 2025',
       isPaid: true,
@@ -334,7 +334,7 @@ const InternshipOpportunities: React.FC<InternshipOpportunitiesProps> = ({ onNav
         'Bug bounty opportunities',
         'Full-time opportunities'
       ],
-      imageUrl: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=600',
+      imageUrl: '/images/javier-trueba-iQPr1XkF5F0-unsplash.jpg?auto=format&fit=crop&q=80&w=600',
       applicationDeadline: '2025-04-10',
       startDate: 'May 2025',
       isPaid: true,
@@ -359,7 +359,7 @@ const InternshipOpportunities: React.FC<InternshipOpportunitiesProps> = ({ onNav
         'Design mentorship',
         'Creative community networking'
       ],
-      imageUrl: 'https://images.unsplash.com/photo-1561070791-2526d30994b5?auto=format&fit=crop&q=80&w=600',
+      imageUrl: '/images/mikael-kristenson-3aVlWP-7bg8-unsplash (1).jpg?auto=format&fit=crop&q=80&w=600',
       applicationDeadline: '2025-05-08',
       startDate: 'June 2025',
       isPaid: true,
@@ -384,7 +384,7 @@ const InternshipOpportunities: React.FC<InternshipOpportunitiesProps> = ({ onNav
         'Specialized equipment training',
         'Career mentorship'
       ],
-      imageUrl: 'https://images.unsplash.com/photo-1576091160568-112566888912?auto=format&fit=crop&q=80&w=600',
+      imageUrl: 'https://images.unsplash.com/photo-1576091160388-112febf46b22?auto=format&fit=crop&q=80&w=800',
       applicationDeadline: '2025-05-25',
       startDate: 'July 2025',
       isPaid: true,
@@ -409,7 +409,7 @@ const InternshipOpportunities: React.FC<InternshipOpportunitiesProps> = ({ onNav
         'Industry machinery training',
         'Full-time employment potential'
       ],
-      imageUrl: 'https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&q=80&w=600',
+      imageUrl: '/images/vadim-sherbakov-d6ebY-faOO0-unsplash.jpg?auto=format&fit=crop&q=80&w=600',
       applicationDeadline: '2025-05-18',
       startDate: 'June 2025',
       isPaid: true,
@@ -434,7 +434,7 @@ const InternshipOpportunities: React.FC<InternshipOpportunitiesProps> = ({ onNav
         'Public service orientation',
         'Career in public sector'
       ],
-      imageUrl: 'https://images.unsplash.com/photo-1577720643272-265f434b3c8b?auto=format&fit=crop&q=80&w=600',
+      imageUrl: 'https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&q=80&w=600',
       applicationDeadline: '2025-05-22',
       startDate: 'July 2025',
       isPaid: true,
@@ -459,7 +459,7 @@ const InternshipOpportunities: React.FC<InternshipOpportunitiesProps> = ({ onNav
         'Humanitarian work exposure',
         'References for further NGO work'
       ],
-      imageUrl: 'https://images.unsplash.com/photo-1593104547489-5cfb3839a3b5?auto=format&fit=crop&q=80&w=600',
+      imageUrl: 'https://images.unsplash.com/photo-1559027615-cd2628902d4a?auto=format&fit=crop&q=80&w=600',
       applicationDeadline: '2025-05-28',
       startDate: 'July 2025',
       isPaid: false,
@@ -538,6 +538,8 @@ const InternshipOpportunities: React.FC<InternshipOpportunitiesProps> = ({ onNav
                       src={internship.imageUrl}
                       alt={internship.title}
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                      loading="lazy"
+                      decoding="async"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-slate-900/50 to-transparent"></div>
                     <div className="absolute top-3 right-3 flex gap-2">
@@ -678,6 +680,8 @@ const InternshipOpportunities: React.FC<InternshipOpportunitiesProps> = ({ onNav
                   src={internship.imageUrl}
                   alt={internship.title}
                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                  loading="lazy"
+                  decoding="async"
                 />
               </div>
 

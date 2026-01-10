@@ -55,9 +55,11 @@ const News: React.FC<NewsProps> = ({ onNavigate }) => {
         {/* Background Image */}
         <div className="absolute inset-0 opacity-20">
           <img 
-            src="https://images.unsplash.com/photo-1532012197267-da84d127e765?auto=format&fit=crop&q=80&w=1200"
+            src="/images/mikael-kristenson-3aVlWP-7bg8-unsplash.jpg"
             alt="Latest news and updates"
             className="w-full h-full object-cover"
+            loading="eager"
+            decoding="async"
           />
           <div className="absolute inset-0 bg-gradient-to-b from-slate-950/20 to-slate-950"></div>
         </div>
@@ -130,6 +132,8 @@ const News: React.FC<NewsProps> = ({ onNavigate }) => {
                         src={filteredNews[0].image} 
                         alt={filteredNews[0].title}
                         className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                        loading="lazy"
+                        decoding="async"
                       />
                     </div>
                     <div className="flex flex-col justify-center">
@@ -188,6 +192,8 @@ const News: React.FC<NewsProps> = ({ onNavigate }) => {
                           src={article.image} 
                           alt={article.title}
                           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                          loading="lazy"
+                          decoding="async"
                         />
                       </div>
 

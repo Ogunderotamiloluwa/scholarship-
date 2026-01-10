@@ -14,7 +14,7 @@ const FAQ: React.FC = () => {
         {/* Background Image */}
         <div className="absolute inset-0 opacity-20">
           <img 
-            src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&q=80&w=1200"
+            src="/images/edwin-andrade-4V1dC_eoCwg-unsplash.jpg"
             alt="FAQ and support"
             className="w-full h-full object-cover"
           />
