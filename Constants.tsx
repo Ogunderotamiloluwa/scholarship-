@@ -833,7 +833,7 @@ export const NEWS_ITEMS = [
         ]
       }
     ] as any,
-    image: 'https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&q=80&w=1200',
+    image: '/images/joshua-hoehne-iggWDxHTAUQ-unsplash.jpg',
     category: 'Scholarships',
     date: '2026-01-10',
     author: 'Marcus Thorne',
@@ -1028,7 +1028,7 @@ export const EVENTS = [
     location: 'Washington, DC Convention Center',
     type: 'Summit',
     attendees: 2150,
-    image: '/images/thisisengineering-TXxiFuQLBKQ-unsplash.jpg'
+    image: '/images/javier-trueba-iQPr1XkF5F0-unsplash.jpg'
   },
   {
     id: 'event-2',
@@ -1050,7 +1050,7 @@ export const EVENTS = [
     location: 'Virtual',
     type: 'Webinar',
     attendees: 1200,
-    image: '/images/thisisengineering-TXxiFuQLBKQ-unsplash.jpg'
+    image: '/images/md-duran-1VqHRwxcCCw-unsplash.jpg'
   },
   {
     id: 'event-4',
@@ -1072,7 +1072,7 @@ export const EVENTS = [
     location: 'San Francisco, CA',
     type: 'Workshop',
     attendees: 320,
-    image: '/images/thisisengineering-TXxiFuQLBKQ-unsplash.jpg'
+    image: '/images/vitalik-nqyK3NuwC6E-unsplash.jpg'
   },
   {
     id: 'event-6',
@@ -1116,7 +1116,7 @@ export const EVENTS = [
     location: 'Virtual',
     type: 'Workshop',
     attendees: 650,
-    image: '/images/thisisengineering-TXxiFuQLBKQ-unsplash.jpg'
+    image: '/images/linkedin-sales-solutions-NpyF7rjqmq4-unsplash.jpg'
   },
   {
     id: 'event-10',
@@ -1149,7 +1149,7 @@ export const EVENTS = [
     location: 'Chicago, IL',
     type: 'Summit',
     attendees: 750,
-    image: '/images/thisisengineering-TXxiFuQLBKQ-unsplash.jpg'
+    image: '/images/mimi-thian-vdXMSiX-n6M-unsplash.jpg'
   },
   {
     id: 'event-13',

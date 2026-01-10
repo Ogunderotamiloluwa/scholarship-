@@ -173,22 +173,8 @@ const CommunityEvents: React.FC<CommunityEventsProps> = ({ onNavigate, setSelect
   return (
     <div className="min-h-screen bg-white dark:bg-slate-950 px-4 md:px-6">
       <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="pt-24 pb-8 md:pt-32 md:pb-12 text-center"
-        >
-          <h1 className="text-4xl md:text-5xl font-black text-slate-950 dark:text-white mb-4 tracking-tight">
-            Community Events & Celebrations
-          </h1>
-          <p className="text-lg text-slate-600 dark:text-slate-300 max-w-2xl mx-auto">
-            Join our vibrant community at exclusive events throughout the year. Network, celebrate achievements, and build lasting friendships.
-          </p>
-        </motion.div>
-
         {/* Featured Events Section */}
-        <div className="mb-16 pb-8">
+        <div className="pt-24 md:pt-32 mb-16 pb-8">
           <h2 className="text-3xl font-black text-slate-950 dark:text-white mb-8">Featured Events</h2>
           <div className="grid md:grid-cols-2 gap-6">
             {featuredEvents.map((event, idx) => (
@@ -325,6 +311,20 @@ const CommunityEvents: React.FC<CommunityEventsProps> = ({ onNavigate, setSelect
             </motion.div>
           ))}
         </div>
+
+        {/* Header - Moved to Bottom */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="py-12 md:py-16 text-center border-t border-slate-200 dark:border-slate-800"
+        >
+          <h1 className="text-4xl md:text-5xl font-black text-slate-950 dark:text-white mb-4 tracking-tight">
+            Community Events & Celebrations
+          </h1>
+          <p className="text-lg text-slate-600 dark:text-slate-300 max-w-2xl mx-auto">
+            Join our vibrant community at exclusive events throughout the year. Network, celebrate achievements, and build lasting friendships.
+          </p>
+        </motion.div>
 
         {/* Navigation to EventDetail is handled via onClick */}
       </div>
