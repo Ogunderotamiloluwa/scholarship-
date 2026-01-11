@@ -8,14 +8,7 @@ const About: React.FC = () => {
     <div className="animate-in fade-in duration-700 bg-white">
       {/* Immersive Header */}
       <section className="relative bg-slate-950 text-white py-40 px-6 overflow-hidden">
-        <div className="absolute inset-0 z-0">
-          <img 
-            src="/images/edwin-andrade-4V1dC_eoCwg-unsplash.jpg" 
-            alt="University Campus" 
-            className="w-full h-full object-cover opacity-20"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent" />
-        </div>
+        <div className="absolute inset-0 z-0 bg-gradient-to-br from-slate-950 via-indigo-950 to-slate-950"></div>
         <div className="relative z-10 max-w-7xl mx-auto text-center">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-indigo-500/20 text-indigo-300 text-[10px] font-black uppercase tracking-[0.2em] mb-10 border border-indigo-400/20">
              Mission Validation 2012-2026
@@ -55,11 +48,12 @@ const About: React.FC = () => {
           </div>
           <div className="relative">
              <div className="absolute -inset-10 bg-indigo-50 rounded-[100px] rotate-3 shadow-inner" />
-             <img 
-               src="/images/leon-wu-LLfRMRT-9AY-unsplash.jpg" 
-               alt="Graduation Day" 
-               className="rounded-[80px] shadow-2xl relative z-10" 
-             />
+             <div className="w-full h-96 bg-gradient-to-br from-indigo-100 to-emerald-100 rounded-[80px] shadow-2xl relative z-10 flex items-center justify-center">
+               <div className="text-center">
+                 <ShieldCheck size={80} className="text-indigo-600 mx-auto mb-4" />
+                 <p className="text-slate-700 font-bold text-lg">Institutional Integrity Since 2012</p>
+               </div>
+             </div>
              <div className="absolute -bottom-10 -right-10 w-48 h-48 bg-white rounded-full p-8 shadow-2xl z-20 flex flex-col items-center justify-center text-center">
                 <ShieldCheck size={40} className="text-emerald-500 mb-2" />
                 <span className="text-[9px] font-black uppercase tracking-widest leading-none">Institutional <br/>Integrity</span>
@@ -79,7 +73,13 @@ const About: React.FC = () => {
             {TEAM.map((member, i) => (
               <div key={i} className="group bg-white rounded-[64px] p-12 shadow-sm hover:shadow-2xl transition-all duration-700 border border-slate-50 flex flex-col items-center text-center">
                 <div className="relative w-48 h-48 mb-10 overflow-hidden rounded-[40px] shadow-2xl rotate-2 group-hover:rotate-0 transition-transform">
-                  <img src={member.img} alt={member.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" />
+                  <img 
+                    src={member.img} 
+                    alt={member.name} 
+                    loading="lazy"
+                    decoding="async"
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" 
+                  />
                 </div>
                 <h4 className="font-black text-3xl text-slate-900 mb-2 tracking-tight">{member.name}</h4>
                 <p className="text-indigo-600 font-bold text-xs uppercase tracking-[0.3em] mb-8">{member.role}</p>

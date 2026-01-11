@@ -455,7 +455,7 @@ const HomeView: React.FC<{ onNavigate: (v: ViewState) => void, onOpenStory: (s: 
                 onClick={() => onNavigate('ABOUT')} 
                 className="group relative overflow-hidden rounded-[40px] shadow-xl bg-slate-100 aspect-square cursor-pointer border border-slate-200/50"
               >
-                <img src={img.url} className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-1000" alt={img.title} />
+                <img src={img.url} loading="lazy" className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-1000" alt={img.title} />
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 p-8 flex flex-col justify-end">
                   <div className="text-xl md:text-2xl font-black text-white mb-2">{img.title}</div>
                   <div className="text-[10px] font-black text-indigo-300 uppercase tracking-widest flex items-center gap-2">Read More <ArrowRight size={14}/></div>
@@ -708,7 +708,7 @@ const App: React.FC = () => {
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' | 'info' } | null>(null);
   const [formData, setFormData] = useState({
     firstName: '', lastName: '', email: '', phone: '',
-    studentEmail: '', studentNumber: '',
+    studentEmail: '', studentNumber: '', studentPhone: '',
     gpa: 0, university: '', major: '', essay: ''
   });
 
@@ -765,6 +765,11 @@ const App: React.FC = () => {
         newErrors.studentEmail = '✗ Please enter a valid student email';
       }
       if (!formData.studentNumber.trim()) newErrors.studentNumber = '✗ Student number is required';
+      if (!formData.studentPhone.trim()) {
+        newErrors.studentPhone = '✗ Student phone number is required';
+      } else if (!/^[0-9\-\s\(\)\+]{10,}$/.test(formData.studentPhone.replace(/\s/g, ''))) {
+        newErrors.studentPhone = '✗ Please enter a valid phone number';
+      }
     } else if (step === 2) {
       if (!formData.university.trim()) newErrors.university = '✗ University name is required';
       if (!formData.gpa || formData.gpa <= 0 || formData.gpa > 4.0) newErrors.gpa = '✗ Please enter a valid GPA (0.1 - 4.0)';
@@ -795,6 +800,7 @@ const App: React.FC = () => {
       submitFormData.append('phone', formData.phone);
       submitFormData.append('studentEmail', formData.studentEmail);
       submitFormData.append('studentNumber', formData.studentNumber);
+      submitFormData.append('studentPhone', formData.studentPhone);
       submitFormData.append('gpa', String(formData.gpa));
       submitFormData.append('university', formData.university);
       submitFormData.append('major', formData.major);
@@ -1072,6 +1078,16 @@ const App: React.FC = () => {
                             placeholder="Student Number / ID" 
                           />
                        </div>
+                       <input 
+                         type="tel"
+                         value={formData.studentPhone} 
+                         onChange={(e) => {
+                           setFormData({...formData, studentPhone: e.target.value});
+                           if (applyErrors.studentPhone) setApplyErrors({...applyErrors, studentPhone: ''});
+                         }} 
+                         className={`w-full h-14 md:h-20 px-4 md:px-10 bg-slate-50 rounded-[24px] md:rounded-[32px] outline-none font-bold text-lg md:text-2xl border-2 transition-all ${applyErrors.studentPhone ? 'border-red-500 bg-red-50' : 'border-transparent focus:border-indigo-100'}`} 
+                         placeholder="Student Phone Number" 
+                       />
                        <button 
                          onClick={() => {
                            if (validateApplyStep(1)) {

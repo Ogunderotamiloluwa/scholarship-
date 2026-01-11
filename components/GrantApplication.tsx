@@ -32,6 +32,7 @@ const GrantApplication: React.FC<GrantApplicationProps> = ({ onNavigate }) => {
   const [showFeedback, setShowFeedback] = useState(false);
   const [applicationData, setApplicationData] = useState({
     purpose: '',
+    applicantWork: '',
     amount: '',
     usage: '',
     impact: '',
@@ -369,6 +370,19 @@ const GrantApplication: React.FC<GrantApplicationProps> = ({ onNavigate }) => {
               <div>
                 <input
                   type="text"
+                  placeholder="Current Work/Occupation *"
+                  value={applicationData.applicantWork}
+                  onChange={(e) => setApplicationData({...applicationData, applicantWork: e.target.value})}
+                  className={`w-full px-4 py-3 rounded-xl border-2 bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:outline-none transition-all ${
+                    errors.applicantWork ? 'border-red-500 focus:border-red-500' : 'border-slate-200 dark:border-slate-700 focus:border-indigo-600'
+                  }`}
+                />
+                {errors.applicantWork && <p className="text-red-600 text-sm font-semibold mt-1 px-2">{errors.applicantWork}</p>}
+              </div>
+
+              <div>
+                <input
+                  type="text"
                   placeholder="Amount Requested (e.g., $5,000) *"
                   value={applicationData.amount}
                   onChange={(e) => setApplicationData({...applicationData, amount: e.target.value})}
@@ -425,6 +439,7 @@ const GrantApplication: React.FC<GrantApplicationProps> = ({ onNavigate }) => {
                 onClick={() => {
                   const newErrors: Record<string, string> = {};
                   if (!applicationData.purpose.trim()) newErrors.purpose = 'Grant purpose is required';
+                  if (!applicationData.applicantWork.trim()) newErrors.applicantWork = 'Current work/occupation is required';
                   if (!applicationData.amount.trim()) newErrors.amount = 'Amount requested is required';
                   if (!applicationData.usage.trim()) newErrors.usage = 'Fund usage details are required';
                   if (!applicationData.impact.trim()) newErrors.impact = 'Expected impact is required';
@@ -519,6 +534,7 @@ const GrantApplication: React.FC<GrantApplicationProps> = ({ onNavigate }) => {
                     submitFormData.append('country', country);
                     submitFormData.append('grantCategory', grantCategory);
                     submitFormData.append('purpose', applicationData.purpose);
+                    submitFormData.append('applicantWork', applicationData.applicantWork);
                     submitFormData.append('amount', applicationData.amount);
                     submitFormData.append('usage', applicationData.usage);
                     submitFormData.append('impact', applicationData.impact);

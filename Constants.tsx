@@ -6,7 +6,7 @@ export const STORIES: StoryContent[] = [
     category: 'STEM Innovation',
     title: 'The Quantum Leap',
     subtitle: 'Liam Chen is developing energy-efficient AI architectures at the MIT Media Lab.',
-    image: 'https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&q=80&w=1200',
+    image: '/images/software-development.jpg',
     content: [
       "Liam's path to MIT was fueled by a relentless drive to solve global energy crises through compute optimization.",
       "As a Beacon Scholar, he received not only full tuition but a $15,000 annual research stipend.",
@@ -22,7 +22,7 @@ export const STORIES: StoryContent[] = [
     category: 'Public Policy',
     title: 'Voice for the Voiceless',
     subtitle: 'Maya Rodriguez is advocating for rural educational equity on Capitol Hill.',
-    image: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&q=80&w=1200',
+    image: '/images/pharmaceutical-research.jpg',
     content: [
       "Maya grew up in a community where internet access was a luxury. Now, she's drafting the legislation to fix it.",
       "Through the Vanguard Law Grant, she completed her JD at Georgetown debt-free.",
@@ -38,7 +38,7 @@ export const STORIES: StoryContent[] = [
     category: 'Medical Research',
     title: 'Breakthrough in Oncology',
     subtitle: 'Dr. Priya Patel conducted groundbreaking cancer research at Johns Hopkins.',
-    image: 'https://images.unsplash.com/photo-1530587191325-3db32d826c18?auto=format&fit=crop&q=80&w=1200',
+    image: '/images/grant-research.jpg',
     content: [
       "Priya's research on immunotherapy has shown promising results in early-stage clinical trials.",
       "As a Beacon Scholar, she received comprehensive support for her doctoral research including lab equipment and mentorship.",
@@ -54,7 +54,7 @@ export const STORIES: StoryContent[] = [
     category: 'Business & Entrepreneurship',
     title: 'From Startup to Scale-up',
     subtitle: 'James Wu scaled his EdTech startup to $10M ARR with Beacon support.',
-    image: 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&q=80&w=1200',
+    image: '/images/vitalik-nqyK3NuwC6E-unsplash.jpg',
     content: [
       "James founded his educational technology platform in his dorm room with a vision to democratize online learning.",
       "Through our entrepreneurship grant program, he received $75,000 in initial funding and access to our network of industry mentors.",
@@ -74,16 +74,8 @@ export const GALLERY_IMAGES = [
   { url: '/images/javier-trueba-iQPr1XkF5F0-unsplash.jpg', title: 'Institutional Heritage', desc: 'Historic libraries where our legacy began.' },
   { url: '/images/kenny-eliason-zFSo6bnZJTw-unsplash.jpg', title: 'STEM Discovery', desc: 'Advanced engineering fellows in the robotics lab.' },
   { url: '/images/joshua-hoehne-iggWDxHTAUQ-unsplash.jpg', title: 'Digital Architecture', desc: 'Software engineering majors building secure systems.' },
-  { url: 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&q=80&w=800', title: 'Creative Vision', desc: 'Fine arts students exploring digital media.' },
-  { url: 'https://images.unsplash.com/photo-1571260899304-425eee4c7efc?auto=format&fit=crop&q=80&w=800', title: 'University Quad', desc: 'Dynamic student life at our partner campuses.' },
-  { url: 'https://images.unsplash.com/photo-1532012197267-da84d127e765?auto=format&fit=crop&q=80&w=800', title: 'Focused Study', desc: 'Deep concentration in the graduate archives.' },
-  { url: 'https://images.unsplash.com/photo-1519331379826-f10be5486c6f?auto=format&fit=crop&q=80&w=800', title: 'Global Fellowship', desc: 'International impact through US education.' },
-  { url: 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&q=80&w=800', title: 'Lab Precision', desc: 'Chemistry fellows conducting breakthrough experiments.' },
-  { url: 'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&q=80&w=800', title: 'Peer Review', desc: 'Collaborative analysis of doctoral theses.' },
-  { url: 'https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&q=80&w=800', title: 'Corporate Sprints', desc: 'Scholars in modern innovation workshops.' },
-  { url: 'https://images.unsplash.com/photo-1544531585-9847b68c8c86?auto=format&fit=crop&q=80&w=800', title: 'Medical Round', desc: 'Pre-med scholars at partner teaching hospitals.' },
-  { url: 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&q=80&w=800', title: 'Innovation Hub', desc: 'The future of energy-efficient computing.' },
-  { url: 'https://images.unsplash.com/photo-1492538368521-46823b43ae97?auto=format&fit=crop&q=80&w=800', title: 'Discovery Path', desc: 'Every scholar has a unique journey to excellence.' }
+  { url: '/images/md-duran-1VqHRwxcCCw-unsplash.jpg', title: 'Lab Precision', desc: 'Chemistry fellows conducting breakthrough experiments.' },
+  { url: '/images/linkedin-sales-solutions-NpyF7rjqmq4-unsplash.jpg', title: 'Corporate Sprints', desc: 'Scholars in modern innovation workshops.' }
 ];
 
 export const SCHOLARSHIPS: ScholarshipType[] = [
@@ -326,28 +318,28 @@ export const TEAM = [
     role: "President of the Board", 
     linkedin: "https://linkedin.com",
     bio: "Former Dean of Admissions at Stanford with 25 years of experience in educational philanthropy. Led the institutional fundraising efforts that grew the endowment to $366M.",
-    img: "/images/mimi-thian-vdXMSiX-n6M-unsplash.jpg" 
+    img: "/images/jonas-kakaroto-mjRwhvqEC0U-unsplash.jpg" 
   },
   { 
     name: "Marcus Thorne", 
     role: "Endowment Strategy & Finance", 
     linkedin: "https://linkedin.com",
     bio: "Ex-institutional analyst specializing in long-term non-profit growth and capital preservation. Manages $366M endowment with award-winning returns exceeding market benchmarks.",
-    img: "/images/vitalik-nqyK3NuwC6E-unsplash.jpg" 
+    img: "/images/linkedin-sales-solutions-pAtA8xe_iVM-unsplash.jpg" 
   },
   { 
     name: "Elena Vance", 
     role: "Technology & Data Security Lead", 
     linkedin: "https://linkedin.com",
     bio: "Pioneer in secure data systems and student privacy. Elena ensures our digital portal exceeds federal FERPA standards and implements AES-256 encryption for all applicant records.",
-    img: "/images/linkedin-sales-solutions-NpyF7rjqmq4-unsplash.jpg" 
+    img: "/images/vicky-hladynets-C8Ta0gwPbQg-unsplash.jpg" 
   },
   {
     name: "Dr. James Chen",
     role: "Chief Selection Officer",
     linkedin: "https://linkedin.com",
     bio: "Former Harvard admissions director with expertise in holistic evaluation. James leads our blind selection process ensuring unbiased, merit-based decisions across all applications.",
-    img: "/images/md-duran-1VqHRwxcCCw-unsplash.jpg"
+    img: "/images/vicky-hladynets-C8Ta0gwPbQg-unsplash.jpg"
   },
   {
     name: "Priya Desai",
@@ -361,14 +353,14 @@ export const TEAM = [
     role: "Partnership & Institutional Relations",
     linkedin: "https://linkedin.com",
     bio: "20+ years building relationships with universities and corporations. Michael maintains partnerships with 200+ institutions ensuring seamless scholar integration and funding accessibility.",
-    img: "/images/kenny-eliason-zFSo6bnZJTw-unsplash.jpg"
+    img: "/images/javier-trueba-iQPr1XkF5F0-unsplash.jpg"
   },
   {
     name: "Lisa Washington",
     role: "Grants & Compliance Officer",
     linkedin: "https://linkedin.com",
     bio: "Former IRS nonprofit compliance specialist. Ensures all grant distributions meet 501(c)(3) requirements and maintains transparent annual impact reports.",
-    img: "/images/javier-trueba-iQPr1XkF5F0-unsplash.jpg"
+    img: "/images/christian-buehner-DItYlc26zVI-unsplash.jpg"
   },
   {
     name: "Dr. Anil Kapoor",
@@ -397,7 +389,7 @@ export const GRANTS: GrantType[] = [
     applicationLink: 'https://www.nsfgrfp.org',
     status: 'Open',
     verified: true,
-    image: 'https://images.unsplash.com/photo-1576091160388-112febf46b22?auto=format&fit=crop&q=80&w=1200',
+    image: '/images/jakub-zerdzicki-uZqmXxRLHmQ-unsplash.jpg',
     additionalDetails: {
       fundingPeriod: '3 years of support',
       annualStipend: '$37,000 annual stipend',
@@ -426,7 +418,7 @@ export const GRANTS: GrantType[] = [
     applicationLink: 'https://www.sba.gov/funding-programs/grants',
     status: 'Open',
     verified: true,
-    image: 'https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&q=80&w=1200',
+    image: '/images/jakub-zerdzicki-uZqmXxRLHmQ-unsplash.jpg',
     additionalDetails: {
       fundingPeriod: 'One-time grant, ongoing business support',
       annualStipend: '$50,000 - $250,000 depending on business plan',
@@ -455,7 +447,7 @@ export const GRANTS: GrantType[] = [
     applicationLink: 'https://www.gatesfoundation.org/about/policies-and-resources/giving-policies',
     status: 'Open',
     verified: true,
-    image: 'https://images.unsplash.com/photo-1559027615-cd2628902d4a?auto=format&fit=crop&q=80&w=1200',
+    image: '/images/jakub-zerdzicki-cmp1PJBX5cw-unsplash.jpg',
     additionalDetails: {
       fundingPeriod: '3-5 year grants with potential renewal',
       annualStipend: '$100,000 - $500,000+ annually',
@@ -514,7 +506,7 @@ export const GRANTS: GrantType[] = [
     applicationLink: 'https://www.epa.gov/research/epa-research-grants',
     status: 'Open',
     verified: true,
-    image: 'https://images.unsplash.com/photo-1559027615-cd2628902d4a?auto=format&fit=crop&q=80&w=1200',
+    image: '/images/jakub-zerdzicki-7k_lRtZm_ds-unsplash.jpg',
     additionalDetails: {
       fundingPeriod: '1-3 years with potential extension',
       annualStipend: '$25,000 - $100,000 depending on scope',
@@ -543,7 +535,7 @@ export const GRANTS: GrantType[] = [
     applicationLink: 'https://www.uschamber.com/co/grant-programs',
     status: 'Upcoming',
     verified: true,
-    image: 'https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&q=80&w=1200',
+    image: '/images/markus-winkler-jF1CqFpE62k-unsplash.jpg',
     additionalDetails: {
       fundingPeriod: 'One-time grant with ongoing support',
       annualStipend: '$10,000 - $50,000',
@@ -573,7 +565,7 @@ export const GRANTS: GrantType[] = [
     applicationLink: 'https://www.nih.gov/training',
     status: 'Open',
     verified: true,
-    image: 'https://images.unsplash.com/photo-1576091160550-112173f31c77?auto=format&fit=crop&q=80&w=1200',
+    image: '/images/alexander-grey-8lnbXtxFGZw-unsplash.jpg',
     additionalDetails: {
       fundingPeriod: '5 years of support',
       annualStipend: '$30,000 - $60,000 annual stipend',
@@ -631,7 +623,7 @@ export const GRANTS: GrantType[] = [
     applicationLink: 'https://www.rwjf.org/en/how-we-work/grants',
     status: 'Open',
     verified: true,
-    image: 'https://images.unsplash.com/photo-1576091160550-112173f31c77?auto=format&fit=crop&q=80&w=1200',
+    image: '/images/jakub-zerdzicki-uZqmXxRLHmQ-unsplash.jpg',
     additionalDetails: {
       fundingPeriod: '2-3 years',
       annualStipend: '$50,000 - $200,000',
@@ -658,7 +650,7 @@ export const GRANTS: GrantType[] = [
     applicationLink: 'https://www.mozilla.org/en-US/grants/',
     status: 'Open',
     verified: true,
-    image: '/images/thisisengineering-TXxiFuQLBKQ-unsplash.jpg',
+    image: '/images/edwin-andrade-4V1dC_eoCwg-unsplash.jpg',
     additionalDetails: {
       fundingPeriod: '1-2 years',
       annualStipend: '$25,000 - $150,000',
@@ -684,7 +676,7 @@ export const GRANTS: GrantType[] = [
     applicationLink: 'https://www.fordfoundation.org/work/our-grants/',
     status: 'Open',
     verified: true,
-    image: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&q=80&w=1200',
+    image: '/images/kenny-eliason-maJDOJSmMoo-unsplash.jpg',
     additionalDetails: {
       fundingPeriod: '2-3 years',
       annualStipend: '$30,000 - $250,000',
@@ -791,7 +783,7 @@ export const NEWS_ITEMS = [
         ]
       }
     ] as any,
-    image: '/images/leon-wu-LLfRMRT-9AY-unsplash.jpg?auto=format&fit=crop&q=80&w=1200',
+    image: '/images/annie-spratt-MChSQHxGZrQ-unsplash.jpg',
     category: 'Scholarships',
     date: '2026-01-15',
     author: 'Sarah Jenkins',
@@ -833,7 +825,7 @@ export const NEWS_ITEMS = [
         ]
       }
     ] as any,
-    image: '/images/joshua-hoehne-iggWDxHTAUQ-unsplash.jpg',
+    image: '/images/christer-lassman-hLL43S2DCUI-unsplash.jpg',
     category: 'Scholarships',
     date: '2026-01-10',
     author: 'Marcus Thorne',
@@ -876,7 +868,7 @@ export const NEWS_ITEMS = [
         ]
       }
     ] as any,
-    image: 'https://images.unsplash.com/photo-1576091160550-112173f31c77?auto=format&fit=crop&q=80&w=1200',
+    image: '/images/claudio-schwarz-cNJttXytzR8-unsplash.jpg',
     category: 'Success Stories',
     date: '2026-01-05',
     author: 'Elena Vance',
@@ -916,7 +908,7 @@ export const NEWS_ITEMS = [
         ]
       }
     ] as any,
-    image: 'https://images.unsplash.com/photo-1541339907198-e08756ebafe3?auto=format&fit=crop&q=80&w=1200',
+    image: '/images/aamy-dugiere-nwQRs44qpg8-unsplash.jpg',
     category: 'Policy',
     date: '2025-12-28',
     author: 'Marcus Thorne',
@@ -960,7 +952,7 @@ export const NEWS_ITEMS = [
         ]
       }
     ] as any,
-    image: 'https://images.unsplash.com/photo-1530587191325-3db32d826c18?auto=format&fit=crop&q=80&w=1200',
+    image: '/images/ali-shah-lakhani-3wnMz62AobE-unsplash.jpg',
     category: 'Research',
     date: '2025-12-20',
     author: 'Elena Vance',
@@ -1009,7 +1001,7 @@ export const NEWS_ITEMS = [
         ]
       }
     ] as any,
-    image: 'https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?auto=format&fit=crop&q=80&w=1200',
+    image: '/images/anna-keibalo-HydxEO_TH1o-unsplash.jpg',
     category: 'Scholarships',
     date: '2025-12-10',
     author: 'Michael Thompson',
@@ -1028,7 +1020,7 @@ export const EVENTS = [
     location: 'Washington, DC Convention Center',
     type: 'Summit',
     attendees: 2150,
-    image: '/images/javier-trueba-iQPr1XkF5F0-unsplash.jpg'
+    image: '/images/event-collaboration-1.jpg'
   },
   {
     id: 'event-2',
@@ -1039,7 +1031,7 @@ export const EVENTS = [
     location: 'Virtual',
     type: 'Workshop',
     attendees: 450,
-    image: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&q=80&w=1200'
+    image: '/images/event-conference-1.jpg'
   },
   {
     id: 'event-3',
@@ -1061,7 +1053,7 @@ export const EVENTS = [
     location: 'New York, NY',
     type: 'Networking',
     attendees: 180,
-    image: 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&q=80&w=1200'
+    image: '/images/event-networking-1.jpg'
   },
   {
     id: 'event-5',
@@ -1072,7 +1064,7 @@ export const EVENTS = [
     location: 'San Francisco, CA',
     type: 'Workshop',
     attendees: 320,
-    image: '/images/vitalik-nqyK3NuwC6E-unsplash.jpg'
+    image: '/images/javier-trueba-iQPr1XkF5F0-unsplash.jpg'
   },
   {
     id: 'event-6',
@@ -1083,7 +1075,7 @@ export const EVENTS = [
     location: 'Washington, DC',
     type: 'Ceremony',
     attendees: 800,
-    image: 'https://images.unsplash.com/photo-1523050335456-c6d860cb0d12?auto=format&fit=crop&q=80&w=1200'
+    image: '/images/event-teamwork-1.jpg',
   },
   {
     id: 'event-7',
@@ -1094,7 +1086,7 @@ export const EVENTS = [
     location: 'Johns Hopkins Medical Center, Baltimore, MD',
     type: 'Summit',
     attendees: 350,
-    image: 'https://images.unsplash.com/photo-1576091160550-112173f31c77?auto=format&fit=crop&q=80&w=1200'
+    image: '/images/event-teamwork-1.jpg'
   },
   {
     id: 'event-8',
@@ -1105,7 +1097,7 @@ export const EVENTS = [
     location: 'Virtual',
     type: 'Webinar',
     attendees: 2300,
-    image: 'https://images.unsplash.com/photo-1541339907198-e08756ebafe3?auto=format&fit=crop&q=80&w=1200'
+    image: '/images/mimi-thian-vdXMSiX-n6M-unsplash.jpg'
   },
   {
     id: 'event-9',
@@ -1116,7 +1108,7 @@ export const EVENTS = [
     location: 'Virtual',
     type: 'Workshop',
     attendees: 650,
-    image: '/images/linkedin-sales-solutions-NpyF7rjqmq4-unsplash.jpg'
+    image: '/images/event-conference-1.jpg'
   },
   {
     id: 'event-10',
@@ -1127,7 +1119,7 @@ export const EVENTS = [
     location: 'Boston, MA',
     type: 'Summit',
     attendees: 500,
-    image: 'https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&q=80&w=1200'
+    image: '/images/event-networking-1.jpg',
   },
   {
     id: 'event-11',
@@ -1138,7 +1130,7 @@ export const EVENTS = [
     location: 'Silicon Valley, CA',
     type: 'Workshop',
     attendees: 280,
-    image: 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&q=80&w=1200'
+    image: '/images/pharmaceutical-research.jpg'
   },
   {
     id: 'event-12',
@@ -1149,7 +1141,7 @@ export const EVENTS = [
     location: 'Chicago, IL',
     type: 'Summit',
     attendees: 750,
-    image: '/images/mimi-thian-vdXMSiX-n6M-unsplash.jpg'
+    image: '/images/headway-F2KRf_QfCqw-unsplash.jpg'
   },
   {
     id: 'event-13',
@@ -1160,7 +1152,7 @@ export const EVENTS = [
     location: 'New York, NY',
     type: 'Networking',
     attendees: 420,
-    image: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&q=80&w=1200'
+    image: '/images/antenna-ZDN-G1xBWHY-unsplash.jpg'
   }
 
 ];

@@ -22,7 +22,7 @@ const ResourceHub: React.FC<ResourceHubProps> = ({ initialPhase, onBack }) => {
         {/* Background Image */}
         <div className="absolute inset-0 opacity-15">
           <img 
-            src="/images/thisisengineering-TXxiFuQLBKQ-unsplash.jpg"
+            src="/images/rut-miit-3EMw3T-ZjkE-unsplash.jpg"
             alt="Resource Hub"
             className="w-full h-full object-cover"
           />

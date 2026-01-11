@@ -57,7 +57,7 @@ const InternshipOpportunities: React.FC<InternshipOpportunitiesProps> = ({ onNav
         'Mentorship from senior data scientists',
         'Potential job offer upon completion'
       ],
-      imageUrl: '/images/thisisengineering-TXxiFuQLBKQ-unsplash.jpg',
+      imageUrl: '/images/icons8-team-yTwXpLO5HAA-unsplash.jpg',
       applicationDeadline: '2025-04-30',
       startDate: 'June 2025',
       isPaid: true,
@@ -82,7 +82,7 @@ const InternshipOpportunities: React.FC<InternshipOpportunitiesProps> = ({ onNav
         'Networking with banking professionals',
         'Certificate of completion'
       ],
-      imageUrl: '/images/kenny-eliason-zFSo6bnZJTw-unsplash.jpg',
+      imageUrl: '/images/brooke-cagle--uHVRvDr7pg-unsplash.jpg',
       applicationDeadline: '2025-05-15',
       startDate: 'July 2025',
       isPaid: true,
@@ -107,7 +107,7 @@ const InternshipOpportunities: React.FC<InternshipOpportunitiesProps> = ({ onNav
         'Code review mentorship',
         'Full-time job consideration'
       ],
-      imageUrl: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&q=80&w=800',
+      imageUrl: '/images/rodeo-project-management-software-b2L3f7ednYE-unsplash.jpg',
       applicationDeadline: '2025-04-15',
       startDate: 'May 2025',
       isPaid: true,
@@ -132,7 +132,7 @@ const InternshipOpportunities: React.FC<InternshipOpportunitiesProps> = ({ onNav
         'Industry networking',
         'Flexible hours'
       ],
-      imageUrl: 'https://images.unsplash.com/photo-1460925895917-aeb19be489c7?auto=format&fit=crop&q=80&w=600',
+      imageUrl: '/images/redd-francisco-PTRzqc_h1r4-unsplash.jpg',
       applicationDeadline: '2025-04-20',
       startDate: 'May 2025',
       isPaid: true,
@@ -157,7 +157,7 @@ const InternshipOpportunities: React.FC<InternshipOpportunitiesProps> = ({ onNav
         'Professional law library access',
         'Networking with legal professionals'
       ],
-      imageUrl: '/images/vitalik-nqyK3NuwC6E-unsplash.jpg?auto=format&fit=crop&q=80&w=600',
+      imageUrl: '/images/joel-danielson-dw4StX7U5Yw-unsplash.jpg?auto=format&fit=crop&q=80&w=600',
       applicationDeadline: '2025-05-01',
       startDate: 'June 2025',
       isPaid: true,
@@ -182,7 +182,7 @@ const InternshipOpportunities: React.FC<InternshipOpportunitiesProps> = ({ onNav
         'Strategic thinking training',
         'Career mentorship'
       ],
-      imageUrl: 'https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&q=80&w=600',
+      imageUrl: '/images/pharmaceutical-research.jpg',
       applicationDeadline: '2025-05-10',
       startDate: 'June 2025',
       isPaid: true,
@@ -209,7 +209,7 @@ const InternshipOpportunities: React.FC<InternshipOpportunitiesProps> = ({ onNav
         'Laboratory access',
         'Full-time employment potential'
       ],
-      imageUrl: '/images/joshua-hoehne-iggWDxHTAUQ-unsplash.jpg?auto=format&fit=crop&q=80&w=600',
+      imageUrl: '/images/redd-francisco-5U_28ojjgms-unsplash.jpg',
       applicationDeadline: '2025-05-05',
       startDate: 'June 2025',
       isPaid: true,
@@ -234,7 +234,7 @@ const InternshipOpportunities: React.FC<InternshipOpportunitiesProps> = ({ onNav
         'Professional development',
         'Networking in HR industry'
       ],
-      imageUrl: 'https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&q=80&w=600',
+      imageUrl: '/images/dylan-gillis-KdeqA3aTnBY-unsplash.jpg',
       applicationDeadline: '2025-05-20',
       startDate: 'July 2025',
       isPaid: true,
@@ -259,7 +259,7 @@ const InternshipOpportunities: React.FC<InternshipOpportunitiesProps> = ({ onNav
         'Environmental networking',
         'Published research potential'
       ],
-      imageUrl: '/images/linkedin-sales-solutions-NpyF7rjqmq4-unsplash.jpg?auto=format&fit=crop&q=80&w=600',
+      imageUrl: '/images/mathurin-napoly-matnapo-5K5gyPvKC80-unsplash.jpg',
       applicationDeadline: '2025-04-25',
       startDate: 'May 2025',
       isPaid: true,
@@ -284,7 +284,7 @@ const InternshipOpportunities: React.FC<InternshipOpportunitiesProps> = ({ onNav
         'Patient interaction experience',
         'Reference for medical school'
       ],
-      imageUrl: '/images/md-duran-1VqHRwxcCCw-unsplash.jpg?auto=format&fit=crop&q=80&w=600',
+      imageUrl: '/images/taiki-ishikawa-A3nnN7AYnjM-unsplash.jpg',
       applicationDeadline: '2025-05-30',
       startDate: 'July 2025',
       isPaid: true,
@@ -309,7 +309,7 @@ const InternshipOpportunities: React.FC<InternshipOpportunitiesProps> = ({ onNav
         'Networking with suppliers',
         'Career advancement potential'
       ],
-      imageUrl: '/images/rut-miit-3EMw3T-ZjkE-unsplash.jpg?auto=format&fit=crop&q=80&w=600',
+      imageUrl: '/images/piron-guillaume-y5hQCIn1c6o-unsplash.jpg',
       applicationDeadline: '2025-05-12',
       startDate: 'June 2025',
       isPaid: true,
@@ -334,7 +334,7 @@ const InternshipOpportunities: React.FC<InternshipOpportunitiesProps> = ({ onNav
         'Bug bounty opportunities',
         'Full-time opportunities'
       ],
-      imageUrl: '/images/javier-trueba-iQPr1XkF5F0-unsplash.jpg?auto=format&fit=crop&q=80&w=600',
+      imageUrl: '/images/mathurin-napoly-matnapo-mbyWF9rYahI-unsplash.jpg',
       applicationDeadline: '2025-04-10',
       startDate: 'May 2025',
       isPaid: true,
@@ -359,7 +359,7 @@ const InternshipOpportunities: React.FC<InternshipOpportunitiesProps> = ({ onNav
         'Design mentorship',
         'Creative community networking'
       ],
-      imageUrl: '/images/mikael-kristenson-3aVlWP-7bg8-unsplash (1).jpg?auto=format&fit=crop&q=80&w=600',
+      imageUrl: '/images/saw-wunna-I0IZK4b1CQU-unsplash.jpg',
       applicationDeadline: '2025-05-08',
       startDate: 'June 2025',
       isPaid: true,
@@ -384,7 +384,7 @@ const InternshipOpportunities: React.FC<InternshipOpportunitiesProps> = ({ onNav
         'Specialized equipment training',
         'Career mentorship'
       ],
-      imageUrl: 'https://images.unsplash.com/photo-1576091160388-112febf46b22?auto=format&fit=crop&q=80&w=800',
+      imageUrl: '/images/pharmaceutical-research.jpg',
       applicationDeadline: '2025-05-25',
       startDate: 'July 2025',
       isPaid: true,
@@ -409,7 +409,7 @@ const InternshipOpportunities: React.FC<InternshipOpportunitiesProps> = ({ onNav
         'Industry machinery training',
         'Full-time employment potential'
       ],
-      imageUrl: '/images/vadim-sherbakov-d6ebY-faOO0-unsplash.jpg?auto=format&fit=crop&q=80&w=600',
+      imageUrl: '/images/campaign-creators-qCi_MzVODoU-unsplash.jpg',
       applicationDeadline: '2025-05-18',
       startDate: 'June 2025',
       isPaid: true,
@@ -434,7 +434,7 @@ const InternshipOpportunities: React.FC<InternshipOpportunitiesProps> = ({ onNav
         'Public service orientation',
         'Career in public sector'
       ],
-      imageUrl: 'https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&q=80&w=600',
+      imageUrl: '/images/anastassia-anufrieva--JUlfa5fAIg-unsplash.jpg',
       applicationDeadline: '2025-05-22',
       startDate: 'July 2025',
       isPaid: true,
@@ -459,7 +459,7 @@ const InternshipOpportunities: React.FC<InternshipOpportunitiesProps> = ({ onNav
         'Humanitarian work exposure',
         'References for further NGO work'
       ],
-      imageUrl: 'https://images.unsplash.com/photo-1559027615-cd2628902d4a?auto=format&fit=crop&q=80&w=600',
+      imageUrl: '/images/annie-spratt-MChSQHxGZrQ-unsplash.jpg',
       applicationDeadline: '2025-05-28',
       startDate: 'July 2025',
       isPaid: false,
