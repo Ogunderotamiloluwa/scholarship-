@@ -792,7 +792,7 @@ const App: React.FC = () => {
 
   const handleApplySubmit = async () => {
     try {
-      // Create FormData object - matching the working Donate form format
+      // Create FormData object with proper Formspree fields
       const submitFormData = new FormData();
       submitFormData.append('firstName', formData.firstName);
       submitFormData.append('lastName', formData.lastName);
@@ -807,16 +807,25 @@ const App: React.FC = () => {
       submitFormData.append('essay', formData.essay);
       submitFormData.append('formType', 'Scholarship Application');
       submitFormData.append('timestamp', new Date().toISOString());
-      submitFormData.append('_gotcha', '');
+      
+      // Formspree special fields for proper email handling
+      submitFormData.append('_subject', `New Scholarship Application from ${formData.firstName} ${formData.lastName}`);
+      submitFormData.append('_replyto', formData.email);
+      submitFormData.append('_gotcha', ''); // Honeypot field
       
       console.log('📤 Submitting scholarship form...');
       const response = await fetch('https://formspree.io/f/mvzgeadj', {
         method: 'POST',
         body: submitFormData,
-        mode: 'no-cors'
       });
       
+      if (!response.ok) {
+        throw new Error(`Submission failed with status ${response.status}`);
+      }
+      
+      const responseData = await response.json();
       console.log('✅ Scholarship application sent successfully!');
+      console.log('📧 Response:', responseData);
       console.log('📧 Check your email inbox for confirmation');
       
       // Show success message

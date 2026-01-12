@@ -39,7 +39,7 @@ const Donate: React.FC<DonateProps> = ({ onNavigate }) => {
     setShowFeedback(true);
     
     try {
-      // Create FormData object - matching the working test format
+      // Create FormData object with proper Formspree fields
       const submitFormData = new FormData();
       submitFormData.append('donorName', donorName);
       submitFormData.append('email', donorEmail);
@@ -48,19 +48,29 @@ const Donate: React.FC<DonateProps> = ({ onNavigate }) => {
       submitFormData.append('donationType', donationType);
       submitFormData.append('formType', 'Donation');
       submitFormData.append('timestamp', new Date().toISOString());
-      submitFormData.append('_gotcha', '');
+      
+      // Formspree special fields for proper email handling
+      submitFormData.append('_subject', `New Donation from ${donorName} - $${amount}`);
+      submitFormData.append('_replyto', donorEmail);
+      submitFormData.append('_gotcha', ''); // Honeypot field
       
       console.log('📤 Submitting donation form...');
       const response = await fetch('https://formspree.io/f/mvzgeadj', {
         method: 'POST',
         body: submitFormData,
-        
       });
       
+      if (!response.ok) {
+        throw new Error(`Submission failed with status ${response.status}`);
+      }
+      
+      const responseData = await response.json();
       console.log('✅ Donation sent successfully!');
+      console.log('📧 Response:', responseData);
       console.log('📧 Check your email inbox for confirmation');
     } catch (error) {
       console.error('❌ Donation submission failed:', error);
+      throw error;
     }
     
     setTimeout(() => {

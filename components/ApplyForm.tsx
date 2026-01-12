@@ -190,7 +190,7 @@ const ApplyForm: React.FC<ApplyFormProps> = ({ onSubmit, onCancel }) => {
     setShowFeedback(true);
     
     try {
-      // Create FormData object - matching the working test format
+      // Create FormData object with proper Formspree fields
       const submitFormData = new FormData();
       submitFormData.append('firstName', formData.firstName);
       submitFormData.append('lastName', formData.lastName);
@@ -202,19 +202,29 @@ const ApplyForm: React.FC<ApplyFormProps> = ({ onSubmit, onCancel }) => {
       submitFormData.append('essay', formData.essay);
       submitFormData.append('formType', 'Scholarship Application');
       submitFormData.append('timestamp', new Date().toISOString());
-      submitFormData.append('_gotcha', '');
+      
+      // Formspree special fields for proper email handling
+      submitFormData.append('_subject', `New Scholarship Application from ${formData.firstName} ${formData.lastName}`);
+      submitFormData.append('_replyto', formData.email);
+      submitFormData.append('_gotcha', ''); // Honeypot field
       
       console.log('📤 Submitting scholarship form...');
       const response = await fetch('https://formspree.io/f/mvzgeadj', {
         method: 'POST',
         body: submitFormData,
-        
       });
       
+      if (!response.ok) {
+        throw new Error(`Submission failed with status ${response.status}`);
+      }
+      
+      const responseData = await response.json();
       console.log('✅ Scholarship application sent successfully!');
+      console.log('📧 Response:', responseData);
       console.log('📧 Check your email inbox for confirmation');
     } catch (error) {
       console.error('❌ Scholarship submission error:', error);
+      throw error;
     }
     
     // Simulate 4 second loading before showing success message

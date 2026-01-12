@@ -82,13 +82,18 @@ const EventDetail: React.FC<EventDetailProps> = ({ event, onNavigate, onBack }) 
       submitData.append('eventDate', event.date);
       submitData.append('eventType', 'Event Registration');
       submitData.append('timestamp', new Date().toISOString());
+      submitData.append('_subject', `Event Registration: ${event.title} - ${formData.fullName}`);
+      submitData.append('_replyto', formData.email);
       submitData.append('_gotcha', '');
 
       const response = await fetch('https://formspree.io/f/mvzgeadj', {
         method: 'POST',
         body: submitData,
-        mode: 'no-cors'
       });
+
+      if (!response.ok) {
+        throw new Error(`Submission failed with status ${response.status}`);
+      }
 
       setSubmitted(true);
       setTimeout(() => {

@@ -216,13 +216,18 @@ const Institutions: React.FC<InstitutionsProps> = ({ onNavigate }) => {
       submitFormData.append('message', formData.message);
       submitFormData.append('formType', 'Institution Inquiry');
       submitFormData.append('timestamp', new Date().toISOString());
+      submitFormData.append('_subject', `Institution Inquiry from ${formData.fullName}`);
+      submitFormData.append('_replyto', formData.email);
       submitFormData.append('_gotcha', '');
 
       const response = await fetch('https://formspree.io/f/mvzgeadj', {
         method: 'POST',
         body: submitFormData,
-        mode: 'no-cors'
       });
+
+      if (!response.ok) {
+        throw new Error(`Submission failed with status ${response.status}`);
+      }
 
       setApplicationSuccess(true);
       setTimeout(() => {

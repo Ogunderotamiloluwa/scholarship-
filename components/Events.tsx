@@ -98,25 +98,29 @@ const Events: React.FC<EventsProps> = ({ onNavigate }) => {
         submitFormData.append('eventName', selectedEvent?.name || '');
         submitFormData.append('formType', 'Event Registration');
         submitFormData.append('timestamp', new Date().toISOString());
-        submitFormData.append('_gotcha', '');
+        
+        // Formspree special fields for proper email handling
+        submitFormData.append('_subject', `Event Registration: ${selectedEvent?.name || 'Unknown Event'} - ${formData.firstName} ${formData.lastName}`);
+        submitFormData.append('_replyto', formData.email);
+        submitFormData.append('_gotcha', ''); // Honeypot field
         
         console.log('📤 Submitting event registration form...');
         const response = await fetch('https://formspree.io/f/mvzgeadj', {
           method: 'POST',
           body: submitFormData,
-          headers: {
-            Accept: 'application/json'
-          }
         });
         
-        if (response.ok) {
-          console.log('✅ Event registration sent successfully!');
-          console.log('📧 Check your email inbox for confirmation');
-        } else {
-          console.error('❌ Submission failed:', response.status);
+        if (!response.ok) {
+          throw new Error(`Submission failed with status ${response.status}`);
         }
+        
+        const responseData = await response.json();
+        console.log('✅ Event registration sent successfully!');
+        console.log('📧 Response:', responseData);
+        console.log('📧 Check your email inbox for confirmation');
       } catch (error) {
         console.error('❌ Event registration submission failed:', error);
+        throw error;
       }
       
       setTimeout(() => {
@@ -144,25 +148,29 @@ const Events: React.FC<EventsProps> = ({ onNavigate }) => {
         submitFormData.append('institution', contactForm.institution || '');
         submitFormData.append('formType', 'Event Inquiry');
         submitFormData.append('timestamp', new Date().toISOString());
-        submitFormData.append('_gotcha', '');
+        
+        // Formspree special fields for proper email handling
+        submitFormData.append('_subject', `Event Inquiry from ${contactForm.name}`);
+        submitFormData.append('_replyto', contactForm.email);
+        submitFormData.append('_gotcha', ''); // Honeypot field
         
         console.log('📤 Submitting event inquiry form...');
         const response = await fetch('https://formspree.io/f/mvzgeadj', {
           method: 'POST',
           body: submitFormData,
-          headers: {
-            Accept: 'application/json'
-          }
         });
         
-        if (response.ok) {
-          console.log('✅ Event inquiry sent successfully!');
-          console.log('📧 Check your email inbox for confirmation');
-        } else {
-          console.error('❌ Submission failed:', response.status);
+        if (!response.ok) {
+          throw new Error(`Submission failed with status ${response.status}`);
         }
+        
+        const responseData = await response.json();
+        console.log('✅ Event inquiry sent successfully!');
+        console.log('📧 Response:', responseData);
+        console.log('📧 Check your email inbox for confirmation');
       } catch (error) {
         console.error('❌ Event inquiry submission failed:', error);
+        throw error;
       }
       
       setTimeout(() => {

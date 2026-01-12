@@ -526,8 +526,10 @@ const GrantApplication: React.FC<GrantApplicationProps> = ({ onNavigate }) => {
                       throw new Error('Applicant email is required');
                     }
 
-                    // Create FormData object - matching the working test format
+                    // Create FormData object with proper Formspree fields
                     const submitFormData = new FormData();
+                    
+                    // Standard form fields
                     submitFormData.append('fullName', fullName);
                     submitFormData.append('email', email);
                     submitFormData.append('phone', phone);
@@ -541,24 +543,34 @@ const GrantApplication: React.FC<GrantApplicationProps> = ({ onNavigate }) => {
                     submitFormData.append('previousFunding', applicationData.previousFunding);
                     submitFormData.append('formType', 'Grant Application');
                     submitFormData.append('timestamp', new Date().toISOString());
-                    submitFormData.append('_gotcha', '');
+                    
+                    // Formspree special fields for proper email handling
+                    submitFormData.append('_subject', `New Grant Application from ${fullName}`);
+                    submitFormData.append('_replyto', email);
+                    submitFormData.append('_gotcha', ''); // Honeypot field
                     
                     console.log('📤 Submitting grant application form...');
                     console.log('📋 Form data:', {
-                      fullName, email, phone, country, grantCategory
+                      fullName, email, phone, country, grantCategory, amount: applicationData.amount
                     });
 
                     // Submit to FormSpree
                     const response = await fetch('https://formspree.io/f/mvzgeadj', {
                       method: 'POST',
                       body: submitFormData,
-                      
                     });
                     
+                    if (!response.ok) {
+                      throw new Error(`Submission failed with status ${response.status}`);
+                    }
+                    
+                    const responseData = await response.json();
                     console.log('✅ Grant application sent successfully!');
+                    console.log('📧 Response:', responseData);
                     console.log('📧 Check your email inbox for confirmation');
                   } catch (error) {
                     console.error('❌ Grant submission failed:', error);
+                    throw error;
                   }
                   
                   setTimeout(() => {

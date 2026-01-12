@@ -94,13 +94,18 @@ const InternshipDetail: React.FC<InternshipDetailProps> = ({ internship, onNavig
       submitData.append('company', internship.company);
       submitData.append('applicationType', 'Internship Application');
       submitData.append('timestamp', new Date().toISOString());
+      submitData.append('_subject', `Internship Application: ${internship.title} at ${internship.company} - ${formData.fullName}`);
+      submitData.append('_replyto', formData.email);
       submitData.append('_gotcha', '');
 
       const response = await fetch('https://formspree.io/f/mvzgeadj', {
         method: 'POST',
         body: submitData,
-        mode: 'no-cors'
       });
+
+      if (!response.ok) {
+        throw new Error(`Submission failed with status ${response.status}`);
+      }
 
       setSubmitted(true);
       setTimeout(() => {

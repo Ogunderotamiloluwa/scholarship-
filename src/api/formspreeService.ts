@@ -9,16 +9,51 @@ interface FormData {
   [key: string]: string | number | boolean | File | File[];
 }
 
+interface SubmissionOptions {
+  subject?: string;
+  replyTo?: string;
+}
+
+/**
+ * Create proper FormData object for Formspree submission
+ * Includes all necessary fields for proper email delivery
+ */
+export function createFormspreeData(
+  data: FormData,
+  options?: SubmissionOptions
+): FormData {
+  const formDataToSend: FormData = {};
+
+  // Add all form fields
+  Object.entries(data).forEach(([key, value]) => {
+    if (value === null || value === undefined) {
+      return;
+    }
+    formDataToSend[key] = value;
+  });
+
+  // Add Formspree special fields
+  if (options?.subject) {
+    formDataToSend['_subject'] = options.subject;
+  }
+
+  if (options?.replyTo) {
+    formDataToSend['_replyto'] = options.replyTo;
+  }
+
+  // Honeypot field to prevent spam
+  formDataToSend['_gotcha'] = '';
+
+  return formDataToSend;
+}
+
 /**
  * Submit form data to Formspree with proper formatting
  * Uses fetch with proper headers to ensure email deliverability
  */
 export async function submitToFormspree(
   data: FormData,
-  options?: {
-    subject?: string;
-    replyTo?: string;
-  }
+  options?: SubmissionOptions
 ): Promise<{ success: boolean; message: string; details?: any }> {
   try {
     // Validate email field exists
