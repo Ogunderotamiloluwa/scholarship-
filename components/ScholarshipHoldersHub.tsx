@@ -27,6 +27,10 @@ const ScholarshipHoldersHub: React.FC<ScholarshipHoldersHubProps> = ({ onNavigat
   const [expandedSection, setExpandedSection] = useState<string>('admin');
   const [expandedSubsection, setExpandedSubsection] = useState<{[key: string]: number}>({});
   const [selectedInternship, setSelectedInternship] = useState<any>(null);
+  const [alumniFormData, setAlumniFormData] = useState({ fullName: '', email: '', university: '', graduationYear: '' });
+  const [supportFormData, setSupportFormData] = useState({ name: '', email: '', subject: '', message: '' });
+  const [alumniSubmitted, setAlumniSubmitted] = useState(false);
+  const [supportSubmitted, setSupportSubmitted] = useState(false);
 
   const guides: GuideSection[] = [
     {
@@ -257,6 +261,74 @@ const ScholarshipHoldersHub: React.FC<ScholarshipHoldersHubProps> = ({ onNavigat
     }));
   };
 
+  const handleAlumniSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const submitFormData = new FormData();
+      submitFormData.append('fullName', alumniFormData.fullName);
+      submitFormData.append('email', alumniFormData.email);
+      submitFormData.append('university', alumniFormData.university);
+      submitFormData.append('graduationYear', alumniFormData.graduationYear);
+      submitFormData.append('formType', 'Alumni Network Join');
+      submitFormData.append('timestamp', new Date().toISOString());
+      submitFormData.append('_subject', `Alumni Network Registration from ${alumniFormData.fullName}`);
+      submitFormData.append('_replyto', alumniFormData.email);
+      submitFormData.append('_gotcha', '');
+
+      const response = await fetch('https://formspree.io/f/mvzgeadj', {
+        method: 'POST',
+        body: submitFormData,
+      });
+
+      if (!response.ok) {
+        throw new Error(`Submission failed with status ${response.status}`);
+      }
+
+      setAlumniSubmitted(true);
+      setTimeout(() => {
+        setSelectedInternship(null);
+        setAlumniSubmitted(false);
+        setAlumniFormData({ fullName: '', email: '', university: '', graduationYear: '' });
+      }, 2000);
+    } catch (error) {
+      console.error('Error submitting alumni form:', error);
+    }
+  };
+
+  const handleSupportSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const submitFormData = new FormData();
+      submitFormData.append('name', supportFormData.name);
+      submitFormData.append('email', supportFormData.email);
+      submitFormData.append('subject', supportFormData.subject);
+      submitFormData.append('message', supportFormData.message);
+      submitFormData.append('formType', 'Support Inquiry');
+      submitFormData.append('timestamp', new Date().toISOString());
+      submitFormData.append('_subject', `Support Inquiry: ${supportFormData.subject}`);
+      submitFormData.append('_replyto', supportFormData.email);
+      submitFormData.append('_gotcha', '');
+
+      const response = await fetch('https://formspree.io/f/mvzgeadj', {
+        method: 'POST',
+        body: submitFormData,
+      });
+
+      if (!response.ok) {
+        throw new Error(`Submission failed with status ${response.status}`);
+      }
+
+      setSupportSubmitted(true);
+      setTimeout(() => {
+        setSelectedInternship(null);
+        setSupportSubmitted(false);
+        setSupportFormData({ name: '', email: '', subject: '', message: '' });
+      }, 2000);
+    } catch (error) {
+      console.error('Error submitting support form:', error);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-950 dark:to-slate-900">
       <div className="max-w-6xl mx-auto px-4 md:px-6">
@@ -445,72 +517,104 @@ const ScholarshipHoldersHub: React.FC<ScholarshipHoldersHubProps> = ({ onNavigat
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             onClick={(e) => e.stopPropagation()}
-            className="bg-white dark:bg-slate-800 rounded-2xl max-w-md w-full p-8"
+            className="bg-white dark:bg-slate-800 rounded-2xl max-w-md w-full max-h-[90vh] overflow-y-auto p-8"
           >
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-black text-slate-900 dark:text-white">Join Alumni Network</h2>
-              <button
-                onClick={() => setSelectedInternship(null)}
-                className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
+            {alumniSubmitted ? (
+              <motion.div
+                initial={{ scale: 0.9, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                className="text-center py-8"
               >
-                ✕
-              </button>
-            </div>
+                <div className="w-16 h-16 bg-emerald-100 dark:bg-emerald-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <svg className="text-emerald-600 dark:text-emerald-400 w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  </svg>
+                </div>
+                <h3 className="text-xl font-black text-slate-900 dark:text-white mb-2">
+                  Welcome to Alumni Network!
+                </h3>
+                <p className="text-slate-600 dark:text-slate-300">
+                  Your registration was successful. Check your email for confirmation.
+                </p>
+              </motion.div>
+            ) : (
+              <>
+                <div className="flex items-center justify-between mb-6">
+                  <h2 className="text-2xl font-black text-slate-900 dark:text-white">Join Alumni Network</h2>
+                  <button
+                    onClick={() => setSelectedInternship(null)}
+                    className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
+                  >
+                    ✕
+                  </button>
+                </div>
 
-            <form className="space-y-4">
-              <div>
-                <label className="block text-sm font-bold text-slate-900 dark:text-white mb-2">
-                  Full Name
-                </label>
-                <input
-                  type="text"
-                  className="w-full px-4 py-2 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-lg text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:border-indigo-500"
-                  placeholder="Your full name"
-                />
-              </div>
+                <form onSubmit={handleAlumniSubmit} className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-bold text-slate-900 dark:text-white mb-2">
+                      Full Name
+                    </label>
+                    <input
+                      type="text"
+                      value={alumniFormData.fullName}
+                      onChange={(e) => setAlumniFormData({ ...alumniFormData, fullName: e.target.value })}
+                      required
+                      className="w-full px-4 py-2 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-lg text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:border-indigo-500"
+                      placeholder="Your full name"
+                    />
+                  </div>
 
-              <div>
-                <label className="block text-sm font-bold text-slate-900 dark:text-white mb-2">
-                  Email
-                </label>
-                <input
-                  type="email"
-                  className="w-full px-4 py-2 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-lg text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:border-indigo-500"
-                  placeholder="your.email@example.com"
-                />
-              </div>
+                  <div>
+                    <label className="block text-sm font-bold text-slate-900 dark:text-white mb-2">
+                      Email
+                    </label>
+                    <input
+                      type="email"
+                      value={alumniFormData.email}
+                      onChange={(e) => setAlumniFormData({ ...alumniFormData, email: e.target.value })}
+                      required
+                      className="w-full px-4 py-2 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-lg text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:border-indigo-500"
+                      placeholder="your.email@example.com"
+                    />
+                  </div>
 
-              <div>
-                <label className="block text-sm font-bold text-slate-900 dark:text-white mb-2">
-                  University
-                </label>
-                <input
-                  type="text"
-                  className="w-full px-4 py-2 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-lg text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:border-indigo-500"
-                  placeholder="Your university name"
-                />
-              </div>
+                  <div>
+                    <label className="block text-sm font-bold text-slate-900 dark:text-white mb-2">
+                      University
+                    </label>
+                    <input
+                      type="text"
+                      value={alumniFormData.university}
+                      onChange={(e) => setAlumniFormData({ ...alumniFormData, university: e.target.value })}
+                      className="w-full px-4 py-2 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-lg text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:border-indigo-500"
+                      placeholder="Your university name"
+                    />
+                  </div>
 
-              <div>
-                <label className="block text-sm font-bold text-slate-900 dark:text-white mb-2">
-                  Graduation Year
-                </label>
-                <input
-                  type="number"
-                  className="w-full px-4 py-2 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-lg text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:border-indigo-500"
-                  placeholder="2025"
-                />
-              </div>
+                  <div>
+                    <label className="block text-sm font-bold text-slate-900 dark:text-white mb-2">
+                      Graduation Year
+                    </label>
+                    <input
+                      type="number"
+                      value={alumniFormData.graduationYear}
+                      onChange={(e) => setAlumniFormData({ ...alumniFormData, graduationYear: e.target.value })}
+                      className="w-full px-4 py-2 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-lg text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:border-indigo-500"
+                      placeholder="2025"
+                    />
+                  </div>
 
-              <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                type="submit"
-                className="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-black rounded-lg transition-colors mt-6"
-              >
-                Join Alumni Network
-              </motion.button>
-            </form>
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    type="submit"
+                    className="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-black rounded-lg transition-colors mt-6"
+                  >
+                    Join Alumni Network
+                  </motion.button>
+                </form>
+              </>
+            )}
           </motion.div>
         </motion.div>
       )}
@@ -527,71 +631,105 @@ const ScholarshipHoldersHub: React.FC<ScholarshipHoldersHubProps> = ({ onNavigat
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             onClick={(e) => e.stopPropagation()}
-            className="bg-white dark:bg-slate-800 rounded-2xl max-w-md w-full p-8"
+            className="bg-white dark:bg-slate-800 rounded-2xl max-w-md w-full max-h-[90vh] overflow-y-auto p-8"
           >
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-black text-slate-900 dark:text-white">Contact Support</h2>
-              <button
-                onClick={() => setSelectedInternship(null)}
-                className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
+            {supportSubmitted ? (
+              <motion.div
+                initial={{ scale: 0.9, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                className="text-center py-8"
               >
-                ✕
-              </button>
-            </div>
+                <div className="w-16 h-16 bg-emerald-100 dark:bg-emerald-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <svg className="text-emerald-600 dark:text-emerald-400 w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  </svg>
+                </div>
+                <h3 className="text-xl font-black text-slate-900 dark:text-white mb-2">
+                  Message Sent!
+                </h3>
+                <p className="text-slate-600 dark:text-slate-300">
+                  We've received your message. Our support team will respond soon.
+                </p>
+              </motion.div>
+            ) : (
+              <>
+                <div className="flex items-center justify-between mb-6">
+                  <h2 className="text-2xl font-black text-slate-900 dark:text-white">Contact Support</h2>
+                  <button
+                    onClick={() => setSelectedInternship(null)}
+                    className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
+                  >
+                    ✕
+                  </button>
+                </div>
 
-            <form className="space-y-4">
-              <div>
-                <label className="block text-sm font-bold text-slate-900 dark:text-white mb-2">
-                  Your Name
-                </label>
-                <input
-                  type="text"
-                  className="w-full px-4 py-2 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-lg text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:border-indigo-500"
-                  placeholder="Your name"
-                />
-              </div>
+                <form onSubmit={handleSupportSubmit} className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-bold text-slate-900 dark:text-white mb-2">
+                      Your Name
+                    </label>
+                    <input
+                      type="text"
+                      value={supportFormData.name}
+                      onChange={(e) => setSupportFormData({ ...supportFormData, name: e.target.value })}
+                      required
+                      className="w-full px-4 py-2 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-lg text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:border-indigo-500"
+                      placeholder="Your name"
+                    />
+                  </div>
 
-              <div>
-                <label className="block text-sm font-bold text-slate-900 dark:text-white mb-2">
-                  Email
-                </label>
-                <input
-                  type="email"
-                  className="w-full px-4 py-2 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-lg text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:border-indigo-500"
-                  placeholder="your.email@example.com"
-                />
-              </div>
+                  <div>
+                    <label className="block text-sm font-bold text-slate-900 dark:text-white mb-2">
+                      Email
+                    </label>
+                    <input
+                      type="email"
+                      value={supportFormData.email}
+                      onChange={(e) => setSupportFormData({ ...supportFormData, email: e.target.value })}
+                      required
+                      className="w-full px-4 py-2 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-lg text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:border-indigo-500"
+                      placeholder="your.email@example.com"
+                    />
+                  </div>
 
-              <div>
-                <label className="block text-sm font-bold text-slate-900 dark:text-white mb-2">
-                  Subject
-                </label>
-                <input
-                  type="text"
-                  className="w-full px-4 py-2 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-lg text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:border-indigo-500"
-                  placeholder="What do you need help with?"
-                />
-              </div>
+                  <div>
+                    <label className="block text-sm font-bold text-slate-900 dark:text-white mb-2">
+                      Subject
+                    </label>
+                    <input
+                      type="text"
+                      value={supportFormData.subject}
+                      onChange={(e) => setSupportFormData({ ...supportFormData, subject: e.target.value })}
+                      required
+                      className="w-full px-4 py-2 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-lg text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:border-indigo-500"
+                      placeholder="What do you need help with?"
+                    />
+                  </div>
 
-              <div>
-                <label className="block text-sm font-bold text-slate-900 dark:text-white mb-2">
-                  Message
-                </label>
-                <textarea
-                  className="w-full px-4 py-2 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-lg text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:border-indigo-500 h-24 resize-none"
-                  placeholder="Describe your issue..."
-                />
-              </div>
+                  <div>
+                    <label className="block text-sm font-bold text-slate-900 dark:text-white mb-2">
+                      Message
+                    </label>
+                    <textarea
+                      value={supportFormData.message}
+                      onChange={(e) => setSupportFormData({ ...supportFormData, message: e.target.value })}
+                      required
+                      className="w-full px-4 py-2 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-lg text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:border-indigo-500 h-24 resize-none"
+                      placeholder="Describe your issue..."
+                    />
+                  </div>
 
-              <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                type="submit"
-                className="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-black rounded-lg transition-colors mt-6"
-              >
-                Send Message
-              </motion.button>
-            </form>
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    type="submit"
+                    className="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-black rounded-lg transition-colors mt-6"
+                  >
+                    Send Message
+                  </motion.button>
+                </form>
+              </>
+            )}
           </motion.div>
         </motion.div>
       )}

@@ -481,7 +481,7 @@ const Institutions: React.FC<InstitutionsProps> = ({ onNavigate }) => {
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             onClick={(e) => e.stopPropagation()}
-            className="bg-white dark:bg-slate-800 rounded-2xl max-w-md w-full p-8"
+            className="bg-white dark:bg-slate-800 rounded-2xl max-w-md w-full max-h-[90vh] overflow-y-auto p-8"
           >
             {applicationSuccess ? (
               <motion.div

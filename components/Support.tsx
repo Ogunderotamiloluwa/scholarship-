@@ -500,8 +500,15 @@ const Support: React.FC<SupportProps> = ({ onNavigate }) => {
                     <p className="text-slate-700 dark:text-slate-300 mb-4">
                       You now have the knowledge to craft a strong application. Visit our application portal to get started.
                     </p>
-                    <button className="px-6 py-3 bg-gradient-to-r from-emerald-600 to-blue-600 hover:from-emerald-700 hover:to-blue-700 text-white rounded-xl font-bold transition-all active:scale-95">
-                      Start Your Application
+                    <button 
+                      onClick={() => {
+                        setSelectedGuide(null);
+                        onNavigate('GRANTS');
+                      }}
+                      className="px-6 py-3 bg-gradient-to-r from-emerald-600 to-blue-600 hover:from-emerald-700 hover:to-blue-700 text-white rounded-xl font-bold transition-all active:scale-95 flex items-center gap-2"
+                    >
+                      <span>Start Application</span>
+                      <ArrowRight size={18} />
                     </button>
                   </div>
                 </div>
