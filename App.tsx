@@ -1305,8 +1305,10 @@ const App: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-[#fcfcfc] selection:bg-indigo-100 selection:text-indigo-600">
-      {/* DESKTOP NAVIGATION */}
-      <Navigation currentView={currentView} setView={handleViewChange} isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} onBack={handleBackNavigation} />
+      {/* DESKTOP NAVIGATION - Hidden when viewing grant tracking account */}
+      {currentView !== 'GRANT_TRACKING' && (
+        <Navigation currentView={currentView} setView={handleViewChange} isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} onBack={handleBackNavigation} />
+      )}
 
       <main className="flex-grow pt-0 md:pt-0">
         <AnimatePresence mode="wait">
@@ -1359,7 +1361,10 @@ const App: React.FC = () => {
       </footer>
       )}
 
-      <MobileActionBar currentView={currentView} setView={handleViewChange} />
+      {/* MOBILE ACTION BAR - Hidden when viewing grant tracking account */}
+      {currentView !== 'GRANT_TRACKING' && (
+        <MobileActionBar currentView={currentView} setView={handleViewChange} />
+      )}
 
       {/* TOAST NOTIFICATION */}
       <AnimatePresence>

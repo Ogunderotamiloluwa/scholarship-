@@ -465,31 +465,36 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
 
   const progress = Math.max(0, ((10 - daysRemaining) / 10) * 100);
 
+  // When user is logged in the tracking account, we want full screen without top padding
+  const isInAccountView = trackingState.stage === 'tracking' && trackingState.isLoggedIn;
+
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white dark:from-slate-950 dark:to-slate-900 pt-24 pb-20">
-      {/* Alert Message */}
+    <div className={`min-h-screen bg-gradient-to-b from-slate-50 to-white dark:from-slate-950 dark:to-slate-900 transition-all ${isInAccountView ? 'pt-0 pb-20' : 'pt-24 pb-20'}`}>
+      {/* Alert Message - Repositioned for better mobile visibility */}
       <AnimatePresence>
         {showAlert && (
           <motion.div
-            initial={{ opacity: 0, y: -50 }}
+            initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -50 }}
-            className="fixed top-20 left-1/2 -translate-x-1/2 z-50 w-full max-w-md sm:max-w-lg md:max-w-2xl bg-gradient-to-r from-emerald-500 to-emerald-600 dark:from-emerald-600 dark:to-emerald-700 border-b-2 border-emerald-700 dark:border-emerald-800 rounded-b-3xl px-4 sm:px-8 py-5 sm:py-6 flex items-center justify-center gap-3 shadow-2xl"
+            exit={{ opacity: 0, y: -20 }}
+            className="fixed top-8 md:top-12 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-2rem)] max-w-md sm:max-w-lg md:max-w-2xl bg-gradient-to-r from-emerald-500 to-emerald-600 dark:from-emerald-600 dark:to-emerald-700 border-b-2 border-emerald-700 dark:border-emerald-800 rounded-2xl px-4 sm:px-6 py-4 sm:py-5 flex items-center justify-center gap-3 shadow-2xl"
           >
-            <CheckCircle2 size={24} className="text-white flex-shrink-0" />
-            <p className="text-white text-sm sm:text-base font-bold whitespace-normal break-words text-center">{alertMessage}</p>
+            <CheckCircle2 size={20} className="text-white flex-shrink-0" />
+            <p className="text-white text-xs sm:text-sm font-bold whitespace-normal break-words text-center">{alertMessage}</p>
           </motion.div>
         )}
       </AnimatePresence>
 
-      <div className="max-w-2xl mx-auto px-4">
-        {/* Header */}
-        <button
-          onClick={() => onNavigate('HOME')}
-          className="flex items-center gap-2 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white font-black text-sm mb-8 transition-colors"
-        >
-          <ArrowLeft size={18} /> Back to Home
-        </button>
+      <div className={`transition-all ${isInAccountView ? 'w-full h-full' : 'max-w-2xl mx-auto px-4'}`}>
+        {/* Header - Hidden when in account view for full screen effect */}
+        {!isInAccountView && (
+          <button
+            onClick={() => onNavigate('HOME')}
+            className="flex items-center gap-2 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white font-black text-sm mb-8 transition-colors"
+          >
+            <ArrowLeft size={18} /> Back to Home
+          </button>
+        )}
 
         <AnimatePresence mode="wait">
           {/* GRANT SELECTION STAGE */}
@@ -847,7 +852,7 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
-              className="space-y-4 sm:space-y-6"
+              className={`space-y-4 sm:space-y-6 ${isInAccountView ? 'px-4 sm:px-6 md:px-8 lg:px-12 py-6 sm:py-8' : ''}`}
             >
               {/* Countdown Timer at Top */}
               {(() => {
@@ -899,6 +904,13 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
                       title="Account Settings"
                     >
                       <Settings size={24} className="text-white" />
+                    </button>
+                    <button
+                      onClick={handleLogout}
+                      className="p-2 sm:p-3 bg-white/10 hover:bg-red-500/20 rounded-xl transition-all"
+                      title="Logout"
+                    >
+                      <LogOut size={24} className="text-white" />
                     </button>
                     <Shield size={32} className="mt-1" />
                   </div>
