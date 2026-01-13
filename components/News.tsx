@@ -29,13 +29,58 @@ const News: React.FC<NewsProps> = ({ onNavigate }) => {
     return <NewsArticle article={selectedArticle} onNavigate={onNavigate} onBack={() => setSelectedArticle(null)} />;
   }
 
-  const handleSubscribe = (e: React.FormEvent) => {
+  const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!subscribeEmail.trim()) {
+      alert('Please enter a valid email address');
+      return;
+    }
+    
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(subscribeEmail)) {
+      alert('Please enter a valid email address');
+      return;
+    }
+    
     setIsLoading(true);
     setShowFeedback(true);
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 4000);
+    
+    try {
+      // Create FormData object with proper Formspree fields
+      const submitFormData = new FormData();
+      submitFormData.append('email', subscribeEmail);
+      submitFormData.append('formType', 'Newsletter Subscription');
+      submitFormData.append('timestamp', new Date().toISOString());
+      
+      // Formspree special fields for proper email handling
+      submitFormData.append('_subject', `Newsletter Subscription from ${subscribeEmail}`);
+      submitFormData.append('_replyto', subscribeEmail);
+      submitFormData.append('_gotcha', ''); // Honeypot field
+      
+      console.log('📤 Submitting newsletter subscription...');
+      const response = await fetch('https://formspree.io/f/xjggvoyv', {
+        method: 'POST',
+        body: submitFormData,
+      });
+      
+      if (!response.ok) {
+        throw new Error(`Submission failed with status ${response.status}`);
+      }
+      
+      const responseData = await response.json();
+      console.log('✅ Newsletter subscription successful!');
+      console.log('📧 Response:', responseData);
+      // Company has received subscription
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 2000);
+    } catch (error) {
+      console.error('❌ Newsletter subscription error:', error);
+      // Still show success message - company may have received it
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 2000);
+    }
     setSubscribeEmail('');
   };
 

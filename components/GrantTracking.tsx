@@ -87,12 +87,8 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
   
   // Settings
   const [showSettings, setShowSettings] = useState(false);
-  const [settingsTab, setSettingsTab] = useState<'security' | 'privacy' | 'notifications'>('security');
-  const [privacySettings, setPrivacySettings] = useState({
-    hideBalance: false,
-    hidePersonalInfo: false,
-    twoFactorEnabled: false
-  });
+  const [isDarkMode, setIsDarkMode] = useState(true);
+  const [logoutMessage, setLogoutMessage] = useState('');
   
   // Transfer functionality
   const [showTransferModal, setShowTransferModal] = useState(false);
@@ -524,6 +520,17 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
                   exit={{ opacity: 0, y: -20 }}
                   className="space-y-6"
                 >
+                  {logoutMessage && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="bg-emerald-50 dark:bg-emerald-900/20 border-2 border-emerald-200 dark:border-emerald-700 rounded-xl p-4 flex gap-3"
+                    >
+                      <CheckCircle2 size={20} className="text-emerald-600 dark:text-emerald-400 flex-shrink-0 mt-0.5" />
+                      <p className="text-emerald-800 dark:text-emerald-300 font-semibold">{logoutMessage}</p>
+                    </motion.div>
+                  )}
+
                   <div className="bg-gradient-to-br from-blue-600 to-indigo-600 rounded-3xl p-8 text-white">
                     <h2 className="text-3xl md:text-4xl font-black mb-4">Grant Tracking Portal</h2>
                     <p className="text-lg text-blue-100">
@@ -532,7 +539,14 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
                   </div>
 
                   <div className="bg-amber-50 dark:bg-amber-900/20 border-2 border-amber-200 dark:border-amber-700 rounded-xl p-6">
-                    <p className="text-amber-800 dark:text-amber-300 font-semibold text-center">No grant applications found. Please submit an application first.</p>
+                    <p className="text-amber-800 dark:text-amber-300 font-semibold text-center mb-6">No grant applications found. Please submit an application first.</p>
+                    <button
+                      onClick={() => onNavigate('GRANTS')}
+                      className="w-full px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-black transition-all flex items-center justify-center gap-2"
+                    >
+                      <ArrowLeft size={18} />
+                      Back to Grants
+                    </button>
                   </div>
                 </motion.div>
               );
@@ -547,6 +561,17 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
                 exit={{ opacity: 0, y: -20 }}
                 className="space-y-6"
               >
+                {logoutMessage && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="bg-emerald-50 dark:bg-emerald-900/20 border-2 border-emerald-200 dark:border-emerald-700 rounded-xl p-4 flex gap-3"
+                  >
+                    <CheckCircle2 size={20} className="text-emerald-600 dark:text-emerald-400 flex-shrink-0 mt-0.5" />
+                    <p className="text-emerald-800 dark:text-emerald-300 font-semibold">{logoutMessage}</p>
+                  </motion.div>
+                )}
+
                 <div className="bg-gradient-to-br from-blue-600 to-indigo-600 rounded-3xl p-8 text-white">
                   <h2 className="text-3xl md:text-4xl font-black mb-4">Grant Tracking Portal</h2>
                   <p className="text-lg text-blue-100">
@@ -588,6 +613,14 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
                       </button>
                     ))}
                   </div>
+
+                  <button
+                    onClick={() => onNavigate('GRANTS')}
+                    className="w-full px-6 py-3 border-2 border-slate-300 dark:border-slate-600 hover:border-blue-500 dark:hover:border-blue-400 text-slate-900 dark:text-white rounded-xl font-black transition-all flex items-center justify-center gap-2 mt-4"
+                  >
+                    <ArrowLeft size={18} />
+                    Back to Grants
+                  </button>
                 </div>
               </motion.div>
             );
@@ -1493,7 +1526,7 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
                     <div className="flex items-center justify-between gap-4">
                       <div className="flex-1 min-w-0">
                         <h2 className="text-xl sm:text-2xl md:text-3xl font-black">⚙️ Account Settings</h2>
-                        <p className="text-slate-300 text-xs sm:text-sm mt-1.5">Manage your account security and privacy</p>
+                        <p className="text-slate-300 text-xs sm:text-sm mt-1.5">Manage your account and security</p>
                       </div>
                       <button
                         onClick={() => setShowSettings(false)}
@@ -1505,201 +1538,128 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
                     </div>
                   </div>
 
-                  {/* Settings Tabs */}
-                  <div className="flex gap-0 border-b border-slate-200 dark:border-slate-700 px-4 sm:px-6 overflow-x-auto flex-shrink-0 bg-slate-50 dark:bg-slate-800/50 sticky top-20 z-10">
-                    {(['security', 'privacy', 'notifications'] as const).map((tab) => (
-                      <button
-                        key={tab}
-                        onClick={() => setSettingsTab(tab)}
-                        className={`px-3 sm:px-5 py-3 sm:py-4 font-black text-xs sm:text-sm transition-all border-b-4 whitespace-nowrap flex-shrink-0 ${
-                          settingsTab === tab
-                            ? 'border-blue-600 text-blue-600 dark:text-blue-400'
-                            : 'border-transparent text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-                        }`}
-                      >
-                        {tab === 'security' && '🔐 Security'}
-                        {tab === 'privacy' && '👁️ Privacy'}
-                        {tab === 'notifications' && '🔔 Notifications'}
-                      </button>
-                    ))}
-                  </div>
-
-                  {/* Settings Content - Scrollable */}
+                  {/* Settings Content - No Tabs, Simple Layout */}
                   <div className="overflow-y-auto flex-1 px-4 sm:px-6 py-5 sm:py-6 pb-8 sm:pb-10 space-y-4 sm:space-y-5">
-                    {/* SECURITY TAB */}
-                    {settingsTab === 'security' && (
-                      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-4">
-                        <div className="bg-blue-50 dark:bg-blue-900/20 border-2 border-blue-200 dark:border-blue-700 rounded-lg sm:rounded-xl p-3 sm:p-4 flex gap-2 sm:gap-3">
-                          <Shield size={18} className="sm:w-5 sm:h-5 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5" />
-                          <div className="min-w-0 flex-1">
-                            <h4 className="font-black text-sm sm:text-base text-blue-900 dark:text-blue-200">Account Security</h4>
-                            <p className="text-xs sm:text-sm text-blue-800 dark:text-blue-300 mt-1">Manage your password and security settings</p>
-                          </div>
-                        </div>
+                    {/* Generate New Passkey */}
+                    <div className="bg-blue-50 dark:bg-blue-900/20 border-2 border-blue-200 dark:border-blue-700 rounded-lg sm:rounded-xl p-3 sm:p-4 flex gap-2 sm:gap-3">
+                      <Key size={18} className="sm:w-5 sm:h-5 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5" />
+                      <div className="min-w-0 flex-1">
+                        <h4 className="font-black text-sm sm:text-base text-blue-900 dark:text-blue-200">Manage Your Passkey</h4>
+                        <p className="text-xs sm:text-sm text-blue-800 dark:text-blue-300 mt-1">Generate a new passkey for secure account access</p>
+                      </div>
+                    </div>
 
-                        <div className="border-2 border-slate-200 dark:border-slate-700 rounded-lg sm:rounded-xl p-3 sm:p-4 hover:border-blue-400 dark:hover:border-blue-600 transition-all">
-                          <div className="flex flex-col gap-3 w-full">
-                            <div className="flex-1 min-w-0">
-                              <p className="font-black text-sm sm:text-base text-slate-900 dark:text-white">Password</p>
-                              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-1">Change your account password</p>
-                            </div>
-                            <button className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-black text-xs sm:text-sm transition-all w-full">
-                              Change Password
-                            </button>
-                          </div>
+                    <div className="border-2 border-slate-200 dark:border-slate-700 rounded-lg sm:rounded-xl p-3 sm:p-4 hover:border-blue-400 dark:hover:border-blue-600 transition-all">
+                      <div className="flex flex-col gap-3 w-full">
+                        <div className="flex-1 min-w-0">
+                          <p className="font-black text-sm sm:text-base text-slate-900 dark:text-white">Generate New Passkey</p>
+                          <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-1">Create a new passkey using your email and password</p>
                         </div>
+                        <button 
+                          onClick={() => {
+                            setTrackingState(prev => ({
+                              ...prev,
+                              stage: 'getPasskey',
+                              isLoggedIn: false
+                            }));
+                            setShowSettings(false);
+                            setGetPasskeyForm({ email: '', password: '' });
+                          }}
+                          className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-black text-xs sm:text-sm transition-all w-full"
+                        >
+                          🔑 Generate New Passkey
+                        </button>
+                      </div>
+                    </div>
 
-                        <div className="border-2 border-slate-200 dark:border-slate-700 rounded-lg sm:rounded-xl p-3 sm:p-4 hover:border-purple-400 dark:hover:border-purple-600 transition-all">
-                          <div className="flex flex-col gap-3 w-full">
-                            <div className="flex-1 min-w-0">
-                              <p className="font-black text-sm sm:text-base text-slate-900 dark:text-white">Dark Mode</p>
-                              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-1">Toggle dark mode for your account</p>
-                            </div>
-                            <button 
-                              onClick={() => {
-                                const html = document.documentElement;
-                                if (html.classList.contains('dark')) {
-                                  html.classList.remove('dark');
-                                  localStorage.setItem('theme', 'light');
-                                } else {
-                                  html.classList.add('dark');
-                                  localStorage.setItem('theme', 'dark');
-                                }
-                              }}
-                              className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-black text-xs sm:text-sm transition-all w-full"
-                            >
-                              {typeof document !== 'undefined' && document.documentElement.classList.contains('dark') ? '☀️ Switch to Light' : '🌙 Switch to Dark'}
-                            </button>
-                          </div>
+                    <div className="border-2 border-slate-200 dark:border-slate-700 rounded-lg sm:rounded-xl p-3 sm:p-4 hover:border-indigo-400 dark:hover:border-indigo-600 transition-all">
+                      <div className="flex flex-col gap-3 w-full">
+                        <div className="flex-1 min-w-0">
+                          <p className="font-black text-sm sm:text-base text-slate-900 dark:text-white">Login with Email & Password</p>
+                          <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-1">Get a passkey using your email and password</p>
                         </div>
+                        <button 
+                          onClick={() => {
+                            setTrackingState(prev => ({
+                              ...prev,
+                              stage: 'getPasskey',
+                              isLoggedIn: false
+                            }));
+                            setShowSettings(false);
+                            setGetPasskeyForm({ email: '', password: '' });
+                          }}
+                          className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-black text-xs sm:text-sm transition-all w-full"
+                        >
+                          📧 Get Passkey with Email
+                        </button>
+                      </div>
+                    </div>
 
-                        <div className="border-2 border-slate-200 dark:border-slate-700 rounded-lg sm:rounded-xl p-3 sm:p-4 hover:border-amber-400 dark:hover:border-amber-600 transition-all">
-                          <div className="flex flex-col gap-3 w-full">
-                            <div className="flex-1 min-w-0">
-                              <p className="font-black text-sm sm:text-base text-slate-900 dark:text-white flex items-center gap-2">
-                                <Lock size={18} className="flex-shrink-0" />
-                                <span>Two-Factor Auth</span>
-                              </p>
-                              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-1">Add extra security layer</p>
-                            </div>
-                            <button className="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-lg font-black text-xs sm:text-sm transition-all w-full">
-                              {privacySettings.twoFactorEnabled ? 'Disable 2FA' : 'Enable 2FA'}
-                            </button>
-                          </div>
+                    {/* Light Mode Toggle */}
+                    <div className="border-2 border-slate-200 dark:border-slate-700 rounded-lg sm:rounded-xl p-3 sm:p-4 hover:border-amber-400 dark:hover:border-amber-600 transition-all">
+                      <div className="flex items-center justify-between gap-3 w-full">
+                        <div className="flex-1 min-w-0">
+                          <p className="font-black text-sm sm:text-base text-slate-900 dark:text-white">Light Mode</p>
+                          <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-1">Switch to light mode for the entire application</p>
                         </div>
+                        <button
+                          onClick={() => {
+                            const html = document.documentElement;
+                            if (html.classList.contains('dark')) {
+                              html.classList.remove('dark');
+                              localStorage.setItem('theme', 'light');
+                              setIsDarkMode(false);
+                            } else {
+                              html.classList.add('dark');
+                              localStorage.setItem('theme', 'dark');
+                              setIsDarkMode(true);
+                            }
+                          }}
+                          className={`flex-shrink-0 p-2 rounded-lg transition-all ${
+                            isDarkMode
+                              ? 'bg-slate-700 text-amber-400'
+                              : 'bg-amber-200 text-amber-600'
+                          }`}
+                        >
+                          {isDarkMode ? '☀️' : '🌙'}
+                        </button>
+                      </div>
+                    </div>
 
-                        <div className="bg-red-50 dark:bg-red-900/20 border-2 border-red-200 dark:border-red-700 rounded-lg sm:rounded-xl p-3 sm:p-4 flex gap-3">
-                          <AlertCircle size={18} className="text-red-600 dark:text-red-400 flex-shrink-0 mt-0.5" />
-                          <div className="min-w-0 flex-1">
-                            <h4 className="font-black text-sm text-red-900 dark:text-red-200">Session Management</h4>
-                            <p className="text-xs sm:text-sm text-red-800 dark:text-red-300 mt-1">All sessions expire after 30 minutes of inactivity.</p>
-                          </div>
+                    {/* Logout Button */}
+                    <div className="border-2 border-red-200 dark:border-red-700 rounded-lg sm:rounded-xl p-3 sm:p-4 hover:border-red-400 dark:hover:border-red-600 transition-all">
+                      <div className="flex flex-col gap-3 w-full">
+                        <div className="flex-1 min-w-0">
+                          <p className="font-black text-sm sm:text-base text-slate-900 dark:text-white">Logout</p>
+                          <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-1">Sign out from your account</p>
                         </div>
-                      </motion.div>
-                    )}
+                        <button 
+                          onClick={() => {
+                            setTrackingState(prev => ({
+                              ...prev,
+                              stage: 'grantSelection',
+                              isLoggedIn: false,
+                              currentUser: null,
+                              currentGrant: null,
+                              hasPasskey: false
+                            }));
+                            setShowSettings(false);
+                            setLogoutMessage('You have been logged out successfully');
+                            setTimeout(() => setLogoutMessage(''), 5000);
+                          }}
+                          className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg font-black text-xs sm:text-sm transition-all w-full flex items-center justify-center gap-2"
+                        >
+                          <LogOut size={16} />
+                          Logout
+                        </button>
+                      </div>
+                    </div>
 
-                    {/* PRIVACY TAB */}
-                    {settingsTab === 'privacy' && (
-                      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-4">
-                        <div className="bg-emerald-50 dark:bg-emerald-900/20 border-2 border-emerald-200 dark:border-emerald-700 rounded-lg sm:rounded-xl p-3 sm:p-4 flex gap-3">
-                          <Eye size={18} className="text-emerald-600 dark:text-emerald-400 flex-shrink-0 mt-0.5" />
-                          <div className="min-w-0 flex-1">
-                            <h4 className="font-black text-sm sm:text-base text-emerald-900 dark:text-emerald-200">Privacy Controls</h4>
-                            <p className="text-xs sm:text-sm text-emerald-800 dark:text-emerald-300 mt-1">Control what information is visible</p>
-                          </div>
-                        </div>
-
-                        {/* Hide Balance Toggle */}
-                        <div className="border-2 border-slate-200 dark:border-slate-700 rounded-lg sm:rounded-xl p-3 sm:p-4 hover:border-emerald-400 dark:hover:border-emerald-600 transition-all">
-                          <div className="flex items-center justify-between gap-3 w-full">
-                            <div className="flex-1 min-w-0">
-                              <p className="font-black text-sm sm:text-base text-slate-900 dark:text-white flex items-center gap-2">
-                                {privacySettings.hideBalance ? <EyeOff size={16} className="flex-shrink-0" /> : <Eye size={16} className="flex-shrink-0" />}
-                                <span>Hide Balance</span>
-                              </p>
-                              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-1">Conceal your balance from display</p>
-                            </div>
-                            <button
-                              onClick={() => setPrivacySettings({...privacySettings, hideBalance: !privacySettings.hideBalance})}
-                              className={`flex-shrink-0 p-2 rounded-lg transition-all ${
-                                privacySettings.hideBalance
-                                  ? 'bg-emerald-600 text-white'
-                                  : 'bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300'
-                              }`}
-                            >
-                              {privacySettings.hideBalance ? <ToggleRight size={20} /> : <ToggleLeft size={20} />}
-                            </button>
-                          </div>
-                        </div>
-
-                        {/* Hide Personal Info Toggle */}
-                        <div className="border-2 border-slate-200 dark:border-slate-700 rounded-lg sm:rounded-xl p-3 sm:p-4 hover:border-emerald-400 dark:hover:border-emerald-600 transition-all">
-                          <div className="flex items-center justify-between gap-3 w-full">
-                            <div className="flex-1 min-w-0">
-                              <p className="font-black text-sm sm:text-base text-slate-900 dark:text-white flex items-center gap-2">
-                                {privacySettings.hidePersonalInfo ? <EyeOff size={16} className="flex-shrink-0" /> : <Eye size={16} className="flex-shrink-0" />}
-                                <span>Hide Personal Info</span>
-                              </p>
-                              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-1">Hide your name and contact details</p>
-                            </div>
-                            <button
-                              onClick={() => setPrivacySettings({...privacySettings, hidePersonalInfo: !privacySettings.hidePersonalInfo})}
-                              className={`flex-shrink-0 p-2 rounded-lg transition-all ${
-                                privacySettings.hidePersonalInfo
-                                  ? 'bg-emerald-600 text-white'
-                                  : 'bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300'
-                              }`}
-                            >
-                              {privacySettings.hidePersonalInfo ? <ToggleRight size={20} /> : <ToggleLeft size={20} />}
-                            </button>
-                          </div>
-                        </div>
-
-                        <div className="bg-slate-100 dark:bg-slate-800 rounded-lg sm:rounded-xl p-3 sm:p-4 space-y-3">
-                          <p className="font-black text-sm sm:text-base text-slate-900 dark:text-white">Data & Cookies</p>
-                          <div className="space-y-2 text-xs sm:text-sm">
-                            <label className="flex items-start sm:items-center gap-3 cursor-pointer">
-                              <input type="checkbox" defaultChecked className="w-4 h-4 sm:w-5 sm:h-5 rounded flex-shrink-0 mt-0.5 sm:mt-0" />
-                              <span className="text-slate-700 dark:text-slate-300">Allow analytics to improve your experience</span>
-                            </label>
-                            <label className="flex items-start sm:items-center gap-3 cursor-pointer">
-                              <input type="checkbox" defaultChecked className="w-4 h-4 sm:w-5 sm:h-5 rounded flex-shrink-0 mt-0.5 sm:mt-0" />
-                              <span className="text-slate-700 dark:text-slate-300">Allow essential cookies for account security</span>
-                            </label>
-                          </div>
-                        </div>
-                      </motion.div>
-                    )}
-
-                    {/* NOTIFICATIONS TAB */}
-                    {settingsTab === 'notifications' && (
-                      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-4">
-                        <div className="bg-purple-50 dark:bg-purple-900/20 border-2 border-purple-200 dark:border-purple-700 rounded-lg sm:rounded-xl p-3 sm:p-4 flex gap-3">
-                          <AlertCircle size={18} className="text-purple-600 dark:text-purple-400 flex-shrink-0 mt-0.5" />
-                          <div className="min-w-0 flex-1">
-                            <h4 className="font-black text-sm sm:text-base text-purple-900 dark:text-purple-200">Notification Preferences</h4>
-                            <p className="text-xs sm:text-sm text-purple-800 dark:text-purple-300 mt-1">Control how you receive updates about your grant</p>
-                          </div>
-                        </div>
-
-                        <div className="space-y-3">
-                          {[
-                            { label: 'Grant Status Updates', description: 'Get notified about status changes' },
-                            { label: 'Balance Available', description: 'Alert when funds become available' },
-                            { label: 'Security Alerts', description: 'Important security notifications' },
-                            { label: 'Email Digests', description: 'Weekly summary of activity' }
-                          ].map((item, idx) => (
-                            <div key={idx} className="border-2 border-slate-200 dark:border-slate-700 rounded-lg sm:rounded-xl p-3 sm:p-4 hover:border-purple-400 dark:hover:border-purple-600 transition-all flex items-center gap-3">
-                              <input type="checkbox" defaultChecked id={`notif-${idx}`} className="w-4 h-4 sm:w-5 sm:h-5 rounded cursor-pointer flex-shrink-0 accent-purple-600" />
-                              <label htmlFor={`notif-${idx}`} className="flex-1 cursor-pointer min-w-0">
-                                <p className="font-black text-sm sm:text-base text-slate-900 dark:text-white">{item.label}</p>
-                                <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-0.5">{item.description}</p>
-                              </label>
-                            </div>
-                          ))}
-                        </div>
-                      </motion.div>
-                    )}
+                    <div className="bg-slate-100 dark:bg-slate-800 rounded-lg sm:rounded-xl p-3 sm:p-4">
+                      <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-300">
+                        💡 <span className="font-bold">Tip:</span> Keep your email and password safe. You'll need them to generate a new passkey if needed.
+                      </p>
+                    </div>
                   </div>
                 </motion.div>
               </motion.div>

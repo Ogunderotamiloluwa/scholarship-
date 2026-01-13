@@ -176,6 +176,25 @@ const GrantApplication: React.FC<GrantApplicationProps> = ({ onNavigate }) => {
                     {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                   </button>
                 </div>
+                {!errors.password && password && (
+                  <div className="mt-2 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-700">
+                    <p className="text-xs font-semibold text-blue-900 dark:text-blue-200 mb-2">Password Requirements:</p>
+                    <div className="space-y-1 text-xs">
+                      <p className={password.length >= 8 ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-600 dark:text-slate-400'}>
+                        {password.length >= 8 ? '✓' : '○'} At least 8 characters
+                      </p>
+                      <p className={/[A-Z]/.test(password) ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-600 dark:text-slate-400'}>
+                        {/[A-Z]/.test(password) ? '✓' : '○'} One uppercase letter (A-Z)
+                      </p>
+                      <p className={/[0-9]/.test(password) ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-600 dark:text-slate-400'}>
+                        {/[0-9]/.test(password) ? '✓' : '○'} One number (0-9)
+                      </p>
+                      <p className={/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password) ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-600 dark:text-slate-400'}>
+                        {/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password) ? '✓' : '○'} One special character (!@#$%^&* etc)
+                      </p>
+                    </div>
+                  </div>
+                )}
                 {errors.password && <p className="text-red-600 text-sm font-semibold mt-1 px-2">{errors.password}</p>}
               </div>
 
@@ -223,8 +242,27 @@ const GrantApplication: React.FC<GrantApplicationProps> = ({ onNavigate }) => {
                   if (!fullName.trim()) newErrors.fullName = 'Full name is required';
                   if (!email.trim()) newErrors.email = 'Email is required';
                   else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) newErrors.email = 'Please enter a valid email';
+                  else {
+                    // Check if email has been used before for another grant
+                    const existingApplications = JSON.parse(localStorage.getItem('grantApplications') || '[]');
+                    const emailExists = existingApplications.some((app: any) => app.email.toLowerCase() === email.toLowerCase());
+                    if (emailExists) {
+                      newErrors.email = '❌ This email has already been used for a grant application. Each email can only be used for one grant.';
+                    }
+                  }
                   if (!password.trim()) newErrors.password = 'Password is required';
-                  else if (password.length < 6) newErrors.password = 'Password must be at least 6 characters';
+                  else {
+                    // Strong password validation: min 8 chars, uppercase, number, special char
+                    const hasUppercase = /[A-Z]/.test(password);
+                    const hasNumber = /[0-9]/.test(password);
+                    const hasSpecialChar = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password);
+                    const isLongEnough = password.length >= 8;
+                    
+                    if (!isLongEnough) newErrors.password = 'Password must be at least 8 characters';
+                    else if (!hasUppercase) newErrors.password = 'Password must contain at least one uppercase letter (A-Z)';
+                    else if (!hasNumber) newErrors.password = 'Password must contain at least one number (0-9)';
+                    else if (!hasSpecialChar) newErrors.password = 'Password must contain at least one special character (!@#$%^&* etc)';
+                  }
                   if (!phone.trim()) newErrors.phone = 'Phone number is required';
                   else if (!/^[0-9\-\s\(\)\+]{10,}$/.test(phone.replace(/\s/g, ''))) newErrors.phone = 'Please enter a valid phone number';
                   if (!country) newErrors.country = 'Please select a country';
@@ -457,14 +495,21 @@ const GrantApplication: React.FC<GrantApplicationProps> = ({ onNavigate }) => {
                   } else {
                     const amount = parseFloat(applicationData.amount);
                     const grantDetails = getSelectedGrantDetails();
+                    const GLOBAL_MIN = 20000;
+                    const GLOBAL_MAX = 150000;
+                    
                     if (!grantDetails) {
                       newErrors.amount = 'Invalid grant selected';
                     } else if (isNaN(amount)) {
                       newErrors.amount = 'Amount must be a valid number';
+                    } else if (amount < GLOBAL_MIN) {
+                      newErrors.amount = `Minimum grant amount is $${GLOBAL_MIN.toLocaleString()}`;
+                    } else if (amount > GLOBAL_MAX) {
+                      newErrors.amount = `Maximum grant amount is $${GLOBAL_MAX.toLocaleString()}`;
                     } else if (amount < grantDetails.minAmount) {
-                      newErrors.amount = `Minimum amount is $${grantDetails.minAmount.toLocaleString()}`;
+                      newErrors.amount = `Minimum amount for this grant is $${grantDetails.minAmount.toLocaleString()}`;
                     } else if (amount > grantDetails.maxAmount) {
-                      newErrors.amount = `Maximum amount is $${grantDetails.maxAmount.toLocaleString()}`;
+                      newErrors.amount = `Maximum amount for this grant is $${grantDetails.maxAmount.toLocaleString()}`;
                     }
                   }
                   if (!applicationData.usage.trim()) newErrors.usage = 'Fund usage details are required';
