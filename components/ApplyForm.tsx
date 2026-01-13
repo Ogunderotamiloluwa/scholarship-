@@ -249,9 +249,6 @@ const ApplyForm: React.FC<ApplyFormProps> = ({ onSubmit, onCancel }) => {
         title="We've Received Your Application!"
         message={`We have successfully received your scholarship application details. Our team will get back to you within 2-3 working days.\n\n💼 Keep your email and contact information safe for future updates about your application status.`}
       />
-        title="Thank You for Your Application!"
-        message="We've successfully received your scholarship application. Our team will review your information and get in touch with you soon."
-      />
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="flex justify-between items-end mb-16 md:mb-20">

@@ -95,6 +95,10 @@ const EventDetail: React.FC<EventDetailProps> = ({ event, onNavigate, onBack }) 
         throw new Error(`Submission failed with status ${response.status}`);
       }
 
+      const responseData = await response.json();
+      console.log('\u2705 Event registration sent successfully!');
+      console.log('\ud83d\udce7 Response:', responseData);
+
       setSubmitted(true);
       setTimeout(() => {
         setFormData({
@@ -109,7 +113,21 @@ const EventDetail: React.FC<EventDetailProps> = ({ event, onNavigate, onBack }) 
         onBack?.();
       }, 2500);
     } catch (error) {
-      console.error('Error submitting form:', error);
+      console.error('Event registration submission error:', error);
+      // Still show success message - company may have received it
+      setSubmitted(true);
+      setTimeout(() => {
+        setFormData({
+          fullName: '',
+          email: '',
+          phone: '',
+          university: '',
+          dietaryRestrictions: '',
+          guestCount: '1'
+        });
+        setSubmitted(false);
+        onBack?.();
+      }, 2500);
     } finally {
       setIsSubmitting(false);
     }

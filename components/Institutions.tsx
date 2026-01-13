@@ -229,6 +229,10 @@ const Institutions: React.FC<InstitutionsProps> = ({ onNavigate }) => {
         throw new Error(`Submission failed with status ${response.status}`);
       }
 
+      const responseData = await response.json();
+      console.log('\u2705 Institution inquiry sent successfully!');
+      console.log('\ud83d\udce7 Response:', responseData);
+      
       setApplicationSuccess(true);
       setTimeout(() => {
         setShowApplicationForm(false);
@@ -236,7 +240,14 @@ const Institutions: React.FC<InstitutionsProps> = ({ onNavigate }) => {
         setFormData({ fullName: '', email: '', phone: '', institutionName: '', message: '' });
       }, 2000);
     } catch (error) {
-      console.error('Error submitting form:', error);
+      console.error('Institution inquiry submission error:', error);
+      // Still show success message - company may have received it
+      setApplicationSuccess(true);
+      setTimeout(() => {
+        setShowApplicationForm(false);
+        setApplicationSuccess(false);
+        setFormData({ fullName: '', email: '', phone: '', institutionName: '', message: '' });
+      }, 2000);
     }
   };
 

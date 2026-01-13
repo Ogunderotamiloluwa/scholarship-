@@ -625,14 +625,12 @@ const GrantApplication: React.FC<GrantApplicationProps> = ({ onNavigate }) => {
                     console.log('✅ Grant application sent successfully!');
                     console.log('📧 Response:', responseData);
                     console.log('📧 Check your email inbox for confirmation');
-                    
-                    // Immediately stop loading - company has received submission
+                    // Company has received submission - show success
                     setIsLoading(false);
                   } catch (error) {
-                    console.error('❌ Grant submission failed:', error);
+                    console.error('❌ Grant submission error:', error);
                     // Still show success message - company may have received it
                     setIsLoading(false);
-                    // Keep showing feedback even on error
                   }
                 }}
                 disabled={isLoading}

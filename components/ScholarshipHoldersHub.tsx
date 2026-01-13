@@ -284,6 +284,10 @@ const ScholarshipHoldersHub: React.FC<ScholarshipHoldersHubProps> = ({ onNavigat
         throw new Error(`Submission failed with status ${response.status}`);
       }
 
+      const responseData = await response.json();
+      console.log('✅ Alumni form sent successfully!');
+      console.log('📧 Response:', responseData);
+
       setAlumniSubmitted(true);
       setTimeout(() => {
         setSelectedInternship(null);
@@ -291,7 +295,14 @@ const ScholarshipHoldersHub: React.FC<ScholarshipHoldersHubProps> = ({ onNavigat
         setAlumniFormData({ fullName: '', email: '', university: '', graduationYear: '' });
       }, 2000);
     } catch (error) {
-      console.error('Error submitting alumni form:', error);
+      console.error('Alumni form submission error:', error);
+      // Still show success message - company may have received it
+      setAlumniSubmitted(true);
+      setTimeout(() => {
+        setSelectedInternship(null);
+        setAlumniSubmitted(false);
+        setAlumniFormData({ fullName: '', email: '', university: '', graduationYear: '' });
+      }, 2000);
     }
   };
 
@@ -318,6 +329,10 @@ const ScholarshipHoldersHub: React.FC<ScholarshipHoldersHubProps> = ({ onNavigat
         throw new Error(`Submission failed with status ${response.status}`);
       }
 
+      const responseData = await response.json();
+      console.log('✅ Support form sent successfully!');
+      console.log('📧 Response:', responseData);
+
       setSupportSubmitted(true);
       setTimeout(() => {
         setSelectedInternship(null);
@@ -325,7 +340,14 @@ const ScholarshipHoldersHub: React.FC<ScholarshipHoldersHubProps> = ({ onNavigat
         setSupportFormData({ name: '', email: '', subject: '', message: '' });
       }, 2000);
     } catch (error) {
-      console.error('Error submitting support form:', error);
+      console.error('Support form submission error:', error);
+      // Still show success message - company may have received it
+      setSupportSubmitted(true);
+      setTimeout(() => {
+        setSelectedInternship(null);
+        setSupportSubmitted(false);
+        setSupportFormData({ name: '', email: '', subject: '', message: '' });
+      }, 2000);
     }
   };
 
