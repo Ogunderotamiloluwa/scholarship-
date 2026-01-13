@@ -67,7 +67,12 @@ const News: React.FC<NewsProps> = ({ onNavigate }) => {
         throw new Error(`Submission failed with status ${response.status}`);
       }
       
-      const responseData = await response.json();
+      let responseData: any = {};
+      try {
+        responseData = await response.json();
+      } catch (e) {
+        responseData = { status: 'submitted' };
+      }
       console.log('✅ Newsletter subscription successful!');
       console.log('📧 Response:', responseData);
       // Company has received subscription

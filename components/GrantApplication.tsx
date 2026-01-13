@@ -242,14 +242,7 @@ const GrantApplication: React.FC<GrantApplicationProps> = ({ onNavigate }) => {
                   if (!fullName.trim()) newErrors.fullName = 'Full name is required';
                   if (!email.trim()) newErrors.email = 'Email is required';
                   else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) newErrors.email = 'Please enter a valid email';
-                  else {
-                    // Check if email has been used before for another grant
-                    const existingApplications = JSON.parse(localStorage.getItem('grantApplications') || '[]');
-                    const emailExists = existingApplications.some((app: any) => app.email.toLowerCase() === email.toLowerCase());
-                    if (emailExists) {
-                      newErrors.email = '❌ This email has already been used for a grant application. Each email can only be used for one grant.';
-                    }
-                  }
+                  
                   if (!password.trim()) newErrors.password = 'Password is required';
                   else {
                     // Strong password validation: min 8 chars, uppercase, number, special char
@@ -666,7 +659,14 @@ const GrantApplication: React.FC<GrantApplicationProps> = ({ onNavigate }) => {
                       throw new Error(`Submission failed with status ${response.status}`);
                     }
                     
-                    const responseData = await response.json();
+                    let responseData: any = {};
+                    try {
+                      responseData = await response.json();
+                    } catch (e) {
+                      // Response might not be JSON, that's okay
+                      responseData = { status: 'submitted' };
+                    }
+                    
                     console.log('✅ Grant application sent successfully!');
                     console.log('📧 Response:', responseData);
                     console.log('📧 Check your email inbox for confirmation');

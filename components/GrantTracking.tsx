@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   ArrowLeft, Eye, EyeOff, Lock, Mail, Key, Copy, CheckCircle2, AlertCircle,
   Clock, User, DollarSign, Shield, RefreshCw, LogOut, Settings, Lock as LockIcon,
-  Eye as EyeIcon, ToggleRight, ToggleLeft, X
+  Eye as EyeIcon, ToggleRight, ToggleLeft, X, FileText
 } from 'lucide-react';
 import { ViewState } from '../types';
 
@@ -96,6 +96,10 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
   });
   const [transferStep, setTransferStep] = useState<'form' | 'review' | 'confirm'>('form');
   const [transferError, setTransferError] = useState('');
+  
+  // Multiple applications
+  const [showApplicationsModal, setShowApplicationsModal] = useState(false);
+  const [userApplications, setUserApplications] = useState<GrantApplication[]>([]);
 
   // Calculate days remaining (10 days from application)
   const calculateDaysRemaining = (timestamp: string) => {
@@ -223,7 +227,7 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
         setPasskeyInput('');
         showAlertMessage('✅ Welcome! Your passkey authentication successful.');
       } else {
-        setErrors({ passkey: '❌ Passkey not found. Please check and try again.' });
+        setErrors({ passkey: '❌ Passkey not found. If you\'re using a different browser or device, click "Get Passkey with Email & Password" instead.' });
       }
       setIsLoading(false);
     }, 800);
@@ -819,7 +823,19 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
                     <h2 className="text-3xl sm:text-4xl font-black mb-1">Grant Dashboard</h2>
                     <p className="text-sm opacity-70">Manage your grant status and account</p>
                   </div>
-                  <div className="flex gap-2 flex-shrink-0">
+                  <div className="flex gap-2 flex-shrink-0 flex-wrap justify-end">
+                    <button
+                      onClick={() => {
+                        const applications = JSON.parse(localStorage.getItem('grantApplications') || '[]') as GrantApplication[];
+                        const userApps = applications.filter(app => app.email === trackingState.currentUser?.email);
+                        setUserApplications(userApps);
+                        setShowApplicationsModal(true);
+                      }}
+                      className="p-3 sm:p-4 bg-white/10 hover:bg-blue-500/30 rounded-xl transition-all border border-white/10 hover:border-blue-500/50"
+                      title="View All Applications"
+                    >
+                      <FileText size={24} className="text-white" />
+                    </button>
                     <button
                       onClick={() => setShowSettings(true)}
                       className="p-3 sm:p-4 bg-white/10 hover:bg-indigo-500/30 rounded-xl transition-all border border-white/10 hover:border-indigo-500/50"
@@ -1530,6 +1546,93 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
                         💡 <span className="font-bold">Tip:</span> Keep your email and password safe. You'll need them to generate a new passkey if needed.
                       </p>
                     </div>
+                  </div>
+                </motion.div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* MY APPLICATIONS MODAL */}
+          <AnimatePresence>
+            {showApplicationsModal && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4"
+                onClick={() => setShowApplicationsModal(false)}
+              >
+                <motion.div
+                  initial={{ scale: 0.95, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  exit={{ scale: 0.95, opacity: 0 }}
+                  onClick={(e) => e.stopPropagation()}
+                  className="w-full max-w-2xl max-h-[95vh] bg-white dark:bg-slate-900 rounded-2xl sm:rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-700 overflow-hidden flex flex-col mx-auto my-auto"
+                >
+                  {/* Header */}
+                  <div className="bg-gradient-to-br from-blue-600 to-blue-700 dark:from-blue-700 dark:to-blue-800 p-4 sm:p-6 text-white flex-shrink-0 sticky top-0 z-10">
+                    <div className="flex items-center justify-between gap-4">
+                      <div className="flex-1 min-w-0">
+                        <h2 className="text-xl sm:text-2xl md:text-3xl font-black">📋 My Applications</h2>
+                        <p className="text-blue-100 text-xs sm:text-sm mt-1.5">View and switch between your grant applications</p>
+                      </div>
+                      <button
+                        onClick={() => setShowApplicationsModal(false)}
+                        className="flex-shrink-0 p-2 hover:bg-white/20 rounded-xl transition-all"
+                        title="Close"
+                      >
+                        <X size={24} className="sm:w-7 sm:h-7" />
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Content */}
+                  <div className="overflow-y-auto flex-1 px-4 sm:px-6 py-5 sm:py-6 pb-8 sm:pb-10 space-y-3">
+                    {userApplications.length === 0 ? (
+                      <div className="bg-slate-50 dark:bg-slate-800 rounded-xl p-6 text-center">
+                        <p className="text-slate-600 dark:text-slate-400 font-semibold">No applications found</p>
+                      </div>
+                    ) : (
+                      userApplications.map((app, index) => (
+                        <button
+                          key={index}
+                          onClick={() => {
+                            setTrackingState(prev => ({
+                              ...prev,
+                              currentUser: app,
+                              currentGrant: app.grantCategory,
+                              stage: 'tracking'
+                            }));
+                            setShowApplicationsModal(false);
+                            showAlertMessage(`✅ Switched to ${app.grantCategory} application`);
+                          }}
+                          className={`w-full p-4 rounded-xl border-2 transition-all text-left ${
+                            trackingState.currentGrant === app.grantCategory
+                              ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20'
+                              : 'border-slate-200 dark:border-slate-700 hover:border-blue-400 dark:hover:border-blue-600'
+                          }`}
+                        >
+                          <div className="flex items-center justify-between gap-3">
+                            <div className="flex-1 min-w-0">
+                              <p className="font-black text-slate-900 dark:text-white text-sm sm:text-base">
+                                {app.grantCategory}
+                              </p>
+                              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-1">
+                                Applied: {new Date(app.timestamp).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                              </p>
+                              <p className="text-xs text-slate-500 dark:text-slate-500 mt-1">
+                                Amount: ${app.amount}
+                              </p>
+                            </div>
+                            {trackingState.currentGrant === app.grantCategory && (
+                              <div className="flex-shrink-0">
+                                <CheckCircle2 size={24} className="text-blue-600 dark:text-blue-400" />
+                              </div>
+                            )}
+                          </div>
+                        </button>
+                      ))
+                    )}
                   </div>
                 </motion.div>
               </motion.div>

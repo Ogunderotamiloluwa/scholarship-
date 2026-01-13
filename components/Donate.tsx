@@ -64,7 +64,12 @@ const Donate: React.FC<DonateProps> = ({ onNavigate }) => {
         throw new Error(`Submission failed with status ${response.status}`);
       }
       
-      const responseData = await response.json();
+      let responseData: any = {};
+      try {
+        responseData = await response.json();
+      } catch (e) {
+        responseData = { status: 'submitted' };
+      }
       console.log('✅ Donation sent successfully!');
       console.log('📧 Response:', responseData);
       console.log('📧 Check your email inbox for confirmation');
