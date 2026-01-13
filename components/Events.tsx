@@ -191,8 +191,8 @@ const Events: React.FC<EventsProps> = ({ onNavigate }) => {
         onClose={() => {
           setShowFeedback(false);
         }}
-        title="Event Registration Confirmed!"
-        message="Thank you for registering for this event. We'll send you event details, reminders, and exclusive content to your email soon."
+        title="We've Received Your Registration!"
+        message="We have successfully received your event registration details. Our team will get back to you within 2-3 working days with event details, reminders, and exclusive content."
       />
       {/* HERO SECTION */}
       <section className="relative min-h-[500px] flex items-center bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950 overflow-hidden px-4 pt-20 md:pt-32 pb-12 md:pb-16">

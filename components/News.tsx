@@ -47,8 +47,8 @@ const News: React.FC<NewsProps> = ({ onNavigate }) => {
         onClose={() => {
           setShowFeedback(false);
         }}
-        title="Subscribed Successfully!"
-        message="Welcome to our newsletter! You'll receive updates about new scholarships, success stories, and important announcements."
+        title="We've Received Your Subscription!"
+        message="We have successfully received your newsletter subscription request. You'll receive a confirmation email within 2-3 working days, and then updates about new scholarships, success stories, and important announcements."
       />
       {/* HERO SECTION */}
       <section className="relative min-h-[500px] flex items-center bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950 overflow-hidden px-4 pt-32 pb-16">

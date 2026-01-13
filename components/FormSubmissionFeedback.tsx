@@ -35,7 +35,7 @@ const FormSubmissionFeedback: React.FC<FormSubmissionFeedbackProps> = ({
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 20 }}
           transition={{ duration: 0.3 }}
-          className="fixed inset-0 z-50 flex items-center justify-center px-4"
+          className="fixed inset-0 z-50 flex items-center justify-center px-4 pt-20"
         >
           <div className="w-full max-w-md bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border-2 border-emerald-200 dark:border-emerald-800 overflow-hidden">
             {/* Loading Bar */}
@@ -90,7 +90,7 @@ const FormSubmissionFeedback: React.FC<FormSubmissionFeedbackProps> = ({
                   transition={{ delay: 0.4 }}
                   className="space-y-4"
                 >
-                  <p className="text-slate-700 dark:text-slate-300 font-medium leading-relaxed">
+                  <p className="text-slate-700 dark:text-slate-300 font-medium leading-relaxed whitespace-pre-line">
                     {message}
                   </p>
 

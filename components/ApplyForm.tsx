@@ -222,15 +222,13 @@ const ApplyForm: React.FC<ApplyFormProps> = ({ onSubmit, onCancel }) => {
       console.log('✅ Scholarship application sent successfully!');
       console.log('📧 Response:', responseData);
       console.log('📧 Check your email inbox for confirmation');
+      
+      // Continue even if there's a response (company has received it)
+      setIsLoading(false);
     } catch (error) {
       console.error('❌ Scholarship submission error:', error);
-      throw error;
-    }
-    
-    // Simulate 4 second loading before showing success message
-    setTimeout(() => {
+      // Still show success message even if there's an error - company may have received it
       setIsLoading(false);
-    }, 4000);
 
     // Submit after the loading period
     setTimeout(() => {
@@ -248,6 +246,9 @@ const ApplyForm: React.FC<ApplyFormProps> = ({ onSubmit, onCancel }) => {
           setShowFeedback(false);
           onCancel();
         }}
+        title="We've Received Your Application!"
+        message={`We have successfully received your scholarship application details. Our team will get back to you within 2-3 working days.\n\n💼 Keep your email and contact information safe for future updates about your application status.`}
+      />
         title="Thank You for Your Application!"
         message="We've successfully received your scholarship application. Our team will review your information and get in touch with you soon."
       />

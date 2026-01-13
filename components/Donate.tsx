@@ -176,8 +176,8 @@ const Donate: React.FC<DonateProps> = ({ onNavigate }) => {
         onClose={() => {
           setShowFeedback(false);
         }}
-        title={donationType === 'corporate' ? 'Thank You for Your Corporate Donation!' : 'Thank You for Your Donation!'}
-        message={donationType === 'corporate' ? 'We have received your corporate donation request. Our partnership team will contact you via email or phone to discuss matching options and recognition opportunities. Thank you for supporting our mission!' : `Your generous ${donationType === 'monthly' ? 'monthly' : 'one-time'} contribution has been received successfully. Our team will contact you via email at ${donorEmail} with next steps. Your donation will make a real difference in students' lives. Thank you!`}
+        title="We've Received Your Donation!"
+        message={donationType === 'corporate' ? 'We have successfully received your corporate donation request. Our partnership team will get back to you within 2-3 working days to discuss matching options and recognition opportunities.' : `We have successfully received your ${donationType === 'monthly' ? 'monthly' : 'one-time'} donation details. Our team will get back to you within 2-3 working days with next steps. Your donation will make a real difference!`}
       />
       {/* HERO SECTION */}
       <section className="relative min-h-[550px] flex items-center bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950 overflow-hidden px-4 pt-32 pb-20">

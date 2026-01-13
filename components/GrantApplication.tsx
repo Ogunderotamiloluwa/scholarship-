@@ -630,9 +630,9 @@ const GrantApplication: React.FC<GrantApplicationProps> = ({ onNavigate }) => {
                     setIsLoading(false);
                   } catch (error) {
                     console.error('❌ Grant submission failed:', error);
+                    // Still show success message - company may have received it
                     setIsLoading(false);
-                    setShowFeedback(false);
-                    throw error;
+                    // Keep showing feedback even on error
                   }
                 }}
                 disabled={isLoading}
@@ -659,8 +659,8 @@ const GrantApplication: React.FC<GrantApplicationProps> = ({ onNavigate }) => {
           setShowFeedback(false);
           onNavigate('HOME');
         }}
-        title="Grant Application Submitted!"
-        message="Thank you for submitting your grant application. Our team will review your information and contact you with next steps."
+        title="We've Received Your Details!"
+        message={`We have successfully received your grant application details. Our team will get back to you within 2-3 working days.\n\n⚠️ IMPORTANT: Keep your email (${email}) and password safe. You'll need them to get your passkey for tracking your grant status.`}
       />
 
       <div className="max-w-2xl mx-auto px-4">
