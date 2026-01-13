@@ -470,17 +470,17 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
 
   return (
     <div className={`min-h-screen bg-gradient-to-b from-slate-50 to-white dark:from-slate-950 dark:to-slate-900 transition-all ${isInAccountView ? 'pt-0 pb-20' : 'pt-24 pb-20'}`}>
-      {/* Alert Message - Repositioned for better mobile visibility */}
+      {/* Alert Message - Left-aligned on mobile for better visibility */}
       <AnimatePresence>
         {showAlert && (
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="fixed top-16 md:top-20 left-1/2 -translate-x-1/2 z-50 w-auto min-w-[280px] max-w-[620px] bg-gradient-to-r from-emerald-500 to-emerald-600 dark:from-emerald-600 dark:to-emerald-700 border-b-2 border-emerald-700 dark:border-emerald-800 rounded-2xl px-5 sm:px-8 py-4 sm:py-5 flex items-center justify-center gap-3 shadow-2xl"
+            className="fixed top-16 md:top-20 left-4 md:left-1/2 md:-translate-x-1/2 right-4 md:right-auto z-50 w-auto md:min-w-[280px] md:max-w-[620px] bg-gradient-to-r from-emerald-500 to-emerald-600 dark:from-emerald-600 dark:to-emerald-700 border-b-2 border-emerald-700 dark:border-emerald-800 rounded-2xl px-4 md:px-8 py-4 sm:py-5 flex items-start md:items-center justify-start md:justify-center gap-3 shadow-2xl"
           >
-            <CheckCircle2 size={20} className="text-white flex-shrink-0" />
-            <p className="text-white text-xs sm:text-sm font-bold whitespace-normal break-words text-center">{alertMessage}</p>
+            <CheckCircle2 size={20} className="text-white flex-shrink-0 mt-0.5 md:mt-0" />
+            <p className="text-white text-xs sm:text-sm font-bold whitespace-normal break-words text-left md:text-center">{alertMessage}</p>
           </motion.div>
         )}
       </AnimatePresence>
@@ -497,54 +497,83 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
         )}
 
         <AnimatePresence mode="wait">
-          {/* GRANT SELECTION STAGE */}
-          {trackingState.stage === 'grantSelection' && (
-            <motion.div
-              key="grantSelection"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              className="space-y-6"
-            >
-              <div className="bg-gradient-to-br from-blue-600 to-indigo-600 rounded-3xl p-8 text-white">
-                <h2 className="text-3xl md:text-4xl font-black mb-4">Grant Tracking Portal</h2>
-                <p className="text-lg text-blue-100">
-                  Select the grant you want to track
-                </p>
-              </div>
-
-              <div className="space-y-4 bg-white dark:bg-slate-900 rounded-2xl p-6 border border-slate-200 dark:border-slate-800">
-                {errors.grantSelection && (
-                  <div className="bg-red-50 dark:bg-red-900/20 border-2 border-red-200 dark:border-red-700 rounded-xl p-4 flex gap-3">
-                    <AlertCircle size={20} className="text-red-600 dark:text-red-400 flex-shrink-0 mt-0.5" />
-                    <p className="text-red-700 dark:text-red-300 font-semibold text-sm">{errors.grantSelection}</p>
-                  </div>
-                )}
-
-                <div className="bg-blue-50 dark:bg-blue-900/20 border-2 border-blue-200 dark:border-blue-700 rounded-xl p-4 flex gap-3">
-                  <AlertCircle size={20} className="text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5" />
-                  <div>
-                    <h4 className="font-black text-blue-900 dark:text-blue-200 mb-1">Select Your Grant</h4>
-                    <p className="text-sm text-blue-800 dark:text-blue-300">
-                      Choose which grant program you applied for to proceed with login.
+          {/* GRANT SELECTION STAGE - AUTO-SKIPS IF ONLY ONE GRANT EXISTS */}
+          {trackingState.stage === 'grantSelection' && (() => {
+            const applications = JSON.parse(localStorage.getItem('grantApplications') || '[]') as GrantApplication[];
+            const uniqueGrants = [...new Set(applications.map(app => app.grantCategory))];
+            
+            // If only one grant exists, auto-skip to passkey login
+            if (uniqueGrants.length === 1 && !trackingState.currentGrant) {
+              setTimeout(() => {
+                setTrackingState((prev) => ({
+                  ...prev,
+                  stage: 'passkeyLogin',
+                  currentGrant: uniqueGrants[0]
+                }));
+              }, 0);
+              return null;
+            }
+            
+            // If no applications, show error
+            if (uniqueGrants.length === 0) {
+              return (
+                <motion.div
+                  key="grantSelection"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  className="space-y-6"
+                >
+                  <div className="bg-gradient-to-br from-blue-600 to-indigo-600 rounded-3xl p-8 text-white">
+                    <h2 className="text-3xl md:text-4xl font-black mb-4">Grant Tracking Portal</h2>
+                    <p className="text-lg text-blue-100">
+                      Track your grant applications
                     </p>
                   </div>
+
+                  <div className="bg-amber-50 dark:bg-amber-900/20 border-2 border-amber-200 dark:border-amber-700 rounded-xl p-6">
+                    <p className="text-amber-800 dark:text-amber-300 font-semibold text-center">No grant applications found. Please submit an application first.</p>
+                  </div>
+                </motion.div>
+              );
+            }
+            
+            // If multiple grants, allow selection (rare case)
+            return (
+              <motion.div
+                key="grantSelection"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                className="space-y-6"
+              >
+                <div className="bg-gradient-to-br from-blue-600 to-indigo-600 rounded-3xl p-8 text-white">
+                  <h2 className="text-3xl md:text-4xl font-black mb-4">Grant Tracking Portal</h2>
+                  <p className="text-lg text-blue-100">
+                    You have multiple grant applications
+                  </p>
                 </div>
 
-                <div className="space-y-3">
-                  {(() => {
-                    const applications = JSON.parse(localStorage.getItem('grantApplications') || '[]') as GrantApplication[];
-                    const uniqueGrants = [...new Set(applications.map(app => app.grantCategory))];
-                    
-                    if (uniqueGrants.length === 0) {
-                      return (
-                        <div className="bg-amber-50 dark:bg-amber-900/20 border-2 border-amber-200 dark:border-amber-700 rounded-xl p-4">
-                          <p className="text-amber-800 dark:text-amber-300 font-semibold">No grant applications found. Please submit an application first.</p>
-                        </div>
-                      );
-                    }
+                <div className="space-y-4 bg-white dark:bg-slate-900 rounded-2xl p-6 border border-slate-200 dark:border-slate-800">
+                  {errors.grantSelection && (
+                    <div className="bg-red-50 dark:bg-red-900/20 border-2 border-red-200 dark:border-red-700 rounded-xl p-4 flex gap-3">
+                      <AlertCircle size={20} className="text-red-600 dark:text-red-400 flex-shrink-0 mt-0.5" />
+                      <p className="text-red-700 dark:text-red-300 font-semibold text-sm">{errors.grantSelection}</p>
+                    </div>
+                  )}
 
-                    return uniqueGrants.map((grantCategory) => (
+                  <div className="bg-blue-50 dark:bg-blue-900/20 border-2 border-blue-200 dark:border-blue-700 rounded-xl p-4 flex gap-3">
+                    <AlertCircle size={20} className="text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5" />
+                    <div>
+                      <h4 className="font-black text-blue-900 dark:text-blue-200 mb-1">Select Grant to Track</h4>
+                      <p className="text-sm text-blue-800 dark:text-blue-300">
+                        Choose which grant you want to access.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="space-y-3">
+                    {uniqueGrants.map((grantCategory) => (
                       <button
                         key={grantCategory}
                         onClick={() => {
@@ -557,12 +586,12 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
                       >
                         💰 {grantCategory}
                       </button>
-                    ));
-                  })()}
+                    ))}
+                  </div>
                 </div>
-              </div>
-            </motion.div>
-          )}
+              </motion.div>
+            );
+          })()}
 
           {/* PASSKEY LOGIN STAGE (ONLY WAY TO LOGIN) */}
           {trackingState.stage === 'passkeyLogin' && (
