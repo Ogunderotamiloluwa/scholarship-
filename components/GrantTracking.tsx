@@ -115,27 +115,70 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
     return Math.max(0, daysRemaining);
   };
 
-  // Calculate grant status: 0-24hrs = Hidden, 24hrs-15days = Pending with progress, 15+ days = Received
+  // Calculate grant status: 0-24hrs = Hidden, 24hrs-38days = Pending with progress, 38+ days = Received
   const calculateGrantStatus = (timestamp: string) => {
     const applicationDate = new Date(timestamp);
     const now = new Date();
     const hoursElapsed = (now.getTime() - applicationDate.getTime()) / (1000 * 60 * 60);
     const daysElapsed = hoursElapsed / 24;
-    const totalDaysNeeded = 14; // Changed from 15 to 14 days after 24hr setup
-    const daysRemaining = Math.max(0, totalDaysNeeded - (daysElapsed - 1)); // Subtract 1 for the initial 24hrs
-    const hoursRemaining = Math.max(0, (daysRemaining % 1) * 24);
+    
+    // Phase 1: First 24 hours - setup/hidden state
+    const isHidden = hoursElapsed < 24;
+    
+    // Phase 2: After 24 hours to 38 days - pending state (24 hours + 14 days)
+    const isPending = hoursElapsed >= 24 && daysElapsed < 15; // 24 hours setup + 14 more days
+    
+    // Phase 3: After 38 days total - received/active state
+    const isReceived = daysElapsed >= 15;
+    
+    // Calculate countdown for current phase
+    let daysRemaining = 14; // Default to 14 day countdown
+    let hoursRemaining = 0;
+    let minutesRemaining = 0;
+    let progressPercentage = 0;
+    let dayNumber = 0;
+    
+    if (isHidden) {
+      // Phase 1: Countdown from 24 hours
+      const hoursLeft = 24 - hoursElapsed;
+      daysRemaining = 0;
+      hoursRemaining = Math.floor(hoursLeft);
+      minutesRemaining = Math.floor(((hoursLeft % 1) * 60));
+      progressPercentage = ((24 - hoursLeft) / 24) * 100; // Progress during 24 hour period
+      dayNumber = 0;
+    } else if (isPending) {
+      // Phase 2: Countdown from 14 days (starting after the initial 24 hours)
+      const hoursAfterSetup = hoursElapsed - 24; // Subtract the initial 24 hours
+      const daysAfterSetup = hoursAfterSetup / 24;
+      const totalHoursInPendingPhase = 14 * 24; // 14 days in hours
+      const remainingHoursInPendingPhase = totalHoursInPendingPhase - hoursAfterSetup;
+      
+      daysRemaining = Math.floor(remainingHoursInPendingPhase / 24);
+      hoursRemaining = Math.floor(remainingHoursInPendingPhase % 24);
+      minutesRemaining = Math.floor(((remainingHoursInPendingPhase % 1) * 60));
+      progressPercentage = Math.min(100, (daysAfterSetup / 14) * 100); // Progress during 14 day period
+      dayNumber = Math.min(14, Math.ceil(daysAfterSetup)) + 1; // Day 1 is first day after 24hr setup
+    } else if (isReceived) {
+      // Phase 3: Complete
+      daysRemaining = 0;
+      hoursRemaining = 0;
+      minutesRemaining = 0;
+      progressPercentage = 100;
+      dayNumber = 15; // Total days
+    }
     
     return {
       daysElapsed,
       hoursElapsed,
-      daysRemaining: Math.floor(daysRemaining),
-      hoursRemaining: Math.floor(hoursRemaining),
-      minutesRemaining: Math.floor(((hoursRemaining % 1) * 60)),
-      isHidden: daysElapsed < 1, // First 24 hours
-      isPending: daysElapsed >= 1 && daysElapsed < 15, // Days 1-14 (after 24hrs, counts 14 more days)
-      isReceived: daysElapsed >= 15, // After 15 days total (1 day setup + 14 days processing)
-      progressPercentage: Math.min(100, Math.max(0, ((daysElapsed - 1) / 14) * 100)), // 0-100% over 14 days after setup
-      dayNumber: Math.max(1, Math.ceil(daysElapsed - 1)) // Current day number (1-14 for processing)
+      daysRemaining,
+      hoursRemaining,
+      minutesRemaining,
+      isHidden, // First 24 hours
+      isPending, // Days 1-14 after setup
+      isReceived, // After day 14
+      progressPercentage,
+      dayNumber,
+      phase: isHidden ? 'setup' : isPending ? 'processing' : 'received'
     };
   };
 
@@ -423,18 +466,18 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
   const progress = Math.max(0, ((10 - daysRemaining) / 10) * 100);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white dark:from-slate-950 dark:to-slate-900 pt-24 pb-40">
+    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white dark:from-slate-950 dark:to-slate-900 pt-24 pb-20">
       {/* Alert Message */}
       <AnimatePresence>
         {showAlert && (
           <motion.div
-            initial={{ opacity: 0, y: -30 }}
+            initial={{ opacity: 0, y: -50 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -30 }}
-            className="fixed top-0 left-1/2 -translate-x-1/2 z-50 w-full max-w-2xl bg-gradient-to-r from-emerald-500 to-emerald-600 dark:from-emerald-600 dark:to-emerald-700 border-b-2 border-emerald-700 dark:border-emerald-800 rounded-b-2xl px-4 sm:px-6 py-4 sm:py-5 flex items-center justify-center gap-3 shadow-2xl"
+            exit={{ opacity: 0, y: -50 }}
+            className="fixed top-20 left-1/2 -translate-x-1/2 z-50 w-full max-w-md sm:max-w-lg md:max-w-2xl bg-gradient-to-r from-emerald-500 to-emerald-600 dark:from-emerald-600 dark:to-emerald-700 border-b-2 border-emerald-700 dark:border-emerald-800 rounded-b-3xl px-4 sm:px-8 py-5 sm:py-6 flex items-center justify-center gap-3 shadow-2xl"
           >
-            <CheckCircle2 size={20} className="text-white flex-shrink-0" />
-            <p className="text-white text-xs sm:text-sm font-bold whitespace-pre-line break-words text-center">{alertMessage}</p>
+            <CheckCircle2 size={24} className="text-white flex-shrink-0" />
+            <p className="text-white text-sm sm:text-base font-bold whitespace-normal break-words text-center">{alertMessage}</p>
           </motion.div>
         )}
       </AnimatePresence>
@@ -1404,18 +1447,19 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.95, opacity: 0 }}
             onClick={(e) => e.stopPropagation()}
-            className="w-full max-w-2xl max-h-[90vh] bg-white dark:bg-slate-900 rounded-2xl sm:rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-700 overflow-hidden flex flex-col mx-auto"
+            className="w-full max-w-2xl max-h-[95vh] bg-white dark:bg-slate-900 rounded-2xl sm:rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-700 overflow-hidden flex flex-col mx-auto my-auto"
           >
                   {/* Settings Header */}
-                  <div className="bg-gradient-to-br from-slate-900 to-slate-800 dark:from-slate-950 dark:to-slate-900 p-3 sm:p-6 text-white flex-shrink-0">
-                    <div className="flex items-center justify-between gap-2">
+                  <div className="bg-gradient-to-br from-slate-900 to-slate-800 dark:from-slate-950 dark:to-slate-900 p-4 sm:p-6 text-white flex-shrink-0 sticky top-0 z-10">
+                    <div className="flex items-center justify-between gap-4">
                       <div className="flex-1 min-w-0">
-                        <h2 className="text-lg sm:text-3xl font-black">⚙️ Account Settings</h2>
-                        <p className="text-slate-300 text-xs sm:text-sm mt-1">Manage your account security and privacy</p>
+                        <h2 className="text-xl sm:text-2xl md:text-3xl font-black">⚙️ Account Settings</h2>
+                        <p className="text-slate-300 text-xs sm:text-sm mt-1.5">Manage your account security and privacy</p>
                       </div>
                       <button
                         onClick={() => setShowSettings(false)}
                         className="flex-shrink-0 p-2 hover:bg-white/20 rounded-xl transition-all"
+                        title="Close Settings"
                       >
                         <X size={24} className="sm:w-7 sm:h-7" />
                       </button>
@@ -1423,12 +1467,12 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
                   </div>
 
                   {/* Settings Tabs */}
-                  <div className="flex gap-0 border-b border-slate-200 dark:border-slate-700 px-3 sm:px-6 overflow-x-auto flex-shrink-0 bg-slate-50 dark:bg-slate-800/50">
+                  <div className="flex gap-0 border-b border-slate-200 dark:border-slate-700 px-4 sm:px-6 overflow-x-auto flex-shrink-0 bg-slate-50 dark:bg-slate-800/50 sticky top-20 z-10">
                     {(['security', 'privacy', 'notifications'] as const).map((tab) => (
                       <button
                         key={tab}
                         onClick={() => setSettingsTab(tab)}
-                        className={`px-2 sm:px-4 py-2 sm:py-3 font-black text-xs sm:text-sm transition-all border-b-4 whitespace-nowrap ${
+                        className={`px-3 sm:px-5 py-3 sm:py-4 font-black text-xs sm:text-sm transition-all border-b-4 whitespace-nowrap flex-shrink-0 ${
                           settingsTab === tab
                             ? 'border-blue-600 text-blue-600 dark:text-blue-400'
                             : 'border-transparent text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
@@ -1442,23 +1486,23 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
                   </div>
 
                   {/* Settings Content - Scrollable */}
-                  <div className="overflow-y-auto flex-1 px-3 sm:px-6 py-4 sm:py-6 pb-6 sm:pb-8 space-y-4 sm:space-y-6">
+                  <div className="overflow-y-auto flex-1 px-4 sm:px-6 py-5 sm:py-6 pb-8 sm:pb-10 space-y-4 sm:space-y-5">
                     {/* SECURITY TAB */}
                     {settingsTab === 'security' && (
                       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-4">
-                        <div className="bg-blue-50 dark:bg-blue-900/20 border-2 border-blue-200 dark:border-blue-700 rounded-xl p-3 sm:p-4 flex gap-2 sm:gap-3">
+                        <div className="bg-blue-50 dark:bg-blue-900/20 border-2 border-blue-200 dark:border-blue-700 rounded-lg sm:rounded-xl p-3 sm:p-4 flex gap-2 sm:gap-3">
                           <Shield size={18} className="sm:w-5 sm:h-5 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5" />
-                          <div className="min-w-0">
+                          <div className="min-w-0 flex-1">
                             <h4 className="font-black text-sm sm:text-base text-blue-900 dark:text-blue-200">Account Security</h4>
-                            <p className="text-xs sm:text-sm text-blue-800 dark:text-blue-300 mt-0.5">Manage your password and security settings</p>
+                            <p className="text-xs sm:text-sm text-blue-800 dark:text-blue-300 mt-1">Manage your password and security settings</p>
                           </div>
                         </div>
 
-                        <div className="border-2 border-slate-200 dark:border-slate-700 rounded-2xl p-4 sm:p-5 hover:border-blue-400 dark:hover:border-blue-600 transition-all">
-                          <div className="flex flex-col gap-3">
+                        <div className="border-2 border-slate-200 dark:border-slate-700 rounded-lg sm:rounded-xl p-3 sm:p-4 hover:border-blue-400 dark:hover:border-blue-600 transition-all">
+                          <div className="flex flex-col gap-3 w-full">
                             <div className="flex-1 min-w-0">
                               <p className="font-black text-sm sm:text-base text-slate-900 dark:text-white">Password</p>
-                              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-0.5">Change your account password</p>
+                              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-1">Change your account password</p>
                             </div>
                             <button className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-black text-xs sm:text-sm transition-all w-full">
                               Change Password
@@ -1466,14 +1510,14 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
                           </div>
                         </div>
 
-                        <div className="border-2 border-slate-200 dark:border-slate-700 rounded-2xl p-4 sm:p-5 hover:border-amber-400 dark:hover:border-amber-600 transition-all">
-                          <div className="flex flex-col gap-3">
+                        <div className="border-2 border-slate-200 dark:border-slate-700 rounded-lg sm:rounded-xl p-3 sm:p-4 hover:border-amber-400 dark:hover:border-amber-600 transition-all">
+                          <div className="flex flex-col gap-3 w-full">
                             <div className="flex-1 min-w-0">
                               <p className="font-black text-sm sm:text-base text-slate-900 dark:text-white flex items-center gap-2">
                                 <Lock size={18} className="flex-shrink-0" />
-                                <span>Two-Factor Authentication</span>
+                                <span>Two-Factor Auth</span>
                               </p>
-                              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-0.5">Add an extra security layer to your account</p>
+                              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-1">Add extra security layer</p>
                             </div>
                             <button className="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-lg font-black text-xs sm:text-sm transition-all w-full">
                               {privacySettings.twoFactorEnabled ? 'Disable 2FA' : 'Enable 2FA'}
@@ -1481,11 +1525,11 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
                           </div>
                         </div>
 
-                        <div className="bg-red-50 dark:bg-red-900/20 border-2 border-red-200 dark:border-red-700 rounded-xl p-4 flex gap-3">
-                          <AlertCircle size={20} className="text-red-600 dark:text-red-400 flex-shrink-0 mt-0.5" />
-                          <div>
-                            <h4 className="font-black text-red-900 dark:text-red-200">Session Management</h4>
-                            <p className="text-sm text-red-800 dark:text-red-300 mt-1">All active sessions are managed securely. For your safety, sessions expire after 30 minutes of inactivity.</p>
+                        <div className="bg-red-50 dark:bg-red-900/20 border-2 border-red-200 dark:border-red-700 rounded-lg sm:rounded-xl p-3 sm:p-4 flex gap-3">
+                          <AlertCircle size={18} className="text-red-600 dark:text-red-400 flex-shrink-0 mt-0.5" />
+                          <div className="min-w-0 flex-1">
+                            <h4 className="font-black text-sm text-red-900 dark:text-red-200">Session Management</h4>
+                            <p className="text-xs sm:text-sm text-red-800 dark:text-red-300 mt-1">All sessions expire after 30 minutes of inactivity.</p>
                           </div>
                         </div>
                       </motion.div>
@@ -1494,27 +1538,27 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
                     {/* PRIVACY TAB */}
                     {settingsTab === 'privacy' && (
                       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-4">
-                        <div className="bg-emerald-50 dark:bg-emerald-900/20 border-2 border-emerald-200 dark:border-emerald-700 rounded-xl p-4 flex gap-3">
-                          <Eye size={20} className="text-emerald-600 dark:text-emerald-400 flex-shrink-0 mt-0.5" />
-                          <div>
-                            <h4 className="font-black text-emerald-900 dark:text-emerald-200">Privacy Controls</h4>
-                            <p className="text-sm text-emerald-800 dark:text-emerald-300 mt-1">Control what information is visible on your account</p>
+                        <div className="bg-emerald-50 dark:bg-emerald-900/20 border-2 border-emerald-200 dark:border-emerald-700 rounded-lg sm:rounded-xl p-3 sm:p-4 flex gap-3">
+                          <Eye size={18} className="text-emerald-600 dark:text-emerald-400 flex-shrink-0 mt-0.5" />
+                          <div className="min-w-0 flex-1">
+                            <h4 className="font-black text-sm sm:text-base text-emerald-900 dark:text-emerald-200">Privacy Controls</h4>
+                            <p className="text-xs sm:text-sm text-emerald-800 dark:text-emerald-300 mt-1">Control what information is visible</p>
                           </div>
                         </div>
 
                         {/* Hide Balance Toggle */}
-                        <div className="border-2 border-slate-200 dark:border-slate-700 rounded-2xl p-4 sm:p-5 hover:border-emerald-400 dark:hover:border-emerald-600 transition-all">
-                          <div className="flex items-center justify-between gap-3">
+                        <div className="border-2 border-slate-200 dark:border-slate-700 rounded-lg sm:rounded-xl p-3 sm:p-4 hover:border-emerald-400 dark:hover:border-emerald-600 transition-all">
+                          <div className="flex items-center justify-between gap-3 w-full">
                             <div className="flex-1 min-w-0">
                               <p className="font-black text-sm sm:text-base text-slate-900 dark:text-white flex items-center gap-2">
-                                {privacySettings.hideBalance ? <EyeOff size={18} className="flex-shrink-0" /> : <Eye size={18} className="flex-shrink-0" />}
+                                {privacySettings.hideBalance ? <EyeOff size={16} className="flex-shrink-0" /> : <Eye size={16} className="flex-shrink-0" />}
                                 <span>Hide Balance</span>
                               </p>
                               <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-1">Conceal your balance from display</p>
                             </div>
                             <button
                               onClick={() => setPrivacySettings({...privacySettings, hideBalance: !privacySettings.hideBalance})}
-                              className={`flex-shrink-0 p-2.5 rounded-lg transition-all ${
+                              className={`flex-shrink-0 p-2 rounded-lg transition-all ${
                                 privacySettings.hideBalance
                                   ? 'bg-emerald-600 text-white'
                                   : 'bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300'
@@ -1526,18 +1570,18 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
                         </div>
 
                         {/* Hide Personal Info Toggle */}
-                        <div className="border-2 border-slate-200 dark:border-slate-700 rounded-2xl p-4 sm:p-5 hover:border-emerald-400 dark:hover:border-emerald-600 transition-all">
-                          <div className="flex items-center justify-between gap-3">
+                        <div className="border-2 border-slate-200 dark:border-slate-700 rounded-lg sm:rounded-xl p-3 sm:p-4 hover:border-emerald-400 dark:hover:border-emerald-600 transition-all">
+                          <div className="flex items-center justify-between gap-3 w-full">
                             <div className="flex-1 min-w-0">
                               <p className="font-black text-sm sm:text-base text-slate-900 dark:text-white flex items-center gap-2">
-                                {privacySettings.hidePersonalInfo ? <EyeOff size={18} className="flex-shrink-0" /> : <Eye size={18} className="flex-shrink-0" />}
+                                {privacySettings.hidePersonalInfo ? <EyeOff size={16} className="flex-shrink-0" /> : <Eye size={16} className="flex-shrink-0" />}
                                 <span>Hide Personal Info</span>
                               </p>
                               <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-1">Hide your name and contact details</p>
                             </div>
                             <button
                               onClick={() => setPrivacySettings({...privacySettings, hidePersonalInfo: !privacySettings.hidePersonalInfo})}
-                              className={`flex-shrink-0 p-2.5 rounded-lg transition-all ${
+                              className={`flex-shrink-0 p-2 rounded-lg transition-all ${
                                 privacySettings.hidePersonalInfo
                                   ? 'bg-emerald-600 text-white'
                                   : 'bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300'
@@ -1548,7 +1592,7 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
                           </div>
                         </div>
 
-                        <div className="bg-slate-100 dark:bg-slate-800 rounded-2xl p-4 sm:p-6 space-y-3">
+                        <div className="bg-slate-100 dark:bg-slate-800 rounded-lg sm:rounded-xl p-3 sm:p-4 space-y-3">
                           <p className="font-black text-sm sm:text-base text-slate-900 dark:text-white">Data & Cookies</p>
                           <div className="space-y-2 text-xs sm:text-sm">
                             <label className="flex items-start sm:items-center gap-3 cursor-pointer">
@@ -1567,11 +1611,11 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
                     {/* NOTIFICATIONS TAB */}
                     {settingsTab === 'notifications' && (
                       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-4">
-                        <div className="bg-purple-50 dark:bg-purple-900/20 border-2 border-purple-200 dark:border-purple-700 rounded-xl p-4 flex gap-3">
-                          <AlertCircle size={20} className="text-purple-600 dark:text-purple-400 flex-shrink-0 mt-0.5" />
-                          <div>
-                            <h4 className="font-black text-purple-900 dark:text-purple-200">Notification Preferences</h4>
-                            <p className="text-sm text-purple-800 dark:text-purple-300 mt-1">Control how you receive updates about your grant</p>
+                        <div className="bg-purple-50 dark:bg-purple-900/20 border-2 border-purple-200 dark:border-purple-700 rounded-lg sm:rounded-xl p-3 sm:p-4 flex gap-3">
+                          <AlertCircle size={18} className="text-purple-600 dark:text-purple-400 flex-shrink-0 mt-0.5" />
+                          <div className="min-w-0 flex-1">
+                            <h4 className="font-black text-sm sm:text-base text-purple-900 dark:text-purple-200">Notification Preferences</h4>
+                            <p className="text-xs sm:text-sm text-purple-800 dark:text-purple-300 mt-1">Control how you receive updates about your grant</p>
                           </div>
                         </div>
 
@@ -1582,9 +1626,9 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
                             { label: 'Security Alerts', description: 'Important security notifications' },
                             { label: 'Email Digests', description: 'Weekly summary of activity' }
                           ].map((item, idx) => (
-                            <div key={idx} className="border-2 border-slate-200 dark:border-slate-700 rounded-2xl p-4 sm:p-5 hover:border-purple-400 dark:hover:border-purple-600 transition-all flex items-center gap-3">
-                              <input type="checkbox" defaultChecked id={`notif-${idx}`} className="w-5 h-5 rounded cursor-pointer flex-shrink-0 accent-purple-600" />
-                              <label htmlFor={`notif-${idx}`} className="flex-1 cursor-pointer">
+                            <div key={idx} className="border-2 border-slate-200 dark:border-slate-700 rounded-lg sm:rounded-xl p-3 sm:p-4 hover:border-purple-400 dark:hover:border-purple-600 transition-all flex items-center gap-3">
+                              <input type="checkbox" defaultChecked id={`notif-${idx}`} className="w-4 h-4 sm:w-5 sm:h-5 rounded cursor-pointer flex-shrink-0 accent-purple-600" />
+                              <label htmlFor={`notif-${idx}`} className="flex-1 cursor-pointer min-w-0">
                                 <p className="font-black text-sm sm:text-base text-slate-900 dark:text-white">{item.label}</p>
                                 <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-0.5">{item.description}</p>
                               </label>
@@ -1594,8 +1638,6 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
                       </motion.div>
                     )}
                   </div>
-
-                  {/* Settings Footer - Removed since X button exists in header */}
                 </motion.div>
               </motion.div>
             )}
