@@ -89,6 +89,11 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
   const [showSettings, setShowSettings] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(true);
   const [logoutMessage, setLogoutMessage] = useState('');
+  const [privacySettings, setPrivacySettings] = useState({
+    hideBalance: false,
+    hidePersonalInfo: false,
+    twoFactorEnabled: false
+  });
   
   // Transfer functionality
   const [showTransferModal, setShowTransferModal] = useState(false);
