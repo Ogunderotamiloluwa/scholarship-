@@ -940,7 +940,8 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
                     </p>
                     <div className="flex items-center justify-between gap-4">
                       <div className="flex-1">
-                        <div className="text-5xl sm:text-6xl font-black mb-2 text-slate-900 dark:text-white">
+                        <p className="text-xs sm:text-sm font-semibold text-slate-500 dark:text-slate-400 mb-1 uppercase tracking-wider">Available Balance</p>
+                        <div className="text-4xl sm:text-5xl font-black mb-2 text-slate-900 dark:text-white tracking-tight">
                           {privacySettings.hideBalance ? '••••••' : status.isHidden ? '$0.00' : `$${trackingState.currentUser?.amount}`}
                         </div>
                         {status.isPending && (
@@ -950,10 +951,15 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
                             🔒 Available in {status.daysRemaining} days {status.hoursRemaining} hours
                           </p>
                         )}
+                        {status.isHidden && (
+                          <p className="text-xs sm:text-sm font-semibold text-slate-600 dark:text-slate-400">
+                            ⏱️ Setup in progress...
+                          </p>
+                        )}
                       </div>
                       <button
                         onClick={() => setPrivacySettings({...privacySettings, hideBalance: !privacySettings.hideBalance})}
-                        className="p-3 bg-white/20 hover:bg-white/30 rounded-2xl transition-all"
+                        className="p-3 sm:p-4 bg-white/20 hover:bg-white/30 rounded-2xl transition-all"
                         title={privacySettings.hideBalance ? "Show balance" : "Hide balance"}
                       >
                         {privacySettings.hideBalance ? <EyeOff size={24} className="text-slate-700 dark:text-white" /> : <Eye size={24} className="text-slate-700 dark:text-white" />}
@@ -1436,7 +1442,7 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
                   </div>
 
                   {/* Settings Content - Scrollable */}
-                  <div className="overflow-y-auto flex-1 px-3 sm:px-6 py-4 sm:py-6 pb-24 sm:pb-16 space-y-4 sm:space-y-6">
+                  <div className="overflow-y-auto flex-1 px-3 sm:px-6 py-4 sm:py-6 pb-6 sm:pb-8 space-y-4 sm:space-y-6">
                     {/* SECURITY TAB */}
                     {settingsTab === 'security' && (
                       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-4">
@@ -1448,29 +1454,29 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
                           </div>
                         </div>
 
-                        <div className="border-2 border-slate-200 dark:border-slate-700 rounded-2xl p-3 sm:p-5">
-                          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-3">
+                        <div className="border-2 border-slate-200 dark:border-slate-700 rounded-2xl p-4 sm:p-5 hover:border-blue-400 dark:hover:border-blue-600 transition-all">
+                          <div className="flex flex-col gap-3">
                             <div className="flex-1 min-w-0">
                               <p className="font-black text-sm sm:text-base text-slate-900 dark:text-white">Password</p>
-                              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400">Change your account password</p>
+                              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-0.5">Change your account password</p>
                             </div>
-                            <button className="flex-shrink-0 px-3 sm:px-4 py-2 sm:py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-black text-xs sm:text-sm transition-all w-full sm:w-auto">
-                              Change
+                            <button className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-black text-xs sm:text-sm transition-all w-full">
+                              Change Password
                             </button>
                           </div>
                         </div>
 
-                        <div className="border-2 border-slate-200 dark:border-slate-700 rounded-2xl p-3 sm:p-5">
-                          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-3">
+                        <div className="border-2 border-slate-200 dark:border-slate-700 rounded-2xl p-4 sm:p-5 hover:border-amber-400 dark:hover:border-amber-600 transition-all">
+                          <div className="flex flex-col gap-3">
                             <div className="flex-1 min-w-0">
                               <p className="font-black text-sm sm:text-base text-slate-900 dark:text-white flex items-center gap-2">
                                 <Lock size={18} className="flex-shrink-0" />
-                                <span>Two-Factor Auth</span>
+                                <span>Two-Factor Authentication</span>
                               </p>
-                              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-1">Extra security layer</p>
+                              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-0.5">Add an extra security layer to your account</p>
                             </div>
-                            <button className="flex-shrink-0 px-3 sm:px-4 py-2 sm:py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-lg font-black text-xs sm:text-sm transition-all w-full sm:w-auto">
-                              {privacySettings.twoFactorEnabled ? 'Disable' : 'Enable'}
+                            <button className="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-lg font-black text-xs sm:text-sm transition-all w-full">
+                              {privacySettings.twoFactorEnabled ? 'Disable 2FA' : 'Enable 2FA'}
                             </button>
                           </div>
                         </div>
@@ -1497,47 +1503,47 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
                         </div>
 
                         {/* Hide Balance Toggle */}
-                        <div className="border-2 border-slate-200 dark:border-slate-700 rounded-2xl p-3 sm:p-5">
-                          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                        <div className="border-2 border-slate-200 dark:border-slate-700 rounded-2xl p-4 sm:p-5 hover:border-emerald-400 dark:hover:border-emerald-600 transition-all">
+                          <div className="flex items-center justify-between gap-3">
                             <div className="flex-1 min-w-0">
-                              <p className="font-black text-sm sm:text-base text-slate-900 dark:text-white flex items-center gap-2\">
+                              <p className="font-black text-sm sm:text-base text-slate-900 dark:text-white flex items-center gap-2">
                                 {privacySettings.hideBalance ? <EyeOff size={18} className="flex-shrink-0" /> : <Eye size={18} className="flex-shrink-0" />}
                                 <span>Hide Balance</span>
                               </p>
-                              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-1">Hide balance visibility.</p>
+                              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-1">Conceal your balance from display</p>
                             </div>
                             <button
                               onClick={() => setPrivacySettings({...privacySettings, hideBalance: !privacySettings.hideBalance})}
-                              className={`flex-shrink-0 p-3 rounded-xl transition-all ${
+                              className={`flex-shrink-0 p-2.5 rounded-lg transition-all ${
                                 privacySettings.hideBalance
                                   ? 'bg-emerald-600 text-white'
                                   : 'bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300'
                               }`}
                             >
-                              {privacySettings.hideBalance ? <ToggleRight size={24} /> : <ToggleLeft size={24} />}
+                              {privacySettings.hideBalance ? <ToggleRight size={20} /> : <ToggleLeft size={20} />}
                             </button>
                           </div>
                         </div>
 
                         {/* Hide Personal Info Toggle */}
-                        <div className="border-2 border-slate-200 dark:border-slate-700 rounded-2xl p-3 sm:p-5">
-                          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                        <div className="border-2 border-slate-200 dark:border-slate-700 rounded-2xl p-4 sm:p-5 hover:border-emerald-400 dark:hover:border-emerald-600 transition-all">
+                          <div className="flex items-center justify-between gap-3">
                             <div className="flex-1 min-w-0">
                               <p className="font-black text-sm sm:text-base text-slate-900 dark:text-white flex items-center gap-2">
                                 {privacySettings.hidePersonalInfo ? <EyeOff size={18} className="flex-shrink-0" /> : <Eye size={18} className="flex-shrink-0" />}
                                 <span>Hide Personal Info</span>
                               </p>
-                              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-1">Limit visibility of name and contact details.</p>
+                              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-1">Hide your name and contact details</p>
                             </div>
                             <button
                               onClick={() => setPrivacySettings({...privacySettings, hidePersonalInfo: !privacySettings.hidePersonalInfo})}
-                              className={`flex-shrink-0 p-3 rounded-xl transition-all ${
+                              className={`flex-shrink-0 p-2.5 rounded-lg transition-all ${
                                 privacySettings.hidePersonalInfo
                                   ? 'bg-emerald-600 text-white'
                                   : 'bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300'
                               }`}
                             >
-                              {privacySettings.hidePersonalInfo ? <ToggleRight size={24} /> : <ToggleLeft size={24} />}
+                              {privacySettings.hidePersonalInfo ? <ToggleRight size={20} /> : <ToggleLeft size={20} />}
                             </button>
                           </div>
                         </div>
@@ -1571,17 +1577,17 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
 
                         <div className="space-y-3">
                           {[
-                            { label: 'Grant Status Updates', description: 'Status change notifications' },
-                            { label: 'Balance Available', description: 'Funds available alerts' },
-                            { label: 'Security Alerts', description: 'Security notifications' },
-                            { label: 'Email Digests', description: 'Weekly activity summary' }
+                            { label: 'Grant Status Updates', description: 'Get notified about status changes' },
+                            { label: 'Balance Available', description: 'Alert when funds become available' },
+                            { label: 'Security Alerts', description: 'Important security notifications' },
+                            { label: 'Email Digests', description: 'Weekly summary of activity' }
                           ].map((item, idx) => (
-                            <div key={idx} className="border-2 border-slate-200 dark:border-slate-700 rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                              <div className="flex-1 min-w-0">
+                            <div key={idx} className="border-2 border-slate-200 dark:border-slate-700 rounded-2xl p-4 sm:p-5 hover:border-purple-400 dark:hover:border-purple-600 transition-all flex items-center gap-3">
+                              <input type="checkbox" defaultChecked id={`notif-${idx}`} className="w-5 h-5 rounded cursor-pointer flex-shrink-0 accent-purple-600" />
+                              <label htmlFor={`notif-${idx}`} className="flex-1 cursor-pointer">
                                 <p className="font-black text-sm sm:text-base text-slate-900 dark:text-white">{item.label}</p>
                                 <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-0.5">{item.description}</p>
-                              </div>
-                              <input type="checkbox" defaultChecked className="w-5 h-5 rounded cursor-pointer flex-shrink-0" />
+                              </label>
                             </div>
                           ))}
                         </div>
@@ -1589,24 +1595,7 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
                     )}
                   </div>
 
-                  {/* Settings Footer */}
-                  <div className="bg-slate-50 dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700 px-3 sm:px-6 py-3 sm:py-4 flex gap-2 sm:gap-3 flex-shrink-0">
-                    <button
-                      onClick={() => setShowSettings(false)}
-                      className="flex-1 px-3 sm:px-4 py-2 sm:py-3 bg-slate-200 dark:bg-slate-700 text-slate-900 dark:text-white font-black text-xs sm:text-sm rounded-lg sm:rounded-xl hover:bg-slate-300 dark:hover:bg-slate-600 transition-all"
-                    >
-                      Close
-                    </button>
-                    <button
-                      onClick={() => {
-                        setShowSettings(false);
-                        showAlertMessage('✅ Settings saved successfully!');
-                      }}
-                      className="flex-1 px-3 sm:px-4 py-2 sm:py-3 bg-blue-600 hover:bg-blue-700 text-white font-black text-xs sm:text-sm rounded-lg sm:rounded-xl transition-all"
-                    >
-                      Save Changes
-                    </button>
-                  </div>
+                  {/* Settings Footer - Removed since X button exists in header */}
                 </motion.div>
               </motion.div>
             )}
