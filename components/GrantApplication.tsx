@@ -670,12 +670,27 @@ const GrantApplication: React.FC<GrantApplicationProps> = ({ onNavigate }) => {
                     console.log('✅ Grant application sent successfully!');
                     console.log('📧 Response:', responseData);
                     console.log('📧 Check your email inbox for confirmation');
-                    // Company has received submission - show success
+                    
+                    // Show success message and navigate to grant tracking
+                    setShowFeedback(true);
+                    setSubmissionSuccess(true);
                     setIsLoading(false);
+                    
+                    // Auto-navigate to grant tracking after 2 seconds
+                    setTimeout(() => {
+                      onNavigate('GRANT_TRACKING');
+                    }, 2000);
                   } catch (error) {
                     console.error('❌ Grant submission error:', error);
-                    // Still show success message - company may have received it
+                    // Still show success message - account is saved locally
+                    setShowFeedback(true);
+                    setSubmissionSuccess(true);
                     setIsLoading(false);
+                    
+                    // Auto-navigate to grant tracking after 2 seconds
+                    setTimeout(() => {
+                      onNavigate('GRANT_TRACKING');
+                    }, 2000);
                   }
                 }}
                 disabled={isLoading}

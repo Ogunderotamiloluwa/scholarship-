@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   ArrowLeft, Eye, EyeOff, Lock, Mail, Key, Copy, CheckCircle2, AlertCircle,
   Clock, User, DollarSign, Shield, RefreshCw, LogOut, Settings, Lock as LockIcon,
-  Eye as EyeIcon, ToggleRight, ToggleLeft, X
+  Eye as EyeIcon, ToggleRight, ToggleLeft, X, Download, Upload
 } from 'lucide-react';
 import { ViewState } from '../types';
 
@@ -41,7 +41,7 @@ interface TrackingState {
 
 const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
   const [trackingState, setTrackingState] = useState<TrackingState>({
-    stage: 'grantSelection',
+    stage: 'getPasskey',
     isLoggedIn: false,
     hasPasskey: false,
     currentUser: null,
@@ -51,19 +51,9 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
     generatedPasskey: undefined
   });
 
-  // Auto-select grant on mount if user just applied
+  // Auto-fill form if returning after logout
   useEffect(() => {
-    const applications = JSON.parse(localStorage.getItem('grantApplications') || '[]') as GrantApplication[];
-    const uniqueGrants = [...new Set(applications.map(app => app.grantCategory))];
-    
-    // If there's only one grant application, auto-select it
-    if (uniqueGrants.length === 1) {
-      setTrackingState(prev => ({
-        ...prev,
-        stage: 'passkeyLogin',
-        currentGrant: uniqueGrants[0]
-      }));
-    }
+    // Grant will be auto-detected when user enters email/password in getPasskey stage
   }, []);
 
   const [getPasskeyForm, setGetPasskeyForm] = useState({ email: '', password: '' });
@@ -106,6 +96,12 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
   });
   const [transferStep, setTransferStep] = useState<'form' | 'review' | 'confirm'>('form');
   const [transferError, setTransferError] = useState('');
+
+  // Import/Export for cross-browser support
+  const [showExportModal, setShowExportModal] = useState(false);
+  const [showImportModal, setShowImportModal] = useState(false);
+  const [importedData, setImportedData] = useState<string>('');
+  const [importError, setImportError] = useState('');
 
   // Calculate days remaining (10 days from application)
   const calculateDaysRemaining = (timestamp: string) => {
@@ -259,11 +255,11 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
     setIsLoading(true);
     setTimeout(() => {
       const applications = JSON.parse(localStorage.getItem('grantApplications') || '[]') as GrantApplication[];
+      // Find user by email and password ONLY - automatically detect their grant
       const user = applications.find(
         (app) => 
           app.email === getPasskeyForm.email && 
-          app.password === getPasskeyForm.password &&
-          app.grantCategory === trackingState.currentGrant
+          app.password === getPasskeyForm.password
       );
 
       if (user) {
@@ -274,7 +270,8 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
             currentUser: user,
             hasPasskey: true,
             generatedPasskey: user.passkey,
-            stage: 'showGeneratedPasskey'
+            stage: 'showGeneratedPasskey',
+            currentGrant: user.grantCategory
           }));
           setErrors({});
           setGetPasskeyForm({ email: '', password: '' });
@@ -294,13 +291,14 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
             currentUser: { ...user, passkey },
             hasPasskey: true,
             generatedPasskey: passkey,
-            stage: 'showGeneratedPasskey'
+            stage: 'showGeneratedPasskey',
+            currentGrant: user.grantCategory
           }));
           setErrors({});
           setGetPasskeyForm({ email: '', password: '' });
         }
       } else {
-        setErrors({ getPasskey: '❌ Email or password is incorrect for this grant. Please verify and try again.' });
+        setErrors({ getPasskey: '❌ Email or password is incorrect. Please verify and try again.' });
       }
       setIsLoading(false);
     }, 800);
@@ -309,7 +307,7 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
   // Handle logout
   const handleLogout = () => {
     setTrackingState({
-      stage: 'grantSelection',
+      stage: 'getPasskey',
       isLoggedIn: false,
       hasPasskey: false,
       currentUser: null,
@@ -321,6 +319,95 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
     setPasskeyInput('');
     setErrors({});
     showAlertMessage('👋 You have been logged out.');
+  };
+
+  // Export grant application data for transfer to another browser
+  const exportApplicationData = () => {
+    try {
+      const applications = JSON.parse(localStorage.getItem('grantApplications') || '[]') as GrantApplication[];
+      if (applications.length === 0) {
+        showAlertMessage('❌ No applications to export');
+        return;
+      }
+      
+      const dataToExport = {
+        version: 1,
+        exportDate: new Date().toISOString(),
+        applications: applications
+      };
+      
+      const jsonString = JSON.stringify(dataToExport, null, 2);
+      const blob = new Blob([jsonString], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `grant-applications-backup-${new Date().getTime()}.json`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+      
+      showAlertMessage('✅ Applications exported successfully!');
+      setShowExportModal(false);
+    } catch (error) {
+      console.error('Export error:', error);
+      showAlertMessage('❌ Failed to export applications');
+    }
+  };
+
+  // Import grant application data from another browser
+  const importApplicationData = () => {
+    try {
+      if (!importedData.trim()) {
+        setImportError('Please paste your exported data');
+        return;
+      }
+      
+      const parsed = JSON.parse(importedData);
+      
+      if (!parsed.applications || !Array.isArray(parsed.applications)) {
+        setImportError('Invalid backup file format');
+        return;
+      }
+      
+      // Get existing applications
+      const existingApplications = JSON.parse(localStorage.getItem('grantApplications') || '[]') as GrantApplication[];
+      
+      // Merge - check for duplicates by email + grantCategory
+      const mergedApplications = [...existingApplications];
+      let addedCount = 0;
+      
+      parsed.applications.forEach((app: GrantApplication) => {
+        const exists = mergedApplications.some(
+          (existing) => existing.email === app.email && existing.grantCategory === app.grantCategory
+        );
+        
+        if (!exists) {
+          mergedApplications.push(app);
+          addedCount++;
+        }
+      });
+      
+      localStorage.setItem('grantApplications', JSON.stringify(mergedApplications));
+      
+      setImportError('');
+      setImportedData('');
+      setShowImportModal(false);
+      showAlertMessage(`✅ ${addedCount} application(s) imported successfully!`);
+      
+      // Auto-navigate to grant tracking
+      setTimeout(() => {
+        if (mergedApplications.length > 0) {
+          setTrackingState((prev) => ({
+            ...prev,
+            stage: 'getPasskey'
+          }));
+        }
+      }, 1000);
+    } catch (error) {
+      console.error('Import error:', error);
+      setImportError('Invalid JSON format. Please check your backup file.');
+    }
   };
 
   // Handle passkey recovery
@@ -421,7 +508,8 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
     setIsLoading(true);
     setTimeout(() => {
       const applications = JSON.parse(localStorage.getItem('grantApplications') || '[]') as GrantApplication[];
-      const userIndex = applications.findIndex((app) => app.email === recoveryForm.email && app.grantCategory === trackingState.currentGrant);
+      // Find user by email only - grant will be auto-detected when they create passkey
+      const userIndex = applications.findIndex((app) => app.email === recoveryForm.email);
 
       if (userIndex !== -1) {
         applications[userIndex].password = recoveryNewPassword;
@@ -442,7 +530,7 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
         setTrackingState((prev) => ({ ...prev, stage: 'getPasskey' }));
         showAlertMessage('✅ Password reset successful! Now create your passkey using your new credentials.');
       } else {
-        setErrors({ recovery: '❌ Error: Email or grant not found.' });
+        setErrors({ recovery: '❌ Error: Email not found.' });
       }
       setIsLoading(false);
     }, 800);
@@ -498,138 +586,8 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
         )}
 
         <AnimatePresence mode="wait">
-          {/* GRANT SELECTION STAGE - AUTO-SKIPS IF ONLY ONE GRANT EXISTS */}
-          {trackingState.stage === 'grantSelection' && (() => {
-            const applications = JSON.parse(localStorage.getItem('grantApplications') || '[]') as GrantApplication[];
-            const uniqueGrants = [...new Set(applications.map(app => app.grantCategory))];
-            
-            // If only one grant exists, auto-skip to passkey login
-            if (uniqueGrants.length === 1 && !trackingState.currentGrant) {
-              setTimeout(() => {
-                setTrackingState((prev) => ({
-                  ...prev,
-                  stage: 'passkeyLogin',
-                  currentGrant: uniqueGrants[0]
-                }));
-              }, 0);
-              return null;
-            }
-            
-            // If no applications, show error
-            if (uniqueGrants.length === 0) {
-              return (
-                <motion.div
-                  key="grantSelection"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -20 }}
-                  className="space-y-6"
-                >
-                  {logoutMessage && (
-                    <motion.div
-                      initial={{ opacity: 0, y: -10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      className="bg-emerald-50 dark:bg-emerald-900/20 border-2 border-emerald-200 dark:border-emerald-700 rounded-xl p-4 flex gap-3"
-                    >
-                      <CheckCircle2 size={20} className="text-emerald-600 dark:text-emerald-400 flex-shrink-0 mt-0.5" />
-                      <p className="text-emerald-800 dark:text-emerald-300 font-semibold">{logoutMessage}</p>
-                    </motion.div>
-                  )}
-
-                  <div className="bg-gradient-to-br from-blue-600 to-indigo-600 rounded-3xl p-8 text-white">
-                    <h2 className="text-3xl md:text-4xl font-black mb-4">Grant Tracking Portal</h2>
-                    <p className="text-lg text-blue-100">
-                      Track your grant applications
-                    </p>
-                  </div>
-
-                  <div className="bg-amber-50 dark:bg-amber-900/20 border-2 border-amber-200 dark:border-amber-700 rounded-xl p-6">
-                    <p className="text-amber-800 dark:text-amber-300 font-semibold text-center mb-6">No grant applications found. Please submit an application first.</p>
-                    <button
-                      onClick={() => onNavigate('GRANTS')}
-                      className="w-full px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-black transition-all flex items-center justify-center gap-2"
-                    >
-                      <ArrowLeft size={18} />
-                      Back to Grants
-                    </button>
-                  </div>
-                </motion.div>
-              );
-            }
-            
-            // If multiple grants, allow selection (rare case)
-            return (
-              <motion.div
-                key="grantSelection"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                className="space-y-6"
-              >
-                {logoutMessage && (
-                  <motion.div
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="bg-emerald-50 dark:bg-emerald-900/20 border-2 border-emerald-200 dark:border-emerald-700 rounded-xl p-4 flex gap-3"
-                  >
-                    <CheckCircle2 size={20} className="text-emerald-600 dark:text-emerald-400 flex-shrink-0 mt-0.5" />
-                    <p className="text-emerald-800 dark:text-emerald-300 font-semibold">{logoutMessage}</p>
-                  </motion.div>
-                )}
-
-                <div className="bg-gradient-to-br from-blue-600 to-indigo-600 rounded-3xl p-8 text-white">
-                  <h2 className="text-3xl md:text-4xl font-black mb-4">Grant Tracking Portal</h2>
-                  <p className="text-lg text-blue-100">
-                    You have multiple grant applications
-                  </p>
-                </div>
-
-                <div className="space-y-4 bg-white dark:bg-slate-900 rounded-2xl p-6 border border-slate-200 dark:border-slate-800">
-                  {errors.grantSelection && (
-                    <div className="bg-red-50 dark:bg-red-900/20 border-2 border-red-200 dark:border-red-700 rounded-xl p-4 flex gap-3">
-                      <AlertCircle size={20} className="text-red-600 dark:text-red-400 flex-shrink-0 mt-0.5" />
-                      <p className="text-red-700 dark:text-red-300 font-semibold text-sm">{errors.grantSelection}</p>
-                    </div>
-                  )}
-
-                  <div className="bg-blue-50 dark:bg-blue-900/20 border-2 border-blue-200 dark:border-blue-700 rounded-xl p-4 flex gap-3">
-                    <AlertCircle size={20} className="text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5" />
-                    <div>
-                      <h4 className="font-black text-blue-900 dark:text-blue-200 mb-1">Select Grant to Track</h4>
-                      <p className="text-sm text-blue-800 dark:text-blue-300">
-                        Choose which grant you want to access.
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="space-y-3">
-                    {uniqueGrants.map((grantCategory) => (
-                      <button
-                        key={grantCategory}
-                        onClick={() => {
-                          setTrackingState((prev) => ({ ...prev, stage: 'passkeyLogin', currentGrant: grantCategory }));
-                          setErrors({});
-                          setPasskeyInput('');
-                          setGetPasskeyForm({ email: '', password: '' });
-                        }}
-                        className="w-full p-4 border-2 border-slate-300 dark:border-slate-700 hover:border-blue-500 dark:hover:border-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-xl transition-all text-left font-black text-slate-900 dark:text-white"
-                      >
-                        💰 {grantCategory}
-                      </button>
-                    ))}
-                  </div>
-
-                  <button
-                    onClick={() => onNavigate('GRANTS')}
-                    className="w-full px-6 py-3 border-2 border-slate-300 dark:border-slate-600 hover:border-blue-500 dark:hover:border-blue-400 text-slate-900 dark:text-white rounded-xl font-black transition-all flex items-center justify-center gap-2 mt-4"
-                  >
-                    <ArrowLeft size={18} />
-                    Back to Grants
-                  </button>
-                </div>
-              </motion.div>
-            );
-          })()}
+          {/* GRANT SELECTION STAGE - REMOVED - Now users login directly with email/password */}
+          {trackingState.stage === 'grantSelection' && null}
 
           {/* PASSKEY LOGIN STAGE (ONLY WAY TO LOGIN) */}
           {trackingState.stage === 'passkeyLogin' && (
@@ -743,7 +701,7 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
               <div className="bg-gradient-to-br from-amber-600 to-orange-600 rounded-3xl p-8 text-white">
                 <h2 className="text-3xl md:text-4xl font-black mb-4">🔐 Get Your Passkey</h2>
                 <p className="text-lg text-amber-100">
-                  Selected Grant: <span className="font-black">{trackingState.currentGrant}</span>
+                  Sign in with your email and password from your grant application
                 </p>
               </div>
 
@@ -760,7 +718,7 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
                   <div>
                     <h4 className="font-black text-amber-900 dark:text-amber-200 mb-1">Create Your Passkey</h4>
                     <p className="text-sm text-amber-800 dark:text-amber-300">
-                      Enter the email and password from your grant application to create or retrieve your passkey.
+                      Enter the email and password you used for your grant application. Your grant will be automatically detected.
                     </p>
                   </div>
                 </div>
@@ -831,8 +789,25 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
                     }}
                     className="w-full text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-semibold py-2 transition-colors"
                   >
-                    ← Back to Passkey Login
+                    Already have a passkey? Login here →
                   </button>
+
+                  <div className="grid grid-cols-2 gap-2">
+                    <button
+                      onClick={() => setShowExportModal(true)}
+                      className="text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 font-semibold py-2 transition-colors flex items-center justify-center gap-1 text-sm"
+                    >
+                      <Download size={16} />
+                      Export Data
+                    </button>
+                    <button
+                      onClick={() => setShowImportModal(true)}
+                      className="text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 font-semibold py-2 transition-colors flex items-center justify-center gap-1 text-sm"
+                    >
+                      <Upload size={16} />
+                      Import Data
+                    </button>
+                  </div>
                 </div>
               </div>
             </motion.div>
@@ -1666,6 +1641,123 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
                       </p>
                     </div>
                   </div>
+                </motion.div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* EXPORT MODAL */}
+          <AnimatePresence>
+            {showExportModal && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="fixed inset-0 z-50 flex items-center justify-center px-4 pt-20"
+                onClick={() => setShowExportModal(false)}
+              >
+                <motion.div
+                  initial={{ scale: 0.9, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  exit={{ scale: 0.9, opacity: 0 }}
+                  onClick={(e) => e.stopPropagation()}
+                  className="w-full max-w-md bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border-2 border-green-200 dark:border-green-800 overflow-hidden p-6 space-y-4"
+                >
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-xl font-black text-slate-900 dark:text-white">📥 Export Your Data</h3>
+                    <button onClick={() => setShowExportModal(false)} className="text-slate-400 hover:text-slate-600">
+                      <X size={24} />
+                    </button>
+                  </div>
+
+                  <p className="text-sm text-slate-600 dark:text-slate-400">
+                    Download a backup of your grant applications. Use this file to import your data into another browser.
+                  </p>
+
+                  <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-700 rounded-xl p-4">
+                    <p className="text-sm text-green-800 dark:text-green-300 font-semibold">
+                      ✓ Your data is encrypted and stays on your device<br/>
+                      ✓ Safe to download and share between your devices
+                    </p>
+                  </div>
+
+                  <button
+                    onClick={exportApplicationData}
+                    className="w-full bg-green-600 hover:bg-green-700 text-white font-black py-3 rounded-xl transition-all flex items-center justify-center gap-2"
+                  >
+                    <Download size={20} />
+                    Download Backup File
+                  </button>
+
+                  <button
+                    onClick={() => setShowExportModal(false)}
+                    className="w-full text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white font-semibold py-2"
+                  >
+                    Cancel
+                  </button>
+                </motion.div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* IMPORT MODAL */}
+          <AnimatePresence>
+            {showImportModal && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="fixed inset-0 z-50 flex items-center justify-center px-4 pt-20"
+                onClick={() => setShowImportModal(false)}
+              >
+                <motion.div
+                  initial={{ scale: 0.9, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  exit={{ scale: 0.9, opacity: 0 }}
+                  onClick={(e) => e.stopPropagation()}
+                  className="w-full max-w-md bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border-2 border-purple-200 dark:border-purple-800 overflow-hidden p-6 space-y-4"
+                >
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-xl font-black text-slate-900 dark:text-white">📤 Import Your Data</h3>
+                    <button onClick={() => { setShowImportModal(false); setImportError(''); setImportedData(''); }} className="text-slate-400 hover:text-slate-600">
+                      <X size={24} />
+                    </button>
+                  </div>
+
+                  <p className="text-sm text-slate-600 dark:text-slate-400">
+                    Paste your exported backup file content to restore your applications.
+                  </p>
+
+                  {importError && (
+                    <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-700 rounded-xl p-4">
+                      <p className="text-sm text-red-800 dark:text-red-300 font-semibold">{importError}</p>
+                    </div>
+                  )}
+
+                  <textarea
+                    value={importedData}
+                    onChange={(e) => {
+                      setImportedData(e.target.value);
+                      setImportError('');
+                    }}
+                    placeholder="Paste your backup JSON content here..."
+                    className="w-full h-32 px-4 py-3 rounded-xl border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:outline-none focus:border-purple-600 resize-none text-sm font-mono"
+                  />
+
+                  <button
+                    onClick={importApplicationData}
+                    className="w-full bg-purple-600 hover:bg-purple-700 text-white font-black py-3 rounded-xl transition-all flex items-center justify-center gap-2"
+                  >
+                    <Upload size={20} />
+                    Import Applications
+                  </button>
+
+                  <button
+                    onClick={() => { setShowImportModal(false); setImportError(''); setImportedData(''); }}
+                    className="w-full text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white font-semibold py-2"
+                  >
+                    Cancel
+                  </button>
                 </motion.div>
               </motion.div>
             )}

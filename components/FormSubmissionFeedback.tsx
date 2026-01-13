@@ -101,6 +101,14 @@ const FormSubmissionFeedback: React.FC<FormSubmissionFeedbackProps> = ({
                     <ul className="text-xs md:text-sm text-slate-700 dark:text-slate-300 space-y-1">
                       <li className="flex items-start gap-2">
                         <span className="text-emerald-600 font-bold mt-0.5 flex-shrink-0">✓</span>
+                        <span>Your account has been saved on this device</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-emerald-600 font-bold mt-0.5 flex-shrink-0">✓</span>
+                        <span>Login anytime with your email & password to track your grant</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-emerald-600 font-bold mt-0.5 flex-shrink-0">✓</span>
                         <span>Our team will get back to you immediately or within a few days</span>
                       </li>
                       <li className="flex items-start gap-2">
