@@ -379,6 +379,7 @@ export const GRANTS: GrantType[] = [
     amount: '$37,000/year',
     minAmount: 37000,
     maxAmount: 37000,
+    organization: 'National Science Foundation',
     eligibility: ['U.S. Citizens', 'Permanent Residents', 'STEM Field'],
     citizenship: 'U.S. Citizen or Permanent Resident',
     ageRequirement: 'No age limit',
