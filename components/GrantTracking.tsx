@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   ArrowLeft, Eye, EyeOff, Lock, Mail, Key, Copy, CheckCircle2, AlertCircle,
   Clock, User, DollarSign, Shield, RefreshCw, LogOut, Settings, Lock as LockIcon,
-  Eye as EyeIcon, ToggleRight, ToggleLeft, X, Download, Upload
+  Eye as EyeIcon, ToggleRight, ToggleLeft, X
 } from 'lucide-react';
 import { ViewState } from '../types';
 
@@ -41,7 +41,7 @@ interface TrackingState {
 
 const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
   const [trackingState, setTrackingState] = useState<TrackingState>({
-    stage: 'getPasskey',
+    stage: 'passkeyLogin',
     isLoggedIn: false,
     hasPasskey: false,
     currentUser: null,
@@ -96,12 +96,6 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
   });
   const [transferStep, setTransferStep] = useState<'form' | 'review' | 'confirm'>('form');
   const [transferError, setTransferError] = useState('');
-
-  // Import/Export for cross-browser support
-  const [showExportModal, setShowExportModal] = useState(false);
-  const [showImportModal, setShowImportModal] = useState(false);
-  const [importedData, setImportedData] = useState<string>('');
-  const [importError, setImportError] = useState('');
 
   // Calculate days remaining (10 days from application)
   const calculateDaysRemaining = (timestamp: string) => {
@@ -211,8 +205,9 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
     setIsLoading(true);
     setTimeout(() => {
       const applications = JSON.parse(localStorage.getItem('grantApplications') || '[]') as GrantApplication[];
+      // Find user by passkey ONLY (no need for grantCategory since passkey is unique)
       const user = applications.find(
-        (app) => app.passkey === passkeyInput.trim() && app.grantCategory === trackingState.currentGrant
+        (app) => app.passkey === passkeyInput.trim()
       );
 
       if (user) {
@@ -221,13 +216,14 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
           currentUser: user,
           isLoggedIn: true,
           hasPasskey: true,
+          currentGrant: user.grantCategory,
           stage: 'tracking'
         }));
         setErrors({});
         setPasskeyInput('');
         showAlertMessage('✅ Welcome! Your passkey authentication successful.');
       } else {
-        setErrors({ passkey: '❌ Passkey not found or does not match this grant. Please check and try again.' });
+        setErrors({ passkey: '❌ Passkey not found. Please check and try again.' });
       }
       setIsLoading(false);
     }, 800);
@@ -307,7 +303,7 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
   // Handle logout
   const handleLogout = () => {
     setTrackingState({
-      stage: 'getPasskey',
+      stage: 'passkeyLogin',
       isLoggedIn: false,
       hasPasskey: false,
       currentUser: null,
@@ -319,95 +315,6 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
     setPasskeyInput('');
     setErrors({});
     showAlertMessage('👋 You have been logged out.');
-  };
-
-  // Export grant application data for transfer to another browser
-  const exportApplicationData = () => {
-    try {
-      const applications = JSON.parse(localStorage.getItem('grantApplications') || '[]') as GrantApplication[];
-      if (applications.length === 0) {
-        showAlertMessage('❌ No applications to export');
-        return;
-      }
-      
-      const dataToExport = {
-        version: 1,
-        exportDate: new Date().toISOString(),
-        applications: applications
-      };
-      
-      const jsonString = JSON.stringify(dataToExport, null, 2);
-      const blob = new Blob([jsonString], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = `grant-applications-backup-${new Date().getTime()}.json`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      URL.revokeObjectURL(url);
-      
-      showAlertMessage('✅ Applications exported successfully!');
-      setShowExportModal(false);
-    } catch (error) {
-      console.error('Export error:', error);
-      showAlertMessage('❌ Failed to export applications');
-    }
-  };
-
-  // Import grant application data from another browser
-  const importApplicationData = () => {
-    try {
-      if (!importedData.trim()) {
-        setImportError('Please paste your exported data');
-        return;
-      }
-      
-      const parsed = JSON.parse(importedData);
-      
-      if (!parsed.applications || !Array.isArray(parsed.applications)) {
-        setImportError('Invalid backup file format');
-        return;
-      }
-      
-      // Get existing applications
-      const existingApplications = JSON.parse(localStorage.getItem('grantApplications') || '[]') as GrantApplication[];
-      
-      // Merge - check for duplicates by email + grantCategory
-      const mergedApplications = [...existingApplications];
-      let addedCount = 0;
-      
-      parsed.applications.forEach((app: GrantApplication) => {
-        const exists = mergedApplications.some(
-          (existing) => existing.email === app.email && existing.grantCategory === app.grantCategory
-        );
-        
-        if (!exists) {
-          mergedApplications.push(app);
-          addedCount++;
-        }
-      });
-      
-      localStorage.setItem('grantApplications', JSON.stringify(mergedApplications));
-      
-      setImportError('');
-      setImportedData('');
-      setShowImportModal(false);
-      showAlertMessage(`✅ ${addedCount} application(s) imported successfully!`);
-      
-      // Auto-navigate to grant tracking
-      setTimeout(() => {
-        if (mergedApplications.length > 0) {
-          setTrackingState((prev) => ({
-            ...prev,
-            stage: 'getPasskey'
-          }));
-        }
-      }, 1000);
-    } catch (error) {
-      console.error('Import error:', error);
-      setImportError('Invalid JSON format. Please check your backup file.');
-    }
   };
 
   // Handle passkey recovery
@@ -599,9 +506,9 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
               className="space-y-6"
             >
               <div className="bg-gradient-to-br from-green-600 to-emerald-600 rounded-3xl p-8 text-white">
-                <h2 className="text-3xl md:text-4xl font-black mb-4">🔑 Login with Passkey</h2>
+                <h2 className="text-3xl md:text-4xl font-black mb-4">🔑 Login with Your Passkey</h2>
                 <p className="text-lg text-green-100">
-                  Selected Grant: <span className="font-black">{trackingState.currentGrant}</span>
+                  Use your passkey to access your grant account
                 </p>
               </div>
 
@@ -791,23 +698,6 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
                   >
                     Already have a passkey? Login here →
                   </button>
-
-                  <div className="grid grid-cols-2 gap-2">
-                    <button
-                      onClick={() => setShowExportModal(true)}
-                      className="text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 font-semibold py-2 transition-colors flex items-center justify-center gap-1 text-sm"
-                    >
-                      <Download size={16} />
-                      Export Data
-                    </button>
-                    <button
-                      onClick={() => setShowImportModal(true)}
-                      className="text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 font-semibold py-2 transition-colors flex items-center justify-center gap-1 text-sm"
-                    >
-                      <Upload size={16} />
-                      Import Data
-                    </button>
-                  </div>
                 </div>
               </div>
             </motion.div>
@@ -1641,123 +1531,6 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
                       </p>
                     </div>
                   </div>
-                </motion.div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-
-          {/* EXPORT MODAL */}
-          <AnimatePresence>
-            {showExportModal && (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className="fixed inset-0 z-50 flex items-center justify-center px-4 pt-20"
-                onClick={() => setShowExportModal(false)}
-              >
-                <motion.div
-                  initial={{ scale: 0.9, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  exit={{ scale: 0.9, opacity: 0 }}
-                  onClick={(e) => e.stopPropagation()}
-                  className="w-full max-w-md bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border-2 border-green-200 dark:border-green-800 overflow-hidden p-6 space-y-4"
-                >
-                  <div className="flex items-center justify-between">
-                    <h3 className="text-xl font-black text-slate-900 dark:text-white">📥 Export Your Data</h3>
-                    <button onClick={() => setShowExportModal(false)} className="text-slate-400 hover:text-slate-600">
-                      <X size={24} />
-                    </button>
-                  </div>
-
-                  <p className="text-sm text-slate-600 dark:text-slate-400">
-                    Download a backup of your grant applications. Use this file to import your data into another browser.
-                  </p>
-
-                  <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-700 rounded-xl p-4">
-                    <p className="text-sm text-green-800 dark:text-green-300 font-semibold">
-                      ✓ Your data is encrypted and stays on your device<br/>
-                      ✓ Safe to download and share between your devices
-                    </p>
-                  </div>
-
-                  <button
-                    onClick={exportApplicationData}
-                    className="w-full bg-green-600 hover:bg-green-700 text-white font-black py-3 rounded-xl transition-all flex items-center justify-center gap-2"
-                  >
-                    <Download size={20} />
-                    Download Backup File
-                  </button>
-
-                  <button
-                    onClick={() => setShowExportModal(false)}
-                    className="w-full text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white font-semibold py-2"
-                  >
-                    Cancel
-                  </button>
-                </motion.div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-
-          {/* IMPORT MODAL */}
-          <AnimatePresence>
-            {showImportModal && (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className="fixed inset-0 z-50 flex items-center justify-center px-4 pt-20"
-                onClick={() => setShowImportModal(false)}
-              >
-                <motion.div
-                  initial={{ scale: 0.9, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  exit={{ scale: 0.9, opacity: 0 }}
-                  onClick={(e) => e.stopPropagation()}
-                  className="w-full max-w-md bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border-2 border-purple-200 dark:border-purple-800 overflow-hidden p-6 space-y-4"
-                >
-                  <div className="flex items-center justify-between">
-                    <h3 className="text-xl font-black text-slate-900 dark:text-white">📤 Import Your Data</h3>
-                    <button onClick={() => { setShowImportModal(false); setImportError(''); setImportedData(''); }} className="text-slate-400 hover:text-slate-600">
-                      <X size={24} />
-                    </button>
-                  </div>
-
-                  <p className="text-sm text-slate-600 dark:text-slate-400">
-                    Paste your exported backup file content to restore your applications.
-                  </p>
-
-                  {importError && (
-                    <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-700 rounded-xl p-4">
-                      <p className="text-sm text-red-800 dark:text-red-300 font-semibold">{importError}</p>
-                    </div>
-                  )}
-
-                  <textarea
-                    value={importedData}
-                    onChange={(e) => {
-                      setImportedData(e.target.value);
-                      setImportError('');
-                    }}
-                    placeholder="Paste your backup JSON content here..."
-                    className="w-full h-32 px-4 py-3 rounded-xl border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:outline-none focus:border-purple-600 resize-none text-sm font-mono"
-                  />
-
-                  <button
-                    onClick={importApplicationData}
-                    className="w-full bg-purple-600 hover:bg-purple-700 text-white font-black py-3 rounded-xl transition-all flex items-center justify-center gap-2"
-                  >
-                    <Upload size={20} />
-                    Import Applications
-                  </button>
-
-                  <button
-                    onClick={() => { setShowImportModal(false); setImportError(''); setImportedData(''); }}
-                    className="w-full text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white font-semibold py-2"
-                  >
-                    Cancel
-                  </button>
                 </motion.div>
               </motion.div>
             )}
