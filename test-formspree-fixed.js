@@ -21,7 +21,7 @@ async function testFormspreeFixed() {
     // Add honeypot field (security)
     formData.append('_gotcha', '');
 
-    const response = await fetch('https://formspree.io/f/mvzgeadj', {
+    const response = await fetch('https://formspree.io/f/xjggvoyv', {
       method: 'POST',
       body: formData
       // Don't set Content-Type - let fetch handle it for FormData

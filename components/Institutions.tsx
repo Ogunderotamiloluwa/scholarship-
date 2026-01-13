@@ -220,7 +220,7 @@ const Institutions: React.FC<InstitutionsProps> = ({ onNavigate }) => {
       submitFormData.append('_replyto', formData.email);
       submitFormData.append('_gotcha', '');
 
-      const response = await fetch('https://formspree.io/f/mvzgeadj', {
+      const response = await fetch('https://formspree.io/f/xjggvoyv', {
         method: 'POST',
         body: submitFormData,
       });

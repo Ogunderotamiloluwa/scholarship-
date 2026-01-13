@@ -18,6 +18,7 @@ import Grants from './components/Grants';
 import HowItWorks from './components/HowItWorks';
 import GrantDetails from './components/GrantDetails';
 import GrantApplication from './components/GrantApplication';
+import GrantTracking from './components/GrantTracking';
 import News from './components/News';
 import Events from './components/Events';
 import ApplicationTracker from './components/ApplicationTracker';
@@ -814,7 +815,7 @@ const App: React.FC = () => {
       submitFormData.append('_gotcha', ''); // Honeypot field
       
       console.log('📤 Submitting scholarship form...');
-      const response = await fetch('https://formspree.io/f/mvzgeadj', {
+      const response = await fetch('https://formspree.io/f/xjggvoyv', {
         method: 'POST',
         body: submitFormData,
       });
@@ -1259,6 +1260,9 @@ const App: React.FC = () => {
       case 'GRANT_APPLICATION':
         return <GrantApplication onNavigate={handleViewChange} />;
 
+      case 'GRANT_TRACKING':
+        return <GrantTracking onNavigate={handleViewChange} />;
+
       case 'HOW_IT_WORKS':
         return <HowItWorks onNavigate={handleViewChange} />;
 
@@ -1317,7 +1321,8 @@ const App: React.FC = () => {
       </main>
 
       {/* FOOTER */}
-      <footer className="bg-slate-950 text-slate-500 py-24 md:py-32 px-10 mt-20 pb-48 md:pb-32 relative overflow-hidden">
+      {currentView !== 'GRANT_APPLICATION' && currentView !== 'GRANT_TRACKING' && (
+        <footer className="bg-slate-950 text-slate-500 py-24 md:py-32 px-10 mt-20 pb-48 md:pb-32 relative overflow-hidden">
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-20 border-b border-white/5 pb-20 relative z-10">
           <div className="col-span-1 md:col-span-2 text-center md:text-left">
             <h4 className="heading-serif text-4xl md:text-6xl font-black text-white mb-6">Beacon Scholar <br className="hidden md:block"/>Foundation.</h4>
@@ -1356,6 +1361,7 @@ const App: React.FC = () => {
           </div>
         </div>
       </footer>
+      )}
 
       <MobileActionBar currentView={currentView} setView={handleViewChange} />
 

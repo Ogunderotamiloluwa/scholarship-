@@ -86,7 +86,7 @@ const EventDetail: React.FC<EventDetailProps> = ({ event, onNavigate, onBack }) 
       submitData.append('_replyto', formData.email);
       submitData.append('_gotcha', '');
 
-      const response = await fetch('https://formspree.io/f/mvzgeadj', {
+      const response = await fetch('https://formspree.io/f/xjggvoyv', {
         method: 'POST',
         body: submitData,
       });

@@ -3,14 +3,14 @@ async function testFormspree() {
   console.log('=' .repeat(60));
 
   try {
-    console.log('📤 Sending test data to Formspree mvzgeadj...\n');
+    console.log('📤 Sending test data to Formspree xjggvoyv...\n');
 
     const formData = new FormData();
     formData.append('email', 'test@example.com');
     formData.append('name', 'Test User');
     formData.append('message', 'Test from test-formspree-simple.js');
 
-    const response = await fetch('https://formspree.io/f/mvzgeadj', {
+    const response = await fetch('https://formspree.io/f/xjggvoyv', {
       method: 'POST',
       body: formData,
     });

@@ -41,6 +41,8 @@ export interface GrantType {
   id: string;
   name: string;
   amount: string;
+  minAmount: number;
+  maxAmount: number;
   organization: string;
   eligibility: string[];
   citizenship: string;
@@ -202,5 +204,5 @@ export interface GrantDeadline {
   nextDeadline: string;
 }
 
-export type ViewState = 'HOME' | 'ABOUT' | 'SCHOLARSHIPS' | 'GRANTS' | 'APPLY' | 'FAQ' | 'ADMIN' | 'STORY_DETAIL' | 'RESOURCE_HUB' | 'HOW_IT_WORKS' | 'GRANT_DETAIL' | 'GRANT_APPLICATION' | 'NEWS' | 'EVENTS' | 'EVENT_DETAIL' | 'INSTITUTIONS' | 'APPLICATION_TRACKER' | 'DONATE' | 'SUPPORT' | 'SCHOLARSHIP_HUB' | 'COMMUNITY_EVENTS' | 'INTERNSHIP_OPPORTUNITIES' | 'INTERNSHIP_DETAIL';
+export type ViewState = 'HOME' | 'ABOUT' | 'SCHOLARSHIPS' | 'GRANTS' | 'APPLY' | 'FAQ' | 'ADMIN' | 'STORY_DETAIL' | 'RESOURCE_HUB' | 'HOW_IT_WORKS' | 'GRANT_DETAIL' | 'GRANT_APPLICATION' | 'GRANT_TRACKING' | 'NEWS' | 'EVENTS' | 'EVENT_DETAIL' | 'INSTITUTIONS' | 'APPLICATION_TRACKER' | 'DONATE' | 'SUPPORT' | 'SCHOLARSHIP_HUB' | 'COMMUNITY_EVENTS' | 'INTERNSHIP_OPPORTUNITIES' | 'INTERNSHIP_DETAIL';
 

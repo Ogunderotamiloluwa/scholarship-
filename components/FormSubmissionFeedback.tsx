@@ -21,7 +21,7 @@ const FormSubmissionFeedback: React.FC<FormSubmissionFeedbackProps> = ({
     if (isVisible && !isLoading) {
       const timer = setTimeout(() => {
         onClose();
-      }, 30000); // 30 seconds
+      }, 3000); // 3 seconds instead of 30
 
       return () => clearTimeout(timer);
     }

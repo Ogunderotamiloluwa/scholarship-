@@ -77,6 +77,33 @@ const Grants: React.FC<GrantsProps> = ({ onNavigate, onGrantSelect }) => {
         </div>
       </section>
 
+      {/* Track Grant CTA Section - PROMINENT */}
+      <section className="px-6 py-12 bg-gradient-to-r from-emerald-500 to-green-600 text-white">
+        <div className="max-w-7xl mx-auto">
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="flex flex-col sm:flex-row items-center justify-between gap-6 p-6 sm:p-8 bg-white/15 backdrop-blur-sm rounded-2xl border-2 border-white/30"
+          >
+            <div className="flex-1">
+              <h3 className="text-2xl sm:text-3xl font-black mb-2">📊 Already Applied?</h3>
+              <p className="text-lg text-green-50">
+                Track your grant application status and check when your funds will be available
+              </p>
+            </div>
+            <motion.button
+              onClick={() => onNavigate('GRANT_TRACKING')}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="flex-shrink-0 bg-white text-green-600 font-black px-8 py-4 rounded-xl hover:bg-green-50 shadow-lg hover:shadow-2xl transition-all flex items-center gap-2 whitespace-nowrap"
+            >
+              🔍 Track My Grant
+              <ChevronRight size={20} />
+            </motion.button>
+          </motion.div>
+        </div>
+      </section>
+
       {/* Search & Filter Section */}
       <section className="px-6 py-16 bg-white dark:bg-slate-950 border-b border-slate-200 dark:border-slate-800">
         <div className="max-w-7xl mx-auto">
@@ -280,19 +307,19 @@ const Grants: React.FC<GrantsProps> = ({ onNavigate, onGrantSelect }) => {
                         </div>
 
                         {/* CTA Buttons */}
-                        <div className="flex gap-3 pt-4 border-t border-slate-200 dark:border-slate-800">
+                        <div className="flex flex-col gap-3 pt-4 border-t border-slate-200 dark:border-slate-800">
                           <button
                             onClick={() => {
                               onGrantSelect?.(grant);
                               onNavigate('GRANT_APPLICATION');
                             }}
-                            className="flex-1 bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 text-white font-black text-sm py-3 rounded-lg transition-all flex items-center justify-center gap-2 shadow-lg hover:shadow-indigo-600/50"
+                            className="w-full bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 text-white font-black text-sm py-3 rounded-lg transition-all flex items-center justify-center gap-2 shadow-lg hover:shadow-indigo-600/50"
                           >
                             Apply Now <ArrowRight size={14} />
                           </button>
                           <button
                             onClick={() => onGrantSelect?.(grant)}
-                            className="flex-1 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-900 dark:text-white font-black text-sm py-3 rounded-lg transition-all"
+                            className="w-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-900 dark:text-white font-black text-sm py-3 rounded-lg transition-all"
                           >
                             Details
                           </button>
