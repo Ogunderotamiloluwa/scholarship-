@@ -632,7 +632,7 @@ const GrantApplication: React.FC<GrantApplicationProps> = ({ onNavigate }) => {
                     // Still show success message - company may have received it
                     setIsLoading(false);
                   }
-                }}
+                  // User must manually close the feedback message
                 disabled={isLoading}
                 className="flex-1 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 disabled:from-emerald-400 disabled:to-teal-400 text-white py-3 md:py-4 rounded-lg md:rounded-xl font-black transition-all duration-200 flex items-center justify-center gap-2 shadow-lg hover:shadow-emerald-500/50 active:scale-95 disabled:cursor-not-allowed text-sm md:text-base"
               >

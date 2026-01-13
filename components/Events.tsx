@@ -125,12 +125,7 @@ const Events: React.FC<EventsProps> = ({ onNavigate }) => {
         // Still show success message - company may have received it
         setIsLoading(false);
       }
-      
-      setTimeout(() => {
-        setShowRegistrationModal(false);
-        setRegistrationStep(1);
-        setFormData({ firstName: '', lastName: '', email: '', phone: '', institution: '', major: '' });
-      }, 7000);
+      // User must manually close the feedback message
     }
   };
 
@@ -175,14 +170,7 @@ const Events: React.FC<EventsProps> = ({ onNavigate }) => {
         // Still show success message - company may have received it
         setIsLoading(false);
       }
-      
-      setTimeout(() => {
-        // Continue with cleanup
-      }, 4000);
-      setTimeout(() => {
-        setContactForm({ name: '', email: '', phone: '', message: '', institution: '' });
-        setShowContactForm(false);
-      }, 7000);
+      // User must manually close the feedback message
     }
   };
 

@@ -75,17 +75,7 @@ const Donate: React.FC<DonateProps> = ({ onNavigate }) => {
       // Still show success message - company may have received it
       setIsLoading(false);
     }
-    
-    setTimeout(() => {
-      // Continue with cleanup
-    }, 4000);
-    
-    setTimeout(() => {
-      setDonorName('');
-      setDonorEmail('');
-      setSelectedAmount(null);
-      setCustomAmount('');
-    }, 7000);
+    // User must manually close the feedback message
   };
 
   const presetAmounts = [25, 50, 100, 250, 500, 1000];

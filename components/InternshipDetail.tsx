@@ -112,38 +112,12 @@ const InternshipDetail: React.FC<InternshipDetailProps> = ({ internship, onNavig
       console.log('\ud83d\udce7 Response:', responseData);
 
       setSubmitted(true);
-      setTimeout(() => {
-        setFormData({
-          fullName: '',
-          email: '',
-          phone: '',
-          university: '',
-          major: '',
-          gpa: '',
-          linkedinUrl: '',
-          coverLetter: ''
-        });
-        setSubmitted(false);
-        onBack?.();
-      }, 2500);
+      // User must manually close the message
     } catch (error) {
       console.error('Internship application submission error:', error);
       // Still show success message - company may have received it
       setSubmitted(true);
-      setTimeout(() => {
-        setFormData({
-          fullName: '',
-          email: '',
-          phone: '',
-          university: '',
-          major: '',
-          gpa: '',
-          linkedinUrl: '',
-          coverLetter: ''
-        });
-        setSubmitted(false);
-        onBack?.();
-      }, 2500);
+      // User must manually close the message
     } finally {
       setIsSubmitting(false);
     }

@@ -121,8 +121,8 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
     const now = new Date();
     const hoursElapsed = (now.getTime() - applicationDate.getTime()) / (1000 * 60 * 60);
     const daysElapsed = hoursElapsed / 24;
-    const totalDaysNeeded = 15;
-    const daysRemaining = Math.max(0, totalDaysNeeded - daysElapsed);
+    const totalDaysNeeded = 14; // Changed from 15 to 14 days after 24hr setup
+    const daysRemaining = Math.max(0, totalDaysNeeded - (daysElapsed - 1)); // Subtract 1 for the initial 24hrs
     const hoursRemaining = Math.max(0, (daysRemaining % 1) * 24);
     
     return {
@@ -132,10 +132,10 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
       hoursRemaining: Math.floor(hoursRemaining),
       minutesRemaining: Math.floor(((hoursRemaining % 1) * 60)),
       isHidden: daysElapsed < 1, // First 24 hours
-      isPending: daysElapsed >= 1 && daysElapsed < 15, // Days 1-15
-      isReceived: daysElapsed >= 15, // After 15 days
-      progressPercentage: Math.min(100, Math.max(0, (daysElapsed / 15) * 100)), // 0-100% over 15 days
-      dayNumber: Math.ceil(daysElapsed) // Current day number (1-15)
+      isPending: daysElapsed >= 1 && daysElapsed < 15, // Days 1-14 (after 24hrs, counts 14 more days)
+      isReceived: daysElapsed >= 15, // After 15 days total (1 day setup + 14 days processing)
+      progressPercentage: Math.min(100, Math.max(0, ((daysElapsed - 1) / 14) * 100)), // 0-100% over 14 days after setup
+      dayNumber: Math.max(1, Math.ceil(daysElapsed - 1)) // Current day number (1-14 for processing)
     };
   };
 
@@ -431,10 +431,10 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
             initial={{ opacity: 0, y: -30 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -30 }}
-            className="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-11/12 max-w-xl bg-emerald-50 dark:bg-emerald-900/20 border-2 border-emerald-200 dark:border-emerald-700 rounded-xl p-4 sm:p-5 flex items-center justify-center gap-3 shadow-lg"
+            className="fixed top-0 left-1/2 -translate-x-1/2 z-50 w-full max-w-2xl bg-gradient-to-r from-emerald-500 to-emerald-600 dark:from-emerald-600 dark:to-emerald-700 border-b-2 border-emerald-700 dark:border-emerald-800 rounded-b-2xl px-4 sm:px-6 py-4 sm:py-5 flex items-center justify-center gap-3 shadow-2xl"
           >
-            <CheckCircle2 size={20} className="text-emerald-600 dark:text-emerald-400 flex-shrink-0" />
-            <p className="text-emerald-800 dark:text-emerald-300 text-xs sm:text-sm font-semibold whitespace-pre-line break-words">{alertMessage}</p>
+            <CheckCircle2 size={20} className="text-white flex-shrink-0" />
+            <p className="text-white text-xs sm:text-sm font-bold whitespace-pre-line break-words text-center">{alertMessage}</p>
           </motion.div>
         )}
       </AnimatePresence>
@@ -884,6 +884,35 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
                   <p className="text-xs opacity-80 mt-2">This matches your application form submitted on {trackingState.currentUser?.timestamp ? new Date(trackingState.currentUser.timestamp).toLocaleDateString() : 'N/A'}</p>
                 </div>
               </div>
+
+              {/* Account Update Notification - Top Left */}
+              {(() => {
+                const status = calculateGrantStatus(trackingState.currentUser?.timestamp || '');
+                if (status.isHidden) {
+                  return (
+                    <motion.div
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      className="bg-gradient-to-br from-blue-600 to-blue-700 dark:from-blue-700 dark:to-blue-800 rounded-2xl p-4 sm:p-5 text-white border-l-4 border-blue-400"
+                    >
+                      <div className="flex items-start gap-3">
+                        <div className="flex-shrink-0 mt-1">
+                          <Clock size={20} className="text-blue-200 animate-pulse" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <h3 className="font-black text-base sm:text-lg mb-1">⏱️ Account Update in Progress</h3>
+                          <p className="text-xs sm:text-sm text-blue-100 mb-2">Your account will be updated with your grant amount after 24 hours</p>
+                          <div className="flex items-center gap-2 text-xs sm:text-sm font-bold">
+                            <span className="text-blue-200">Time until update:</span>
+                            <span className="text-white text-sm sm:text-base">{String(status.hoursRemaining).padStart(2, '0')}h {String(status.minutesRemaining).padStart(2, '0')}m</span>
+                          </div>
+                        </div>
+                      </div>
+                    </motion.div>
+                  );
+                }
+                return null;
+              })()}
 
               {/* Dynamic Balance Card */}
               {(() => {
@@ -1361,7 +1390,7 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4"
+                className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4"
                 onClick={() => setShowSettings(false)}
               >
           <motion.div
@@ -1369,13 +1398,13 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.95, opacity: 0 }}
             onClick={(e) => e.stopPropagation()}
-            className="w-full max-w-2xl max-h-[85vh] bg-white dark:bg-slate-900 rounded-2xl sm:rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-700 overflow-y-auto mx-auto"
+            className="w-full max-w-2xl max-h-[90vh] bg-white dark:bg-slate-900 rounded-2xl sm:rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-700 overflow-hidden flex flex-col mx-auto"
           >
                   {/* Settings Header */}
-                  <div className="bg-gradient-to-br from-slate-900 to-slate-800 dark:from-slate-950 dark:to-slate-900 p-4 sm:p-6 text-white sticky top-0">
+                  <div className="bg-gradient-to-br from-slate-900 to-slate-800 dark:from-slate-950 dark:to-slate-900 p-3 sm:p-6 text-white flex-shrink-0">
                     <div className="flex items-center justify-between gap-2">
                       <div className="flex-1 min-w-0">
-                        <h2 className="text-xl sm:text-3xl font-black">⚙️ Account Settings</h2>
+                        <h2 className="text-lg sm:text-3xl font-black">⚙️ Account Settings</h2>
                         <p className="text-slate-300 text-xs sm:text-sm mt-1">Manage your account security and privacy</p>
                       </div>
                       <button
@@ -1388,12 +1417,12 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
                   </div>
 
                   {/* Settings Tabs */}
-                  <div className="flex gap-0 border-b border-slate-200 dark:border-slate-700 px-4 sm:px-6 overflow-x-auto">
+                  <div className="flex gap-0 border-b border-slate-200 dark:border-slate-700 px-3 sm:px-6 overflow-x-auto flex-shrink-0 bg-slate-50 dark:bg-slate-800/50">
                     {(['security', 'privacy', 'notifications'] as const).map((tab) => (
                       <button
                         key={tab}
                         onClick={() => setSettingsTab(tab)}
-                        className={`px-3 sm:px-4 py-3 font-black text-xs sm:text-sm transition-all border-b-4 whitespace-nowrap ${
+                        className={`px-2 sm:px-4 py-2 sm:py-3 font-black text-xs sm:text-sm transition-all border-b-4 whitespace-nowrap ${
                           settingsTab === tab
                             ? 'border-blue-600 text-blue-600 dark:text-blue-400'
                             : 'border-transparent text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
@@ -1406,8 +1435,8 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
                     ))}
                   </div>
 
-                  {/* Settings Content */}
-                  <div className="px-4 sm:px-6 py-4 sm:py-6 space-y-4 sm:space-y-6">
+                  {/* Settings Content - Scrollable */}
+                  <div className="overflow-y-auto flex-1 px-3 sm:px-6 py-4 sm:py-6 pb-24 sm:pb-16 space-y-4 sm:space-y-6">
                     {/* SECURITY TAB */}
                     {settingsTab === 'security' && (
                       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-4">
@@ -1420,19 +1449,19 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
                         </div>
 
                         <div className="border-2 border-slate-200 dark:border-slate-700 rounded-2xl p-3 sm:p-5">
-                          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-3">
                             <div className="flex-1 min-w-0">
                               <p className="font-black text-sm sm:text-base text-slate-900 dark:text-white">Password</p>
                               <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400">Change your account password</p>
                             </div>
-                            <button className="flex-shrink-0 px-3 sm:px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-black text-xs sm:text-sm transition-all w-full sm:w-auto">
+                            <button className="flex-shrink-0 px-3 sm:px-4 py-2 sm:py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-black text-xs sm:text-sm transition-all w-full sm:w-auto">
                               Change
                             </button>
                           </div>
                         </div>
 
                         <div className="border-2 border-slate-200 dark:border-slate-700 rounded-2xl p-3 sm:p-5">
-                          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-3">
                             <div className="flex-1 min-w-0">
                               <p className="font-black text-sm sm:text-base text-slate-900 dark:text-white flex items-center gap-2">
                                 <Lock size={18} className="flex-shrink-0" />
@@ -1440,7 +1469,7 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
                               </p>
                               <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-1">Extra security layer</p>
                             </div>
-                            <button className="flex-shrink-0 px-3 sm:px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-lg font-black text-xs sm:text-sm transition-all w-full sm:w-auto">
+                            <button className="flex-shrink-0 px-3 sm:px-4 py-2 sm:py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-lg font-black text-xs sm:text-sm transition-all w-full sm:w-auto">
                               {privacySettings.twoFactorEnabled ? 'Disable' : 'Enable'}
                             </button>
                           </div>
@@ -1561,10 +1590,10 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
                   </div>
 
                   {/* Settings Footer */}
-                  <div className="bg-slate-50 dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700 p-6 sm:p-8 flex gap-3 sticky bottom-0">
+                  <div className="bg-slate-50 dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700 px-3 sm:px-6 py-3 sm:py-4 flex gap-2 sm:gap-3 flex-shrink-0">
                     <button
                       onClick={() => setShowSettings(false)}
-                      className="flex-1 px-4 py-3 bg-slate-200 dark:bg-slate-700 text-slate-900 dark:text-white font-black rounded-xl hover:bg-slate-300 dark:hover:bg-slate-600 transition-all"
+                      className="flex-1 px-3 sm:px-4 py-2 sm:py-3 bg-slate-200 dark:bg-slate-700 text-slate-900 dark:text-white font-black text-xs sm:text-sm rounded-lg sm:rounded-xl hover:bg-slate-300 dark:hover:bg-slate-600 transition-all"
                     >
                       Close
                     </button>
@@ -1573,7 +1602,7 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
                         setShowSettings(false);
                         showAlertMessage('✅ Settings saved successfully!');
                       }}
-                      className="flex-1 px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white font-black rounded-xl transition-all"
+                      className="flex-1 px-3 sm:px-4 py-2 sm:py-3 bg-blue-600 hover:bg-blue-700 text-white font-black text-xs sm:text-sm rounded-lg sm:rounded-xl transition-all"
                     >
                       Save Changes
                     </button>

@@ -234,20 +234,12 @@ const Institutions: React.FC<InstitutionsProps> = ({ onNavigate }) => {
       console.log('\ud83d\udce7 Response:', responseData);
       
       setApplicationSuccess(true);
-      setTimeout(() => {
-        setShowApplicationForm(false);
-        setApplicationSuccess(false);
-        setFormData({ fullName: '', email: '', phone: '', institutionName: '', message: '' });
-      }, 2000);
+      // User must manually close the message
     } catch (error) {
       console.error('Institution inquiry submission error:', error);
       // Still show success message - company may have received it
       setApplicationSuccess(true);
-      setTimeout(() => {
-        setShowApplicationForm(false);
-        setApplicationSuccess(false);
-        setFormData({ fullName: '', email: '', phone: '', institutionName: '', message: '' });
-      }, 2000);
+      // User must manually close the message
     }
   };
 

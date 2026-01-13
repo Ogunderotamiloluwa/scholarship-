@@ -289,20 +289,12 @@ const ScholarshipHoldersHub: React.FC<ScholarshipHoldersHubProps> = ({ onNavigat
       console.log('📧 Response:', responseData);
 
       setAlumniSubmitted(true);
-      setTimeout(() => {
-        setSelectedInternship(null);
-        setAlumniSubmitted(false);
-        setAlumniFormData({ fullName: '', email: '', university: '', graduationYear: '' });
-      }, 2000);
+      // User must manually close the message
     } catch (error) {
       console.error('Alumni form submission error:', error);
       // Still show success message - company may have received it
       setAlumniSubmitted(true);
-      setTimeout(() => {
-        setSelectedInternship(null);
-        setAlumniSubmitted(false);
-        setAlumniFormData({ fullName: '', email: '', university: '', graduationYear: '' });
-      }, 2000);
+      // User must manually close the message
     }
   };
 
@@ -334,20 +326,12 @@ const ScholarshipHoldersHub: React.FC<ScholarshipHoldersHubProps> = ({ onNavigat
       console.log('📧 Response:', responseData);
 
       setSupportSubmitted(true);
-      setTimeout(() => {
-        setSelectedInternship(null);
-        setSupportSubmitted(false);
-        setSupportFormData({ name: '', email: '', subject: '', message: '' });
-      }, 2000);
+      // User must manually close the message
     } catch (error) {
       console.error('Support form submission error:', error);
       // Still show success message - company may have received it
       setSupportSubmitted(true);
-      setTimeout(() => {
-        setSelectedInternship(null);
-        setSupportSubmitted(false);
-        setSupportFormData({ name: '', email: '', subject: '', message: '' });
-      }, 2000);
+      // User must manually close the message
     }
   };
 

@@ -836,12 +836,7 @@ const App: React.FC = () => {
       // Still show success - company received the submission via Formspree
       setToast({ message: `✅ Application submitted successfully! Check your email for confirmation.`, type: 'success' });
     }
-    
-    setTimeout(() => {
-      setCurrentView('HOME');
-      setApplyStep(1);
-      setToast(null);
-    }, 3000);
+    // User can manually close the toast message
   };
 
   const renderView = () => {

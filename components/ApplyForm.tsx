@@ -229,12 +229,8 @@ const ApplyForm: React.FC<ApplyFormProps> = ({ onSubmit, onCancel }) => {
       console.error('❌ Scholarship submission error:', error);
       // Still show success message even if there's an error - company may have received it
       setIsLoading(false);
-
-    // Submit after the loading period
-    setTimeout(() => {
-      onSubmit(formData);
-      // Don't close immediately - let user see the message for 30 seconds
-    }, 7000);
+    }
+    // User must manually close the feedback message
   };
 
   return (
