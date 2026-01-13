@@ -477,7 +477,7 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="fixed top-8 md:top-12 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-2rem)] max-w-md sm:max-w-lg md:max-w-2xl bg-gradient-to-r from-emerald-500 to-emerald-600 dark:from-emerald-600 dark:to-emerald-700 border-b-2 border-emerald-700 dark:border-emerald-800 rounded-2xl px-4 sm:px-6 py-4 sm:py-5 flex items-center justify-center gap-3 shadow-2xl"
+            className="fixed top-16 md:top-20 left-1/2 -translate-x-1/2 z-50 w-auto min-w-[280px] max-w-[620px] bg-gradient-to-r from-emerald-500 to-emerald-600 dark:from-emerald-600 dark:to-emerald-700 border-b-2 border-emerald-700 dark:border-emerald-800 rounded-2xl px-5 sm:px-8 py-4 sm:py-5 flex items-center justify-center gap-3 shadow-2xl"
           >
             <CheckCircle2 size={20} className="text-white flex-shrink-0" />
             <p className="text-white text-xs sm:text-sm font-bold whitespace-normal break-words text-center">{alertMessage}</p>
@@ -658,17 +658,6 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
                     className="w-full text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-semibold py-2 transition-colors"
                   >
                     🔒 Lost Your Passkey? Recover It
-                  </button>
-
-                  <button
-                    onClick={() => {
-                      setTrackingState((prev) => ({ ...prev, stage: 'grantSelection', currentGrant: null }));
-                      setErrors({});
-                      setPasskeyInput('');
-                    }}
-                    className="w-full text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white font-semibold py-2 transition-colors"
-                  >
-                    ← Change Grant
                   </button>
                 </div>
               </div>
@@ -859,31 +848,31 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
                 const status = calculateGrantStatus(trackingState.currentUser?.timestamp || '');
                 return (
                   <motion.div
-                    className={`rounded-2xl p-4 sm:p-6 text-white font-black text-center transition-all ${
+                    className={`rounded-3xl p-6 sm:p-8 text-white font-black text-center transition-all border-2 ${
                       status.isHidden 
-                        ? 'bg-gradient-to-r from-blue-600 to-blue-700' 
+                        ? 'bg-gradient-to-r from-blue-600 to-blue-700 border-blue-400/50' 
                         : status.isPending 
-                        ? 'bg-gradient-to-r from-amber-600 to-orange-600' 
-                        : 'bg-gradient-to-r from-emerald-600 to-teal-600'
+                        ? 'bg-gradient-to-r from-amber-600 to-orange-600 border-amber-400/50' 
+                        : 'bg-gradient-to-r from-emerald-600 to-teal-600 border-emerald-400/50'
                     }`}
-                    animate={{ scale: [1, 1.02, 1] }}
-                    transition={{ duration: 2, repeat: Infinity }}
+                    animate={{ scale: [1, 1.01, 1] }}
+                    transition={{ duration: 3, repeat: Infinity }}
                   >
-                    <p className="text-xs sm:text-sm opacity-90 mb-2 uppercase tracking-wider">⏱️ Time Until Funds Available</p>
-                    <div className="flex items-center justify-center gap-2 sm:gap-4">
+                    <p className="text-xs sm:text-sm opacity-90 mb-4 uppercase tracking-widest font-bold">⏱️ Processing Timeline</p>
+                    <div className="flex items-center justify-center gap-3 sm:gap-6 flex-wrap">
                       <div className="flex flex-col items-center">
-                        <div className="text-3xl sm:text-4xl font-black">{status.daysRemaining}</div>
-                        <div className="text-xs sm:text-sm opacity-75">Days</div>
+                        <div className="text-4xl sm:text-5xl font-black leading-none">{status.daysRemaining}</div>
+                        <div className="text-xs sm:text-sm opacity-75 mt-1">Days</div>
                       </div>
-                      <div className="text-2xl sm:text-3xl opacity-50">:</div>
+                      <div className="text-3xl sm:text-4xl opacity-40">:</div>
                       <div className="flex flex-col items-center">
-                        <div className="text-3xl sm:text-4xl font-black">{String(status.hoursRemaining).padStart(2, '0')}</div>
-                        <div className="text-xs sm:text-sm opacity-75">Hours</div>
+                        <div className="text-4xl sm:text-5xl font-black leading-none">{String(status.hoursRemaining).padStart(2, '0')}</div>
+                        <div className="text-xs sm:text-sm opacity-75 mt-1">Hours</div>
                       </div>
-                      <div className="text-2xl sm:text-3xl opacity-50">:</div>
+                      <div className="text-3xl sm:text-4xl opacity-40">:</div>
                       <div className="flex flex-col items-center">
-                        <div className="text-3xl sm:text-4xl font-black">{String(status.minutesRemaining).padStart(2, '0')}</div>
-                        <div className="text-xs sm:text-sm opacity-75">Min</div>
+                        <div className="text-4xl sm:text-5xl font-black leading-none">{String(status.minutesRemaining).padStart(2, '0')}</div>
+                        <div className="text-xs sm:text-sm opacity-75 mt-1">Mins</div>
                       </div>
                     </div>
                   </motion.div>
@@ -891,52 +880,49 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
               })()}
 
               {/* Main Account Header */}
-              <div className="bg-gradient-to-br from-slate-900 to-slate-800 dark:from-slate-950 dark:to-slate-900 rounded-3xl p-6 sm:p-8 text-white">
-                <div className="flex items-start justify-between gap-4 mb-6">
+              <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 rounded-3xl p-6 sm:p-8 text-white border border-slate-700/50">
+                <div className="flex items-start justify-between gap-4 mb-8">
                   <div className="flex-1">
-                    <p className="text-xs sm:text-sm opacity-75 uppercase mb-2">Grant Account</p>
-                    <h2 className="text-2xl sm:text-3xl font-black">Your Grant Portal</h2>
+                    <p className="text-xs sm:text-sm opacity-60 uppercase mb-2 tracking-wider">Secure Grant Account</p>
+                    <h2 className="text-3xl sm:text-4xl font-black mb-1">Grant Dashboard</h2>
+                    <p className="text-sm opacity-70">Manage your grant status and account</p>
                   </div>
-                  <div className="flex gap-3 flex-shrink-0">
+                  <div className="flex gap-2 flex-shrink-0">
                     <button
                       onClick={() => setShowSettings(true)}
-                      className="p-2 sm:p-3 bg-white/10 hover:bg-white/20 rounded-xl transition-all"
+                      className="p-3 sm:p-4 bg-white/10 hover:bg-indigo-500/30 rounded-xl transition-all border border-white/10 hover:border-indigo-500/50"
                       title="Account Settings"
                     >
                       <Settings size={24} className="text-white" />
                     </button>
                     <button
                       onClick={handleLogout}
-                      className="p-2 sm:p-3 bg-white/10 hover:bg-red-500/20 rounded-xl transition-all"
+                      className="p-3 sm:p-4 bg-white/10 hover:bg-red-500/30 rounded-xl transition-all border border-white/10 hover:border-red-500/50"
                       title="Logout"
                     >
                       <LogOut size={24} className="text-white" />
                     </button>
-                    <Shield size={32} className="mt-1" />
                   </div>
                 </div>
                 
-                <div className="grid grid-cols-2 gap-3 sm:gap-4 mb-4">
-                  <div className="bg-white/10 backdrop-blur rounded-xl p-3 sm:p-4">
-                    <p className="text-xs opacity-75 mb-1">Applicant</p>
-                    <p className="text-lg sm:text-xl font-black truncate">{trackingState.currentUser?.fullName?.split(' ')[0]}</p>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
+                  <div className="bg-white/10 backdrop-blur border border-white/20 rounded-2xl p-4 sm:p-5">
+                    <p className="text-xs opacity-60 uppercase mb-2 tracking-wider font-bold">Applicant Name</p>
+                    <p className="text-lg sm:text-xl font-black truncate">{trackingState.currentUser?.fullName?.split(' ')[0] || 'User'}</p>
                   </div>
-                  <div className="bg-white/10 backdrop-blur rounded-xl p-3 sm:p-4">
-                    <p className="text-xs opacity-75 mb-1">Account Status</p>
-                    <p className="text-sm sm:text-base font-black">
+                  <div className="bg-white/10 backdrop-blur border border-white/20 rounded-2xl p-4 sm:p-5">
+                    <p className="text-xs opacity-60 uppercase mb-2 tracking-wider font-bold">Account Status</p>
+                    <p className="text-lg sm:text-xl font-black">
                       {(() => {
                         const status = calculateGrantStatus(trackingState.currentUser?.timestamp || '');
                         return status.isHidden ? '🔒 Setup' : status.isPending ? '⏳ Processing' : '✅ Active';
                       })()}
                     </p>
                   </div>
-                </div>
-
-                {/* Grant Type Display */}
-                <div className="bg-gradient-to-r from-indigo-500 to-blue-500 rounded-xl p-4 border-2 border-blue-300">
-                  <p className="text-xs opacity-90 uppercase mb-1 font-semibold">Grant Type You Applied For</p>
-                  <p className="text-xl sm:text-2xl font-black">💰 {trackingState.currentGrant}</p>
-                  <p className="text-xs opacity-80 mt-2">This matches your application form submitted on {trackingState.currentUser?.timestamp ? new Date(trackingState.currentUser.timestamp).toLocaleDateString() : 'N/A'}</p>
+                  <div className="bg-gradient-to-br from-emerald-500/20 to-teal-500/20 backdrop-blur border border-emerald-500/30 rounded-2xl p-4 sm:p-5 col-span-2 md:col-span-1">
+                    <p className="text-xs opacity-60 uppercase mb-2 tracking-wider font-bold">Grant Type</p>
+                    <p className="text-lg sm:text-xl font-black text-emerald-300">{trackingState.currentGrant || 'N/A'}</p>
+                  </div>
                 </div>
               </div>
 
@@ -974,47 +960,50 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
                 const status = calculateGrantStatus(trackingState.currentUser?.timestamp || '');
                 return (
                   <motion.div
-                    className={`rounded-3xl p-6 sm:p-8 transition-all ${
+                    className={`rounded-3xl p-6 sm:p-8 transition-all border-2 ${
                       status.isHidden 
-                        ? 'bg-slate-100 dark:bg-slate-800 border-2 border-slate-300 dark:border-slate-700'
+                        ? 'bg-slate-100 dark:bg-slate-800 border-slate-300 dark:border-slate-700'
                         : status.isPending
-                        ? 'bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20 border-2 border-amber-200 dark:border-amber-700'
-                        : 'bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-emerald-900/20 dark:to-teal-900/20 border-3 border-emerald-300 dark:border-emerald-600'
+                        ? 'bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20 border-amber-200 dark:border-amber-700'
+                        : 'bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-emerald-900/20 dark:to-teal-900/20 border-emerald-300 dark:border-emerald-600'
                     }`}
                     animate={{ y: [0, -5, 0] }}
                     transition={{ duration: 3, repeat: Infinity }}
                   >
-                    <p className={`text-xs sm:text-sm font-black uppercase mb-3 ${
+                    <p className={`text-xs sm:text-sm font-black uppercase mb-4 tracking-widest ${
                       status.isHidden 
                         ? 'text-slate-600 dark:text-slate-400'
                         : status.isPending
                         ? 'text-amber-700 dark:text-amber-300'
                         : 'text-emerald-700 dark:text-emerald-300'
                     }`}>
-                      {status.isHidden ? '💤 Account Being Setup' : status.isPending ? '⏳ Pending Balance' : '✅ Available Balance'}
+                      {status.isHidden ? '💤 Account Setup' : status.isPending ? '⏳ Pending Balance' : '✅ Available Balance'}
                     </p>
                     <div className="flex items-center justify-between gap-4">
                       <div className="flex-1">
-                        <p className="text-xs sm:text-sm font-semibold text-slate-500 dark:text-slate-400 mb-1 uppercase tracking-wider">Available Balance</p>
-                        <div className="text-4xl sm:text-5xl font-black mb-2 text-slate-900 dark:text-white tracking-tight">
+                        <p className="text-xs sm:text-sm font-semibold text-slate-500 dark:text-slate-400 mb-2 uppercase tracking-wider">Total Grant Amount</p>
+                        <div className="text-5xl sm:text-6xl font-black mb-3 text-slate-900 dark:text-white tracking-tighter">
                           {privacySettings.hideBalance ? '••••••' : status.isHidden ? '$0.00' : `$${trackingState.currentUser?.amount}`}
                         </div>
                         {status.isPending && (
-                          <p className={`text-xs sm:text-sm font-semibold ${
-                            status.isPending ? 'text-amber-700 dark:text-amber-300' : ''
-                          }`}>
-                            🔒 Available in {status.daysRemaining} days {status.hoursRemaining} hours
+                          <p className="text-xs sm:text-sm font-semibold text-amber-700 dark:text-amber-300">
+                            🔓 Unlocks in {status.daysRemaining} days {status.hoursRemaining} hours
                           </p>
                         )}
                         {status.isHidden && (
                           <p className="text-xs sm:text-sm font-semibold text-slate-600 dark:text-slate-400">
-                            ⏱️ Setup in progress...
+                            Initializing in 24 hours...
+                          </p>
+                        )}
+                        {status.isReceived && (
+                          <p className="text-xs sm:text-sm font-semibold text-emerald-700 dark:text-emerald-300">
+                            ✓ Ready for withdrawal
                           </p>
                         )}
                       </div>
                       <button
                         onClick={() => setPrivacySettings({...privacySettings, hideBalance: !privacySettings.hideBalance})}
-                        className="p-3 sm:p-4 bg-white/20 hover:bg-white/30 rounded-2xl transition-all"
+                        className="p-3 sm:p-4 bg-white/20 hover:bg-white/30 rounded-full transition-all border border-white/30"
                         title={privacySettings.hideBalance ? "Show balance" : "Hide balance"}
                       >
                         {privacySettings.hideBalance ? <EyeOff size={24} className="text-slate-700 dark:text-white" /> : <Eye size={24} className="text-slate-700 dark:text-white" />}
@@ -1029,71 +1018,80 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
                 const status = calculateGrantStatus(trackingState.currentUser?.timestamp || '');
                 return (
                   <div className="space-y-4">
-                    <p className="font-black text-slate-900 dark:text-white text-sm sm:text-base">Processing Status</p>
-                    <div className="bg-white dark:bg-slate-900 rounded-2xl p-4 sm:p-6 border border-slate-200 dark:border-slate-700">
+                    <p className="font-black text-slate-900 dark:text-white text-sm sm:text-base uppercase tracking-wider">Processing Status</p>
+                    <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-8 border-2 border-slate-200 dark:border-slate-800 shadow-lg">
                       {status.isHidden && (
-                        <div className="space-y-4">
-                          <div className="flex gap-3">
-                            <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
-                              <Clock className="text-blue-600 dark:text-blue-400" size={20} />
+                        <div className="space-y-5">
+                          <div className="flex gap-4 items-start">
+                            <div className="flex-shrink-0 w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-blue-100 dark:bg-blue-900/40 flex items-center justify-center flex-col relative">
+                              <Clock className="text-blue-600 dark:text-blue-400" size={22} />
+                              <div className="absolute inset-0 rounded-full animate-pulse border-2 border-blue-300 dark:border-blue-600/50"></div>
                             </div>
-                            <div className="flex-1">
-                              <p className="font-black text-slate-900 dark:text-white text-sm sm:text-base">Day 0: Account Setup</p>
-                              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400">Setting up your grant account...</p>
+                            <div className="flex-1 pt-1">
+                              <p className="font-black text-slate-900 dark:text-white text-base sm:text-lg">Phase 1: Account Initialization</p>
+                              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-1">Your grant account is being configured and secured...</p>
                             </div>
                           </div>
-                          <div className="h-1 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
-                            <motion.div className="h-full bg-blue-500" initial={{ width: '10%' }} animate={{ width: '50%' }} transition={{ duration: 20 }} />
+                          <div className="bg-blue-50 dark:bg-blue-900/20 rounded-2xl p-4">
+                            <div className="h-2 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
+                              <motion.div className="h-full bg-gradient-to-r from-blue-500 to-cyan-500" initial={{ width: '10%' }} animate={{ width: '50%' }} transition={{ duration: 20 }} />
+                            </div>
+                            <p className="text-xs sm:text-sm text-blue-700 dark:text-blue-300 font-semibold mt-3">Processing setup... Check back in 24 hours</p>
                           </div>
-                          <p className="text-xs text-slate-600 dark:text-slate-400">Check back in 24 hours for balance update</p>
                         </div>
                       )}
 
                       {status.isPending && (
-                        <div className="space-y-4">
-                          <div className="flex gap-3 items-start">
-                            <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center">
-                              <AlertCircle className="text-amber-600 dark:text-amber-400" size={20} />
+                        <div className="space-y-5">
+                          <div className="flex gap-4 items-start">
+                            <div className="flex-shrink-0 w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-amber-100 dark:bg-amber-900/40 flex items-center justify-center flex-col relative">
+                              <AlertCircle className="text-amber-600 dark:text-amber-400" size={22} />
+                              <div className="absolute inset-0 rounded-full animate-pulse border-2 border-amber-300 dark:border-amber-600/50"></div>
                             </div>
-                            <div className="flex-1 min-w-0">
-                              <p className="font-black text-slate-900 dark:text-white text-sm sm:text-base">Day {status.dayNumber}: Processing ({status.progressPercentage.toFixed(0)}%)</p>
-                              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400">Grant processing in progress...</p>
+                            <div className="flex-1 pt-1">
+                              <p className="font-black text-slate-900 dark:text-white text-base sm:text-lg">Phase 2: Processing ({status.progressPercentage.toFixed(0)}%)</p>
+                              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-1">Day {status.dayNumber} of 14 — Your grant is being processed and verified</p>
                             </div>
                           </div>
-                          <div className="h-3 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
-                            <motion.div
-                              className="h-full bg-gradient-to-r from-amber-500 to-orange-500"
-                              initial={{ width: '0%' }}
-                              animate={{ width: `${status.progressPercentage}%` }}
-                              transition={{ duration: 1 }}
-                            />
+                          <div className="bg-amber-50 dark:bg-amber-900/20 rounded-2xl p-4">
+                            <div className="h-3 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
+                              <motion.div
+                                className="h-full bg-gradient-to-r from-amber-500 to-orange-500"
+                                initial={{ width: '0%' }}
+                                animate={{ width: `${status.progressPercentage}%` }}
+                                transition={{ duration: 1 }}
+                              />
+                            </div>
+                            <div className="flex justify-between items-center mt-3">
+                              <p className="text-xs sm:text-sm text-amber-700 dark:text-amber-300 font-semibold">{status.progressPercentage.toFixed(1)}% Complete</p>
+                              <p className="text-xs sm:text-sm text-amber-700 dark:text-amber-300 font-semibold">{status.daysRemaining} days remaining</p>
+                            </div>
                           </div>
-                          <p className="text-xs text-slate-600 dark:text-slate-400 font-semibold">
-                            {status.progressPercentage.toFixed(1)}% — {status.daysRemaining} days remaining until transfer
-                          </p>
                         </div>
                       )}
 
                       {status.isReceived && (
-                        <div className="space-y-4">
-                          <div className="flex gap-3 items-start">
-                            <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center">
-                              <CheckCircle2 className="text-emerald-600 dark:text-emerald-400" size={20} />
+                        <div className="space-y-5">
+                          <div className="flex gap-4 items-start">
+                            <div className="flex-shrink-0 w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-emerald-100 dark:bg-emerald-900/40 flex items-center justify-center flex-col">
+                              <CheckCircle2 className="text-emerald-600 dark:text-emerald-400" size={22} />
                             </div>
-                            <div className="flex-1 min-w-0">
-                              <p className="font-black text-slate-900 dark:text-white text-sm sm:text-base">Day 15: Grant Received ✅</p>
-                              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400">Your grant has been approved!</p>
+                            <div className="flex-1 pt-1">
+                              <p className="font-black text-slate-900 dark:text-white text-base sm:text-lg">Phase 3: Completed ✅</p>
+                              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-1">Your grant has been approved and is ready for withdrawal</p>
                             </div>
                           </div>
-                          <div className="h-3 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
-                            <motion.div
-                              className="h-full bg-gradient-to-r from-emerald-500 to-teal-500"
-                              initial={{ width: '0%' }}
-                              animate={{ width: '100%' }}
-                              transition={{ duration: 1 }}
-                            />
+                          <div className="bg-emerald-50 dark:bg-emerald-900/20 rounded-2xl p-4">
+                            <div className="h-3 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
+                              <motion.div
+                                className="h-full bg-gradient-to-r from-emerald-500 to-teal-500"
+                                initial={{ width: '0%' }}
+                                animate={{ width: '100%' }}
+                                transition={{ duration: 1 }}
+                              />
+                            </div>
+                            <p className="text-xs sm:text-sm text-emerald-700 dark:text-emerald-300 font-semibold mt-3">100% Complete — Ready for transfer</p>
                           </div>
-                          <p className="text-xs text-emerald-700 dark:text-emerald-300 font-semibold">100% Complete — Ready for transfer</p>
                         </div>
                       )}
                     </div>
@@ -1518,6 +1516,30 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
                             </div>
                             <button className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-black text-xs sm:text-sm transition-all w-full">
                               Change Password
+                            </button>
+                          </div>
+                        </div>
+
+                        <div className="border-2 border-slate-200 dark:border-slate-700 rounded-lg sm:rounded-xl p-3 sm:p-4 hover:border-purple-400 dark:hover:border-purple-600 transition-all">
+                          <div className="flex flex-col gap-3 w-full">
+                            <div className="flex-1 min-w-0">
+                              <p className="font-black text-sm sm:text-base text-slate-900 dark:text-white">Dark Mode</p>
+                              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-1">Toggle dark mode for your account</p>
+                            </div>
+                            <button 
+                              onClick={() => {
+                                const html = document.documentElement;
+                                if (html.classList.contains('dark')) {
+                                  html.classList.remove('dark');
+                                  localStorage.setItem('theme', 'light');
+                                } else {
+                                  html.classList.add('dark');
+                                  localStorage.setItem('theme', 'dark');
+                                }
+                              }}
+                              className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-black text-xs sm:text-sm transition-all w-full"
+                            >
+                              {typeof document !== 'undefined' && document.documentElement.classList.contains('dark') ? '☀️ Switch to Light' : '🌙 Switch to Dark'}
                             </button>
                           </div>
                         </div>
