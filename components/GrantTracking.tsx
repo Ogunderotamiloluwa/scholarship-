@@ -1044,22 +1044,22 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
 
                     {/* DETAIL CARDS - Applicant Name, Account Status, Grant Type */}
                     <div className="grid grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
-                      <div className="bg-white/10 backdrop-blur border border-white/20 rounded-2xl p-4 sm:p-5">
-                        <p className="text-xs opacity-60 uppercase mb-2 tracking-wider font-bold">Applicant Name</p>
-                        <p className="text-lg sm:text-xl font-black truncate">{trackingState.currentUser?.fullName || 'User'}</p>
+                      <div className="bg-white/10 dark:bg-slate-800/50 backdrop-blur border border-white/20 dark:border-slate-600/50 rounded-2xl p-4 sm:p-5">
+                        <p className="text-xs text-slate-600 dark:text-slate-300 uppercase mb-2 tracking-wider font-bold">Applicant Name</p>
+                        <p className="text-lg sm:text-xl font-black text-slate-900 dark:text-white truncate">{trackingState.currentUser?.fullName || 'User'}</p>
                       </div>
-                      <div className="bg-white/10 backdrop-blur border border-white/20 rounded-2xl p-4 sm:p-5">
-                        <p className="text-xs opacity-60 uppercase mb-2 tracking-wider font-bold">Account Status</p>
-                        <p className="text-lg sm:text-xl font-black">
+                      <div className="bg-white/10 dark:bg-slate-800/50 backdrop-blur border border-white/20 dark:border-slate-600/50 rounded-2xl p-4 sm:p-5">
+                        <p className="text-xs text-slate-600 dark:text-slate-300 uppercase mb-2 tracking-wider font-bold">Account Status</p>
+                        <p className="text-lg sm:text-xl font-black text-slate-900 dark:text-white">
                           {(() => {
                             const status = calculateGrantStatus(trackingState.currentUser?.timestamp || '');
                             return status.isHidden ? '🔒 Setup' : status.isPending ? '⏳ Processing' : '✅ Active';
                           })()}
                         </p>
                       </div>
-                      <div className="bg-gradient-to-br from-emerald-500/20 to-teal-500/20 backdrop-blur border border-emerald-500/30 rounded-2xl p-4 sm:p-5 col-span-2 md:col-span-1">
-                        <p className="text-xs opacity-60 uppercase mb-2 tracking-wider font-bold">Grant Type</p>
-                        <p className="text-lg sm:text-xl font-black text-emerald-300">{trackingState.currentGrant || 'N/A'}</p>
+                      <div className="bg-gradient-to-br from-emerald-500/20 to-teal-500/20 dark:from-emerald-600/20 dark:to-teal-600/20 backdrop-blur border border-emerald-500/30 dark:border-emerald-600/30 rounded-2xl p-4 sm:p-5 col-span-2 md:col-span-1">
+                        <p className="text-xs text-slate-600 dark:text-slate-300 uppercase mb-2 tracking-wider font-bold">Grant Type</p>
+                        <p className="text-lg sm:text-xl font-black text-emerald-700 dark:text-emerald-300">{trackingState.currentGrant || 'N/A'}</p>
                       </div>
                     </div>
                   </div>
