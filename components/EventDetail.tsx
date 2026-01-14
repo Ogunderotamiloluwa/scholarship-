@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import {
   ArrowLeft, Calendar, MapPin, Users, CheckCircle2, Mail,
-  Sparkles, Heart, Share2, Clock
+  Sparkles, Heart, Share2, Clock, MessageCircle, ThumbsUp, Send
 } from 'lucide-react';
 import { ViewState } from '../types';
 
@@ -36,6 +36,17 @@ const EventDetail: React.FC<EventDetailProps> = ({ event, onNavigate, onBack }) 
   });
   const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [likes, setLikes] = useState(248);
+  const [isLiked, setIsLiked] = useState(false);
+  const [comments, setComments] = useState([
+    { id: 1, author: 'Sarah Johnson', university: 'Budapest University of Technology', text: 'This event was absolutely amazing! Great networking opportunity. Looking forward to the next one!', timestamp: '2 days ago', likes: 24 },
+    { id: 2, author: 'Ahmed Hassan', university: 'Eötvös Loránd University', text: 'Met wonderful people from different countries. Really enhanced my experience as a scholarship holder.', timestamp: '1 week ago', likes: 18 },
+    { id: 3, author: 'Elena Rodriguez', university: 'University of Debrecen', text: 'The organization was perfect. The venue was beautiful and the entertainment was top-notch!', timestamp: '1 week ago', likes: 31 },
+    { id: 4, author: 'Marcus Chen', university: 'Corvinus University', text: 'Loved every minute of it. The cultural performances were outstanding.', timestamp: '2 weeks ago', likes: 15 },
+    { id: 5, author: 'Fatima Al-Rashid', university: 'University of Szeged', text: 'Such a wonderful event to celebrate our diversity. Grateful for this opportunity!', timestamp: '2 weeks ago', likes: 22 },
+  ]);
+  const [newComment, setNewComment] = useState('');
+  const [newCommentAuthor, setNewCommentAuthor] = useState('');
 
   if (!event) {
     return (
@@ -109,6 +120,36 @@ const EventDetail: React.FC<EventDetailProps> = ({ event, onNavigate, onBack }) 
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  const handleAddComment = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (newComment.trim() && newCommentAuthor.trim()) {
+      const newCommentObj = {
+        id: comments.length + 1,
+        author: newCommentAuthor,
+        university: 'Your University',
+        text: newComment,
+        timestamp: 'just now',
+        likes: 0
+      };
+      setComments([newCommentObj, ...comments]);
+      setNewComment('');
+      setNewCommentAuthor('');
+    }
+  };
+
+  const handleLikeComment = (commentId: number) => {
+    setComments(comments.map(comment =>
+      comment.id === commentId
+        ? { ...comment, likes: comment.likes + 1 }
+        : comment
+    ));
+  };
+
+  const handleToggleLike = () => {
+    setLikes(isLiked ? likes - 1 : likes + 1);
+    setIsLiked(!isLiked);
   };
 
   return (
@@ -229,6 +270,96 @@ const EventDetail: React.FC<EventDetailProps> = ({ event, onNavigate, onBack }) 
                   </ul>
                 </div>
               )}
+
+              {/* Like & Share Section */}
+              <div className="mt-8 pt-6 border-t border-slate-200 dark:border-slate-700 flex items-center gap-4">
+                <motion.button
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={handleToggleLike}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-lg font-bold transition-all ${
+                    isLiked
+                      ? 'bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400'
+                      : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-red-100 dark:hover:bg-red-900/30'
+                  }`}
+                >
+                  <Heart size={18} fill={isLiked ? 'currentColor' : 'none'} />
+                  <span>{likes} Likes</span>
+                </motion.button>
+                <button className="flex items-center gap-2 px-4 py-2 rounded-lg font-bold bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600 transition-all">
+                  <Share2 size={18} />
+                  <span>Share</span>
+                </button>
+              </div>
+            </motion.div>
+
+            {/* Comments Section */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+              className="bg-white dark:bg-slate-800 p-6 md:p-8 rounded-xl border border-slate-200 dark:border-slate-700"
+            >
+              <h3 className="text-xl md:text-2xl font-black text-slate-900 dark:text-white mb-6 flex items-center gap-2">
+                <MessageCircle size={24} />
+                Comments & Feedback ({comments.length})
+              </h3>
+
+              {/* Add Comment Form */}
+              <form onSubmit={handleAddComment} className="mb-8 pb-8 border-b border-slate-200 dark:border-slate-700">
+                <div className="space-y-3">
+                  <input
+                    type="text"
+                    placeholder="Your name"
+                    value={newCommentAuthor}
+                    onChange={(e) => setNewCommentAuthor(e.target.value)}
+                    className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-lg text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all"
+                  />
+                  <textarea
+                    placeholder="Share your thoughts about this event..."
+                    value={newComment}
+                    onChange={(e) => setNewComment(e.target.value)}
+                    rows={3}
+                    className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-lg text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all resize-none"
+                  />
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    type="submit"
+                    className="w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-lg transition-all flex items-center justify-center gap-2"
+                  >
+                    <Send size={16} />
+                    Post Comment
+                  </motion.button>
+                </div>
+              </form>
+
+              {/* Comments List */}
+              <div className="space-y-4">
+                {comments.map((comment) => (
+                  <motion.div
+                    key={comment.id}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="p-4 bg-slate-50 dark:bg-slate-700/50 rounded-lg border border-slate-200 dark:border-slate-700"
+                  >
+                    <div className="flex items-start justify-between gap-3 mb-2">
+                      <div>
+                        <p className="font-bold text-slate-900 dark:text-white">{comment.author}</p>
+                        <p className="text-xs text-slate-500 dark:text-slate-400">{comment.university} · {comment.timestamp}</p>
+                      </div>
+                    </div>
+                    <p className="text-slate-700 dark:text-slate-300 mb-3">{comment.text}</p>
+                    <button
+                      onClick={() => handleLikeComment(comment.id)}
+                      className="flex items-center gap-1 text-xs font-bold text-slate-500 hover:text-red-600 dark:hover:text-red-400 transition-colors"
+                    >
+                      <ThumbsUp size={14} />
+                      <span>{comment.likes}</span>
+                    </button>
+                  </motion.div>
+                ))}
+              </div>
             </motion.div>
 
             {/* Mobile Form - shown below on mobile, beside on desktop */}

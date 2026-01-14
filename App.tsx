@@ -1225,12 +1225,6 @@ const App: React.FC = () => {
                           </div>
                        </div>
 
-                       <div className="bg-amber-50 border-2 border-amber-200 rounded-[32px] p-8">
-                          <p className="text-amber-900 font-black text-lg mb-3">📢 Important Notice</p>
-                          <p className="text-amber-800 mb-3">A processing fee of <span className="font-black text-amber-900">$200.00</span> may be required for scholarship processing.</p>
-                          <p className="text-amber-800 text-sm">This will be discussed when our team contacts you to finalize your application.</p>
-                       </div>
-
                        <button 
                          onClick={() => {
                            handleApplySubmit();

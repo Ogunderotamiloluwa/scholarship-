@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Calendar, MapPin, Users, Sparkles, Award, Heart, Share2, ChevronRight } from 'lucide-react';
+import { Calendar, MapPin, Users, Sparkles, Award, Heart, Share2, ChevronRight, MessageCircle } from 'lucide-react';
 import { ViewState } from '../types';
 
 interface CommunityEventsProps {
@@ -19,6 +19,8 @@ interface Event {
   category: 'gala' | 'welcome' | 'cultural' | 'networking' | 'sports' | 'farewell';
   highlights: string[];
   isFeatured: boolean;
+  likes?: number;
+  commentCount?: number;
 }
 
 const CommunityEvents: React.FC<CommunityEventsProps> = ({ onNavigate, setSelectedEvent }) => {
@@ -41,7 +43,9 @@ const CommunityEvents: React.FC<CommunityEventsProps> = ({ onNavigate, setSelect
         'Gourmet dinner and cocktails',
         'Photo opportunities and media coverage'
       ],
-      isFeatured: true
+      isFeatured: true,
+      likes: 428,
+      commentCount: 34
     },
     {
       id: 'alumni-fest-2025',
@@ -59,7 +63,9 @@ const CommunityEvents: React.FC<CommunityEventsProps> = ({ onNavigate, setSelect
         'Inclusive environment for all graduates',
         'Building global connections'
       ],
-      isFeatured: true
+      isFeatured: true,
+      likes: 356,
+      commentCount: 28
     },
     {
       id: 'welcome-2025',
@@ -78,7 +84,9 @@ const CommunityEvents: React.FC<CommunityEventsProps> = ({ onNavigate, setSelect
         'Celebrate diversity and inclusion',
         'Get practical orientation information'
       ],
-      isFeatured: false
+      isFeatured: false,
+      likes: 512,
+      commentCount: 47
     },
     {
       id: 'farewell-2025',
@@ -96,7 +104,9 @@ const CommunityEvents: React.FC<CommunityEventsProps> = ({ onNavigate, setSelect
         'Entertainment and cultural performances',
         'Networking for post-graduation connections'
       ],
-      isFeatured: false
+      isFeatured: false,
+      likes: 387,
+      commentCount: 31
     },
     {
       id: 'cultural-festival',
@@ -114,7 +124,9 @@ const CommunityEvents: React.FC<CommunityEventsProps> = ({ onNavigate, setSelect
         'Language exchange corner',
         'Cultural demonstrations and workshops'
       ],
-      isFeatured: false
+      isFeatured: false,
+      likes: 624,
+      commentCount: 56
     },
     {
       id: 'sports-day',
@@ -132,7 +144,9 @@ const CommunityEvents: React.FC<CommunityEventsProps> = ({ onNavigate, setSelect
         'Spectator activities and entertainment',
         'Social gathering and BBQ'
       ],
-      isFeatured: false
+      isFeatured: false,
+      likes: 443,
+      commentCount: 39
     },
     {
       id: 'mentorship-training',
@@ -150,7 +164,9 @@ const CommunityEvents: React.FC<CommunityEventsProps> = ({ onNavigate, setSelect
         'Language practice and cultural integration',
         'Administrative and transportation assistance'
       ],
-      isFeatured: false
+      isFeatured: false,
+      likes: 298,
+      commentCount: 22
     }
   ];
 
@@ -296,6 +312,18 @@ const CommunityEvents: React.FC<CommunityEventsProps> = ({ onNavigate, setSelect
                   <div className="flex items-center gap-2">
                     <Users size={16} />
                     ~{event.attendees}+ Attendees
+                  </div>
+                </div>
+
+                {/* Engagement Metrics */}
+                <div className="flex gap-4 mb-4 text-sm">
+                  <div className="flex items-center gap-1 text-red-500 dark:text-red-400 font-semibold">
+                    <Heart size={16} fill="currentColor" />
+                    {event.likes || 0}
+                  </div>
+                  <div className="flex items-center gap-1 text-indigo-600 dark:text-indigo-400 font-semibold">
+                    <MessageCircle size={16} />
+                    {event.commentCount || 0}
                   </div>
                 </div>
 

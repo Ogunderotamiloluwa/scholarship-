@@ -310,14 +310,14 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
       
       if (extractedUser) {
         // Success! Passkey contains all account data
-        // Show the passkey display before going to tracking
+        // Go directly to tracking dashboard (don't show passkey again)
         setTrackingState((prev) => ({
           ...prev,
           currentUser: extractedUser,
+          isLoggedIn: true,
           hasPasskey: true,
-          generatedPasskey: passkeyInput.trim(),  // Show the passkey they just used
-          stage: 'showGeneratedPasskey',  // Display passkey first
-          currentGrant: extractedUser.grantCategory
+          currentGrant: extractedUser.grantCategory,
+          stage: 'tracking'  // Go straight to tracking, skip passkey display
         }));
         
         // Also save to localStorage for this browser
@@ -909,13 +909,13 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
                 );
               })()}
 
-              {/* Main Account Header */}
-              <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 rounded-3xl p-6 sm:p-8 text-white border border-slate-700/50">
+              {/* Main Account Header - Premium Wallet Style */}
+              <div className="bg-gradient-to-br from-indigo-900 via-purple-900 to-slate-900 dark:from-indigo-950 dark:via-purple-950 dark:to-slate-950 rounded-3xl p-6 sm:p-8 text-white border border-indigo-600/30 shadow-2xl">
                 <div className="flex items-start justify-between gap-4 mb-8">
                   <div className="flex-1">
-                    <p className="text-xs sm:text-sm opacity-60 uppercase mb-2 tracking-wider">Secure Grant Account</p>
-                    <h2 className="text-3xl sm:text-4xl font-black mb-1">Grant Dashboard</h2>
-                    <p className="text-sm opacity-70">Manage your grant status and account</p>
+                    <p className="text-xs sm:text-sm opacity-70 uppercase mb-2 tracking-widest font-black">🔐 Secure Grant Account</p>
+                    <h2 className="text-3xl sm:text-4xl font-black mb-2 bg-gradient-to-r from-indigo-200 via-purple-200 to-pink-200 bg-clip-text text-transparent">Grant Wallet</h2>
+                    <p className="text-sm opacity-80">Manage and track your grant application status</p>
                   </div>
                   <div className="flex gap-2 flex-shrink-0 flex-wrap justify-end">
                     <button
@@ -925,24 +925,24 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
                         setUserApplications(userApps);
                         setShowApplicationsModal(true);
                       }}
-                      className="p-3 sm:p-4 bg-white/10 hover:bg-blue-500/30 rounded-xl transition-all border border-white/10 hover:border-blue-500/50"
-                      title="View All Applications"
+                      className="p-3 sm:p-4 bg-gradient-to-br from-blue-500/20 to-blue-600/10 hover:from-blue-500/40 hover:to-blue-600/20 rounded-xl transition-all border border-blue-400/30 hover:border-blue-400/60 backdrop-blur-sm"
+                      title="View Applications"
                     >
-                      <FileText size={24} className="text-white" />
+                      <FileText size={24} className="text-blue-300" />
                     </button>
                     <button
                       onClick={() => setShowSettings(true)}
-                      className="p-3 sm:p-4 bg-white/10 hover:bg-indigo-500/30 rounded-xl transition-all border border-white/10 hover:border-indigo-500/50"
-                      title="Account Settings"
+                      className="p-3 sm:p-4 bg-gradient-to-br from-purple-500/20 to-purple-600/10 hover:from-purple-500/40 hover:to-purple-600/20 rounded-xl transition-all border border-purple-400/30 hover:border-purple-400/60 backdrop-blur-sm"
+                      title="Settings"
                     >
-                      <Settings size={24} className="text-white" />
+                      <Settings size={24} className="text-purple-300" />
                     </button>
                     <button
                       onClick={handleLogout}
-                      className="p-3 sm:p-4 bg-white/10 hover:bg-red-500/30 rounded-xl transition-all border border-white/10 hover:border-red-500/50"
+                      className="p-3 sm:p-4 bg-gradient-to-br from-red-500/20 to-red-600/10 hover:from-red-500/40 hover:to-red-600/20 rounded-xl transition-all border border-red-400/30 hover:border-red-400/60 backdrop-blur-sm"
                       title="Logout"
                     >
-                      <LogOut size={24} className="text-white" />
+                      <LogOut size={24} className="text-red-300" />
                     </button>
                   </div>
                 </div>
@@ -997,17 +997,17 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
                 return null;
               })()}
 
-              {/* Dynamic Balance Card */}
+              {/* Dynamic Balance Card - Premium Wallet Card */}
               {(() => {
                 const status = calculateGrantStatus(trackingState.currentUser?.timestamp || '');
                 return (
                   <motion.div
-                    className={`rounded-3xl p-6 sm:p-8 transition-all border-2 ${
+                    className={`rounded-3xl p-6 sm:p-8 transition-all border-2 shadow-xl ${
                       status.isHidden 
-                        ? 'bg-slate-100 dark:bg-slate-800 border-slate-300 dark:border-slate-700'
+                        ? 'bg-gradient-to-br from-slate-100 via-blue-50 to-slate-100 dark:from-slate-800 dark:via-slate-800 dark:to-slate-800 border-slate-300 dark:border-slate-700'
                         : status.isPending
-                        ? 'bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20 border-amber-200 dark:border-amber-700'
-                        : 'bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-emerald-900/20 dark:to-teal-900/20 border-emerald-300 dark:border-emerald-600'
+                        ? 'bg-gradient-to-br from-amber-100 via-orange-50 to-amber-100 dark:from-amber-900/30 dark:via-orange-900/20 dark:to-amber-900/30 border-amber-300 dark:border-amber-700'
+                        : 'bg-gradient-to-br from-emerald-100 via-teal-50 to-emerald-100 dark:from-emerald-900/30 dark:via-teal-900/20 dark:to-emerald-900/30 border-emerald-400 dark:border-emerald-600'
                     }`}
                     animate={{ y: [0, -5, 0] }}
                     transition={{ duration: 3, repeat: Infinity }}
@@ -1212,27 +1212,17 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
                 </div>
               </div>
 
-              {/* Security & Passkey Section */}
-              <div className="bg-red-50 dark:bg-red-900/20 border-2 border-red-200 dark:border-red-700 rounded-2xl p-4 sm:p-6 space-y-3">
+              {/* Security & Passkey Section - Hidden from tracking view */}
+              {/* Passkey is not displayed after login to protect user security */}
+              <div className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 border-2 border-green-200 dark:border-green-700 rounded-2xl p-4 sm:p-6 space-y-3">
                 <div className="flex items-start gap-3">
-                  <AlertCircle size={24} className="text-red-600 dark:text-red-400 flex-shrink-0 mt-0.5" />
+                  <CheckCircle2 size={24} className="text-green-600 dark:text-green-400 flex-shrink-0 mt-0.5" />
                   <div className="flex-1 min-w-0">
-                    <h4 className="font-black text-red-900 dark:text-red-200 text-sm sm:text-base">Your Secure Passkey</h4>
-                    <p className="text-xs sm:text-sm text-red-800 dark:text-red-300 mt-1">
-                      Never share this. It's your personal API key for account access.
+                    <h4 className="font-black text-green-900 dark:text-green-200 text-sm sm:text-base">✅ Account Secure</h4>
+                    <p className="text-xs sm:text-sm text-green-800 dark:text-green-300 mt-1">
+                      Your passkey is safely stored. Keep it in a secure location like a password manager.
                     </p>
                   </div>
-                </div>
-                <div className="bg-white dark:bg-slate-800 p-3 sm:p-4 rounded-xl border border-red-300 dark:border-red-600 flex items-center justify-between gap-2 sm:gap-3">
-                  <code className="text-xs sm:text-sm font-mono font-bold text-slate-900 dark:text-white break-all flex-1">
-                    {trackingState.currentUser?.passkey}
-                  </code>
-                  <button
-                    onClick={() => copyToClipboard(trackingState.currentUser?.passkey || '', 'Passkey')}
-                    className="flex-shrink-0 p-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-all"
-                  >
-                    <Copy size={16} />
-                  </button>
                 </div>
               </div>
 
@@ -1579,29 +1569,39 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
                     <div className="border-2 border-slate-200 dark:border-slate-700 rounded-lg sm:rounded-xl p-3 sm:p-4 hover:border-amber-400 dark:hover:border-amber-600 transition-all">
                       <div className="flex items-center justify-between gap-3 w-full">
                         <div className="flex-1 min-w-0">
-                          <p className="font-black text-sm sm:text-base text-slate-900 dark:text-white">Light Mode</p>
-                          <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-1">Switch to light mode for the entire application</p>
+                          <p className="font-black text-sm sm:text-base text-slate-900 dark:text-white">Dark Mode</p>
+                          <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-1">Toggle dark and light mode</p>
                         </div>
                         <button
                           onClick={() => {
                             const html = document.documentElement;
-                            if (html.classList.contains('dark')) {
+                            const isDark = html.classList.contains('dark');
+                            
+                            if (isDark) {
+                              // Switch to light mode
                               html.classList.remove('dark');
                               localStorage.setItem('theme', 'light');
                               setIsDarkMode(false);
                             } else {
+                              // Switch to dark mode
                               html.classList.add('dark');
                               localStorage.setItem('theme', 'dark');
                               setIsDarkMode(true);
                             }
                           }}
-                          className={`flex-shrink-0 p-2 rounded-lg transition-all ${
+                          className={`flex-shrink-0 w-14 h-8 rounded-full transition-all flex items-center justify-end pr-1 ${
                             isDarkMode
-                              ? 'bg-slate-700 text-amber-400'
-                              : 'bg-amber-200 text-amber-600'
+                              ? 'bg-slate-700'
+                              : 'bg-amber-200'
                           }`}
                         >
-                          {isDarkMode ? '☀️' : '🌙'}
+                          <span className={`inline-flex items-center justify-center w-7 h-7 rounded-full transition-all ${
+                            isDarkMode
+                              ? 'bg-slate-800 text-amber-400'
+                              : 'bg-white text-amber-600'
+                          }`}>
+                            {isDarkMode ? '🌙' : '☀️'}
+                          </span>
                         </button>
                       </div>
                     </div>
