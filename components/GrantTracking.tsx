@@ -235,37 +235,37 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
       const decoded = atob(encoded);
       const minimalData = JSON.parse(decoded);
       
-      // Extract essential fields (e=email, p=password, g=grantCategory, t=timestamp)
+      // Extract essential fields from passkey - THESE ARE THE SOURCE OF TRUTH
       const email = minimalData.e;
       const password = minimalData.p;
       const grantCategory = minimalData.g;
-      const timestamp = minimalData.t;
+      const timestamp = minimalData.t;  // This MUST NOT change
       
       // Try to find full account data in localStorage for this browser
       const applications = JSON.parse(localStorage.getItem('grantApplications') || '[]') as GrantApplication[];
-      const fullAccount = applications.find(app => app.email === email && app.grantCategory === grantCategory);
+      const fullAccount = applications.find(app => app.email === email && app.grantCategory === grantCategory && app.timestamp === timestamp);
       
       if (fullAccount) {
-        // Full account found locally - return it
+        // Full account found locally with SAME timestamp and grant category - return it as-is
         return fullAccount;
       }
       
-      // Account not in localStorage - return minimal account with just essential fields
-      // This allows cross-browser login with at least basic info
+      // Account not found in localStorage, or timestamp/grant doesn't match
+      // Return complete account using passkey values (which are definitive) and empty optional fields
       return {
         fullName: 'Your Grant Account',
         email: email,
         password: password,
         phone: '',
         country: '',
-        grantCategory: grantCategory,
+        grantCategory: grantCategory,  // From passkey - exact
         amount: '',
         purpose: '',
         applicantWork: '',
         usage: '',
         impact: '',
         previousFunding: '',
-        timestamp: timestamp,
+        timestamp: timestamp,  // From passkey - exact, will NOT change
         passkey: passkey
       } as GrantApplication;
     } catch (error) {
