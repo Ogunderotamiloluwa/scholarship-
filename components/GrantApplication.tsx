@@ -423,12 +423,15 @@ const GrantApplication: React.FC<GrantApplicationProps> = ({ onNavigate }) => {
                   Amount Requested (${getSelectedGrantDetails()?.minAmount.toLocaleString() || '0'} - ${getSelectedGrantDetails()?.maxAmount.toLocaleString() || '0'}) *
                 </label>
                 <input
-                  type="number"
+                  type="text"
                   placeholder={`Amount between $${getSelectedGrantDetails()?.minAmount?.toLocaleString()} - $${getSelectedGrantDetails()?.maxAmount?.toLocaleString()}`}
-                  value={applicationData.amount}
-                  onChange={(e) => setApplicationData({...applicationData, amount: e.target.value})}
-                  min={getSelectedGrantDetails()?.minAmount}
-                  max={getSelectedGrantDetails()?.maxAmount}
+                  value={applicationData.amount ? Number(applicationData.amount.replace(/,/g, '')).toLocaleString() : ''}
+                  onChange={(e) => {
+                    const numericValue = e.target.value.replace(/,/g, '');
+                    if (numericValue === '' || /^\d+$/.test(numericValue)) {
+                      setApplicationData({...applicationData, amount: numericValue});
+                    }
+                  }}
                   className={`w-full px-4 py-3 rounded-xl border-2 bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:outline-none transition-all ${
                     errors.amount ? 'border-red-500 focus:border-red-500' : 'border-slate-200 dark:border-slate-700 focus:border-indigo-600'
                   }`}
@@ -717,8 +720,8 @@ const GrantApplication: React.FC<GrantApplicationProps> = ({ onNavigate }) => {
           setShowFeedback(false);
           onNavigate('HOME');
         }}
-        title="We've Received Your Details!"
-        message={`We have successfully received your grant application details. Our team will get back to you within 2-3 working days.\n\n⚠️ IMPORTANT: Keep your email (${email}) and password safe. You'll need them to get your passkey for tracking your grant status.`}
+        title="We've Received Your Application!"
+        message={`We have successfully received your grant application details. Our team will get back to you within 2-3 working days via iMessage, SMS, or email.\n\n⚠️ IMPORTANT: Keep your email (${email}) and password safe. You'll need them to get your passkey for tracking your grant status.\n\nWe will contact you on the phone number and email you provided to discuss your application.`}
       />
 
       <div className="max-w-2xl mx-auto px-4">

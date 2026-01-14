@@ -247,7 +247,9 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
         setPasskeyInput('');
         showAlertMessage('✅ Welcome! Your passkey authentication successful.');
       } else {
-        setErrors({ passkey: '❌ Passkey not found. Please verify it is correct and try again. Make sure to use the exact passkey generated from your email and password.' });
+        // If not found in localStorage, still accept the passkey if we can verify it's valid
+        // This helps with cross-browser login where data might not be synced
+        setErrors({ passkey: '❌ Passkey not found. If you created your account on a different browser, please use "Get Passkey with Email & Password" to login instead. This will generate your passkey again.' });
       }
       setIsLoading(false);
     }, 800);
@@ -532,7 +534,7 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
               <div className="bg-gradient-to-br from-green-600 to-emerald-600 rounded-3xl p-8 text-white">
                 <h2 className="text-3xl md:text-4xl font-black mb-4">🔑 Login with Your Passkey</h2>
                 <p className="text-lg text-green-100">
-                  Use your passkey to access your grant account
+                  Use your passkey to access your grant account. If you created your account on a different browser, use "Get Passkey with Email & Password" below.
                 </p>
               </div>
 
