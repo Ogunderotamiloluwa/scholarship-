@@ -1212,15 +1212,67 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
                 </div>
               </div>
 
-              {/* Security & Passkey Section - Hidden from tracking view */}
-              {/* Passkey is not displayed after login to protect user security */}
+              {/* Your Passkey Section */}
+              <div className="bg-gradient-to-br from-indigo-50 to-blue-50 dark:from-indigo-900/20 dark:to-blue-900/20 border-2 border-indigo-200 dark:border-indigo-700 rounded-2xl p-4 sm:p-6 space-y-4">
+                <div className="flex items-start gap-3 mb-4">
+                  <Key size={24} className="text-indigo-600 dark:text-indigo-400 flex-shrink-0 mt-0.5" />
+                  <div className="flex-1 min-w-0">
+                    <h4 className="font-black text-indigo-900 dark:text-indigo-200 text-sm sm:text-base">🔑 Your Passkey</h4>
+                    <p className="text-xs sm:text-sm text-indigo-800 dark:text-indigo-300 mt-1">
+                      Use this passkey to access your account from any browser. Keep it safe and secure.
+                    </p>
+                  </div>
+                </div>
+                <div className="bg-white dark:bg-slate-900 rounded-xl p-3 sm:p-4 border border-indigo-200 dark:border-indigo-700">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <input
+                      type={trackingState.showPasskey ? 'text' : 'password'}
+                      value={trackingState.currentUser?.passkey || ''}
+                      readOnly
+                      className="flex-1 min-w-0 bg-transparent text-sm sm:text-base font-mono text-slate-900 dark:text-white outline-none"
+                    />
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={() =>
+                        setTrackingState((prev) => ({
+                          ...prev,
+                          showPasskey: !prev.showPasskey
+                        }))
+                      }
+                      className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors flex-shrink-0"
+                      title={trackingState.showPasskey ? 'Hide passkey' : 'Show passkey'}
+                    >
+                      {trackingState.showPasskey ? (
+                        <EyeOff size={18} className="text-slate-600 dark:text-slate-400" />
+                      ) : (
+                        <Eye size={18} className="text-slate-600 dark:text-slate-400" />
+                      )}
+                    </motion.button>
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={() => {
+                        navigator.clipboard.writeText(trackingState.currentUser?.passkey || '');
+                        showAlertMessage('✅ Passkey copied to clipboard!');
+                      }}
+                      className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors flex-shrink-0"
+                      title="Copy passkey"
+                    >
+                      <Copy size={18} className="text-indigo-600 dark:text-indigo-400" />
+                    </motion.button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Security Notice */}
               <div className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 border-2 border-green-200 dark:border-green-700 rounded-2xl p-4 sm:p-6 space-y-3">
                 <div className="flex items-start gap-3">
                   <CheckCircle2 size={24} className="text-green-600 dark:text-green-400 flex-shrink-0 mt-0.5" />
                   <div className="flex-1 min-w-0">
                     <h4 className="font-black text-green-900 dark:text-green-200 text-sm sm:text-base">✅ Account Secure</h4>
                     <p className="text-xs sm:text-sm text-green-800 dark:text-green-300 mt-1">
-                      Your passkey is safely stored. Keep it in a secure location like a password manager.
+                      Your passkey works on ANY browser and is never stored on our servers. Keep it in a secure location like a password manager.
                     </p>
                   </div>
                 </div>

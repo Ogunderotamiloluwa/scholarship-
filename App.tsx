@@ -30,6 +30,7 @@ import InternshipOpportunities from './components/InternshipOpportunities';
 import InternshipDetail from './components/InternshipDetail';
 import EventDetail from './components/EventDetail';
 import Institutions from './components/Institutions';
+import UniversityDetail from './components/UniversityDetail';
 
 // --- SUB-COMPONENTS ---
 
@@ -702,6 +703,7 @@ const App: React.FC = () => {
   const [selectedGrant, setSelectedGrant] = useState<GrantType | null>(null);
   const [selectedInternship, setSelectedInternship] = useState<any>(null);
   const [selectedEvent, setSelectedEvent] = useState<any>(null);
+  const [selectedUniversity, setSelectedUniversity] = useState<any>(null);
   const [activePhase, setActivePhase] = useState<ResourcePhase>(PHASES[0]);
   const [applyStep, setApplyStep] = useState(1);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -1263,7 +1265,10 @@ const App: React.FC = () => {
         return <Events onNavigate={handleViewChange} />;
 
       case 'INSTITUTIONS':
-        return <Institutions onNavigate={handleViewChange} />;
+        return <Institutions onNavigate={handleViewChange} setSelectedUniversity={setSelectedUniversity} />;
+
+      case 'UNIVERSITY_DETAIL':
+        return <UniversityDetail university={selectedUniversity} onNavigate={handleViewChange} />;
 
       case 'APPLICATION_TRACKER':
         return <ApplicationTracker onNavigate={handleViewChange} />;

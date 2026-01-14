@@ -6,6 +6,7 @@ import { MEMBER_INSTITUTIONS } from '../Constants';
 
 interface InstitutionsProps {
   onNavigate?: (view: ViewState) => void;
+  setSelectedUniversity?: (university: UnifiedInstitution) => void;
 }
 
 interface UnifiedInstitution {
@@ -24,7 +25,7 @@ interface UnifiedInstitution {
   highlights: string[];
 }
 
-const Institutions: React.FC<InstitutionsProps> = ({ onNavigate }) => {
+const Institutions: React.FC<InstitutionsProps> = ({ onNavigate, setSelectedUniversity }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedRegion, setSelectedRegion] = useState<string>('All');
   const [selectedInstitution, setSelectedInstitution] = useState<UnifiedInstitution | null>(null);
@@ -140,23 +141,103 @@ const Institutions: React.FC<InstitutionsProps> = ({ onNavigate }) => {
         'Affordable living costs',
         'Strong international programs'
       ]
+    },
+    {
+      id: 'university-6',
+      name: 'Péter Pázmány Catholic University',
+      city: 'Budapest',
+      country: 'Hungary',
+      coordinates: { lat: 47.5144, lng: 19.0347 },
+      imageUrl: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&q=80&w=800',
+      description: 'Premier Catholic university with strong theology, law, and business programs',
+      programs: ['Theology', 'Law', 'Business', 'Philosophy', 'Social Sciences'],
+      studentCount: 6800,
+      established: 1635,
+      website: 'ppke.hu',
+      accommodation: 'Campus housing available in Budapest',
+      highlights: [
+        'Jesuit heritage and values',
+        'Law and theology excellence',
+        'International scholarships',
+        'Strong student community'
+      ]
+    },
+    {
+      id: 'university-7',
+      name: 'Budapest Metropolitan University',
+      city: 'Budapest',
+      country: 'Hungary',
+      coordinates: { lat: 47.4878, lng: 19.0347 },
+      imageUrl: 'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?auto=format&fit=crop&q=80&w=800',
+      description: 'Modern university specializing in business, IT, and applied sciences',
+      programs: ['Business Administration', 'Information Technology', 'Engineering', 'Management'],
+      studentCount: 5200,
+      established: 2000,
+      website: 'metropolitan.hu',
+      accommodation: 'Modern student housing near campus',
+      highlights: [
+        'Industry partnerships',
+        'Practical business education',
+        'Modern facilities',
+        'Career-focused curriculum'
+      ]
+    },
+    {
+      id: 'university-8',
+      name: 'Miskolc University',
+      city: 'Miskolc',
+      country: 'Hungary',
+      coordinates: { lat: 48.1034, lng: 20.7784 },
+      imageUrl: 'https://images.unsplash.com/photo-1554531088-c3fb42ca9e7d?auto=format&fit=crop&q=80&w=800',
+      description: 'Technical university with strong engineering and material science programs',
+      programs: ['Mechanical Engineering', 'Materials Science', 'Mining Engineering', 'Electrical Engineering'],
+      studentCount: 8200,
+      established: 1735,
+      website: 'uni-miskolc.hu',
+      accommodation: 'Affordable dormitories available',
+      highlights: [
+        'Engineering excellence',
+        'Research-focused programs',
+        'Industrial partnerships',
+        'Lower living costs than Budapest'
+      ]
+    },
+    {
+      id: 'university-9',
+      name: 'University of Pécs',
+      city: 'Pécs',
+      country: 'Hungary',
+      coordinates: { lat: 46.0727, lng: 18.2292 },
+      imageUrl: 'https://images.unsplash.com/photo-1518904572312-16f8c49b8a4d?auto=format&fit=crop&q=80&w=800',
+      description: 'Historic university with world-renowned medical school and international programs',
+      programs: ['Medicine', 'Law', 'Engineering', 'Sciences', 'Arts'],
+      studentCount: 8700,
+      established: 1367,
+      website: 'pte.hu',
+      accommodation: 'Multiple dormitory options in historic city',
+      highlights: [
+        'Europe oldest university',
+        'Medical school excellence',
+        'Cultural city location',
+        'International student community'
+      ]
     }
   ];
 
   // Unique building-focused images for US institutions
   const usInstitutionImages = [
-    'https://images.unsplash.com/photo-1541339907198-e08756ebafe3?auto=format&fit=crop&q=80&w=800',
-    'https://images.unsplash.com/photo-1530587191325-3db32d826c18?auto=format&fit=crop&q=80&w=800',
-    'https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&q=80&w=800',
-    'https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&q=80&w=800',
-    'https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&q=80&w=800',
     'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&q=80&w=800',
     'https://images.unsplash.com/photo-1460925895917-aeb19be489c7?auto=format&fit=crop&q=80&w=800',
     'https://images.unsplash.com/photo-1519671482749-fd09be7ccebf?auto=format&fit=crop&q=80&w=800',
+    'https://images.unsplash.com/photo-1507842217343-583f7270bfba?auto=format&fit=crop&q=80&w=800',
+    'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&q=80&w=800',
+    'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?auto=format&fit=crop&q=80&w=800',
+    'https://images.unsplash.com/photo-1554531088-c3fb42ca9e7d?auto=format&fit=crop&q=80&w=800',
+    'https://images.unsplash.com/photo-1518904572312-16f8c49b8a4d?auto=format&fit=crop&q=80&w=800',
     'https://images.unsplash.com/photo-1541339907198-e08756ebafe3?auto=format&fit=crop&q=80&w=800',
     'https://images.unsplash.com/photo-1530587191325-3db32d826c18?auto=format&fit=crop&q=80&w=800',
-    'https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&q=80&w=800',
-    'https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&q=80&w=800'
+    'https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&q=80&w=800',
+    'https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&q=80&w=800'
   ];
 
   // Convert US institutions to University format for unified display
@@ -306,7 +387,11 @@ const Institutions: React.FC<InstitutionsProps> = ({ onNavigate }) => {
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: idx * 0.05 }}
-                  onClick={() => setSelectedInstitution(inst)}
+                  onClick={() => {
+                    setSelectedInstitution(inst);
+                    setSelectedUniversity?.(inst);
+                    onNavigate?.('UNIVERSITY_DETAIL');
+                  }}
                   className={`w-full p-4 rounded-xl border-2 transition-all text-left ${
                     selectedInstitution?.id === inst.id
                       ? 'border-indigo-500 bg-indigo-50 dark:bg-indigo-900/30 shadow-lg'
