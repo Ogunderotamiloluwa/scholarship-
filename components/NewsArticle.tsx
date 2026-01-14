@@ -98,12 +98,12 @@ const NewsArticle: React.FC<NewsArticleProps> = ({ article, onNavigate, onBack }
             >
               <Heart size={20} className={liked ? 'text-red-600' : 'text-slate-600 dark:text-slate-400'} fill={liked ? 'currentColor' : 'none'} />
             </button>
-        <button
-            onClick={handleShare}
-            className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-all"
-          >
-            <Share2 size={20} className="text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400" />
-          </button>
+            <button
+              onClick={handleShare}
+              className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-all"
+            >
+              <Share2 size={20} className="text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400" />
+            </button>
           </div>
         </div>
       </div>
@@ -335,8 +335,8 @@ const NewsArticle: React.FC<NewsArticleProps> = ({ article, onNavigate, onBack }
                     </div>
                     <p className="text-slate-700 dark:text-slate-300 text-base leading-relaxed">{comment.text}</p>
                     <div className="flex gap-4 mt-3">
-                      <button className="text-xs font-bold text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Ì±ç Like</button>
-                      <button className="text-xs font-bold text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Ì≤¨ Reply</button>
+                      <button className="text-xs font-bold text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">ÔøΩÔøΩÔøΩ Like</button>
+                      <button className="text-xs font-bold text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">ÔøΩÔøΩÔøΩ Reply</button>
                     </div>
                   </div>
                 </div>

@@ -1170,31 +1170,6 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
                 );
               })()}
 
-              {/* Account Details Section */}
-              <div className="bg-white dark:bg-slate-900 rounded-2xl p-4 sm:p-6 border border-slate-200 dark:border-slate-700 space-y-4">
-                <h3 className="font-black text-slate-900 dark:text-white text-base sm:text-lg">Account Details</h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-                  <div className="bg-slate-50 dark:bg-slate-800 rounded-xl p-3 sm:p-4">
-                    <p className="text-xs font-black text-slate-500 dark:text-slate-400 uppercase mb-1">Name</p>
-                    <p className="text-sm sm:text-base font-semibold text-slate-900 dark:text-white truncate">{trackingState.currentUser?.fullName}</p>
-                  </div>
-                  <div className="bg-slate-50 dark:bg-slate-800 rounded-xl p-3 sm:p-4">
-                    <p className="text-xs font-black text-slate-500 dark:text-slate-400 uppercase mb-1">Email</p>
-                    <p className="text-sm sm:text-base font-semibold text-slate-900 dark:text-white truncate">{trackingState.currentUser?.email}</p>
-                  </div>
-                  <div className="bg-slate-50 dark:bg-slate-800 rounded-xl p-3 sm:p-4">
-                    <p className="text-xs font-black text-slate-500 dark:text-slate-400 uppercase mb-1">Grant Category</p>
-                    <p className="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">{trackingState.currentUser?.grantCategory}</p>
-                  </div>
-                  <div className="bg-slate-50 dark:bg-slate-800 rounded-xl p-3 sm:p-4">
-                    <p className="text-xs font-black text-slate-500 dark:text-slate-400 uppercase mb-1">Submitted</p>
-                    <p className="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">
-                      {new Date(trackingState.currentUser?.timestamp || '').toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
-                    </p>
-                  </div>
-                </div>
-              </div>
-
               {/* Your Passkey Section */}
               <div className="bg-gradient-to-br from-indigo-50 to-blue-50 dark:from-indigo-900/20 dark:to-blue-900/20 border-2 border-indigo-200 dark:border-indigo-700 rounded-2xl p-4 sm:p-6 space-y-4">
                 <div className="flex items-start gap-3 mb-4">
