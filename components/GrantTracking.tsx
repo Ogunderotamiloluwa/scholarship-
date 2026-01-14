@@ -952,7 +952,7 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
                   <div className="bg-white/10 backdrop-blur border border-white/20 rounded-2xl p-4 sm:p-5">
                     <p className="text-xs opacity-60 uppercase mb-2 tracking-wider font-bold">Applicant Name</p>
-                    <p className="text-lg sm:text-xl font-black truncate">{trackingState.currentUser?.fullName?.split(' ')[0] || 'User'}</p>
+                    <p className="text-lg sm:text-xl font-black truncate">{trackingState.currentUser?.fullName || 'User'}</p>
                   </div>
                   <div className="bg-white/10 backdrop-blur border border-white/20 rounded-2xl p-4 sm:p-5">
                     <p className="text-xs opacity-60 uppercase mb-2 tracking-wider font-bold">Account Status</p>

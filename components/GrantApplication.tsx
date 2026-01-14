@@ -272,6 +272,12 @@ const GrantApplication: React.FC<GrantApplicationProps> = ({ onNavigate }) => {
                   if (!fullName.trim()) newErrors.fullName = 'Full name is required';
                   if (!email.trim()) newErrors.email = 'Email is required';
                   else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) newErrors.email = 'Please enter a valid email';
+                  else {
+                    // Check if email already exists (prevent duplicate accounts with same email)
+                    const existingApplications = JSON.parse(localStorage.getItem('grantApplications') || '[]');
+                    const emailExists = existingApplications.some((app: any) => app.email.toLowerCase() === email.toLowerCase());
+                    if (emailExists) newErrors.email = '❌ This email is already registered. Please use a different email or login to your existing account.';
+                  }
                   
                   if (!password.trim()) newErrors.password = 'Password is required';
                   else {
