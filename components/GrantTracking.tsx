@@ -111,6 +111,71 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
   };
 
   // Calculate grant status: 0-24hrs = Hidden, 24hrs-38days = Pending with progress, 38+ days = Received
+  // IndexedDB utilities for cross-browser account sync
+  const saveApplicationToIndexedDB = async (app: GrantApplication) => {
+    try {
+      const db = await new Promise<IDBDatabase>((resolve, reject) => {
+        const request = indexedDB.open('UniversitiesDB', 1);
+        request.onerror = () => reject(request.error);
+        request.onsuccess = () => resolve(request.result);
+        request.onupgradeneeded = (e) => {
+          const db = (e.target as IDBOpenDBRequest).result;
+          if (!db.objectStoreNames.contains('applications')) {
+            db.createObjectStore('applications', { keyPath: 'id' });
+          }
+        };
+      });
+
+      const tx = db.transaction('applications', 'readwrite');
+      const store = tx.objectStore('applications');
+      const id = `${app.email}:${app.grantCategory}`;
+      await new Promise((resolve, reject) => {
+        const request = store.put({ ...app, id });
+        request.onsuccess = resolve;
+        request.onerror = () => reject(request.error);
+      });
+      db.close();
+    } catch (error) {
+      console.log('IndexedDB save failed:', error);
+    }
+  };
+
+  const getApplicationFromIndexedDB = async (email: string, password: string): Promise<GrantApplication | null> => {
+    try {
+      const db = await new Promise<IDBDatabase>((resolve, reject) => {
+        const request = indexedDB.open('UniversitiesDB', 1);
+        request.onerror = () => reject(request.error);
+        request.onsuccess = () => resolve(request.result);
+        request.onupgradeneeded = (e) => {
+          const db = (e.target as IDBOpenDBRequest).result;
+          if (!db.objectStoreNames.contains('applications')) {
+            db.createObjectStore('applications', { keyPath: 'id' });
+          }
+        };
+      });
+
+      const tx = db.transaction('applications', 'readonly');
+      const store = tx.objectStore('applications');
+      
+      const result = await new Promise<GrantApplication | null>((resolve, reject) => {
+        const request = store.getAll();
+        request.onsuccess = () => {
+          const apps = request.result as any[];
+          const match = apps.find((app: any) => app.email === email && app.password === password);
+          resolve(match || null);
+        };
+        request.onerror = () => reject(request.error);
+      });
+      
+      db.close();
+      return result;
+    } catch (error) {
+      console.log('IndexedDB read failed:', error);
+      return null;
+    }
+  };
+
+  // Calculate grant status
   const calculateGrantStatus = (timestamp: string) => {
     const applicationDate = new Date(timestamp);
     const now = new Date();
@@ -207,7 +272,7 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
     }
 
     setIsLoading(true);
-    setTimeout(() => {
+    setTimeout(async () => {
       const applications = JSON.parse(localStorage.getItem('grantApplications') || '[]') as GrantApplication[];
       
       // CROSS-BROWSER FIX: Try to find user in localStorage first
@@ -245,39 +310,68 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
         setPasskeyInput('');
         showAlertMessage('✅ Welcome! Your passkey authentication successful.');
       } else {
-        // CROSS-BROWSER LOGIN: Passkey is mathematically valid, but account is on different browser
-        // This is normal - user created account on Chrome, now logging in from Opera
-        // Show minimal tracking page with submission confirmation
+        // Not in localStorage - try IndexedDB (cross-browser sync)
+        // Try to extract email and password from passkey by matching against stored apps
+        let indexedDBUser: GrantApplication | null = null;
         
-        // Create a temporary read-only session for tracking
-        const tempUser: GrantApplication = {
-          fullName: 'Grant Applicant',
-          email: 'Your application was submitted',
-          password: '',
-          phone: '',
-          country: '',
-          grantCategory: 'Cross-Browser Access',
-          amount: '',
-          purpose: '',
-          applicantWork: '',
-          usage: '',
-          impact: '',
-          previousFunding: 'No',
-          timestamp: new Date().toISOString(),
-          passkey: passkeyInput.trim()
-        };
+        // We don't have email/password directly, but we can check IndexedDB for any account that generates this passkey
+        try {
+          const db = await new Promise<IDBDatabase>((resolve, reject) => {
+            const request = indexedDB.open('UniversitiesDB', 1);
+            request.onerror = () => reject(request.error);
+            request.onsuccess = () => resolve(request.result);
+            request.onupgradeneeded = (e) => {
+              const db = (e.target as IDBOpenDBRequest).result;
+              if (!db.objectStoreNames.contains('applications')) {
+                db.createObjectStore('applications', { keyPath: 'id' });
+              }
+            };
+          });
 
-        setTrackingState((prev) => ({
-          ...prev,
-          currentUser: tempUser,
-          isLoggedIn: true,
-          hasPasskey: true,
-          currentGrant: 'Cross-Browser Access',
-          stage: 'tracking'
-        }));
-        setErrors({});
-        setPasskeyInput('');
-        showAlertMessage('✅ Your submission was received! Login on your original browser (where you created the account) to see full details.');
+          const tx = db.transaction('applications', 'readonly');
+          const store = tx.objectStore('applications');
+          
+          const apps = await new Promise<any[]>((resolve, reject) => {
+            const request = store.getAll();
+            request.onsuccess = () => resolve(request.result);
+            request.onerror = () => reject(request.error);
+          });
+          
+          db.close();
+          
+          // Check if any IndexedDB app matches this passkey
+          for (const app of apps) {
+            const passkey = generatePasskey(app.email, app.password);
+            if (passkey === passkeyInput.trim()) {
+              indexedDBUser = app;
+              break;
+            }
+          }
+        } catch (error) {
+          console.log('IndexedDB lookup failed:', error);
+        }
+
+        if (indexedDBUser) {
+          // Found in IndexedDB! Show full account from another browser
+          const updatedApplications = applications;
+          updatedApplications.push(indexedDBUser);
+          localStorage.setItem('grantApplications', JSON.stringify(updatedApplications));
+
+          setTrackingState((prev) => ({
+            ...prev,
+            currentUser: indexedDBUser,
+            isLoggedIn: true,
+            hasPasskey: true,
+            currentGrant: indexedDBUser!.grantCategory,
+            stage: 'tracking'
+          }));
+          setErrors({});
+          setPasskeyInput('');
+          showAlertMessage('✅ Welcome! Your account synced from another browser.');
+        } else {
+          // Not found anywhere - show helpful message
+          setErrors({ passkey: '⚠️ Passkey not recognized. Make sure you entered it correctly, or use "Get Passkey with Email & Password" to generate it.' });
+        }
       }
       setIsLoading(false);
     }, 800);
@@ -303,7 +397,7 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
     }
 
     setIsLoading(true);
-    setTimeout(() => {
+    setTimeout(async () => {
       const applications = JSON.parse(localStorage.getItem('grantApplications') || '[]') as GrantApplication[];
       
       // CROSS-BROWSER FIX: Generate passkey for ANY email/password combination
@@ -317,16 +411,23 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
           app.password === getPasskeyForm.password
       );
 
-      if (user) {
-        // User exists in this browser's localStorage - update their passkey and show
-        if (!user.passkey) {
-          const updatedApplications = applications.map((app) =>
-            app.email === user!.email && app.grantCategory === user!.grantCategory 
-              ? { ...app, passkey } 
-              : app
-          );
-          localStorage.setItem('grantApplications', JSON.stringify(updatedApplications));
+      // If not found in localStorage, try IndexedDB
+      if (!user) {
+        try {
+          user = await getApplicationFromIndexedDB(getPasskeyForm.email, getPasskeyForm.password);
+        } catch (error) {
+          console.log('IndexedDB lookup failed:', error);
         }
+      }
+
+      if (user) {
+        // User found - save to IndexedDB for cross-browser sync
+        await saveApplicationToIndexedDB(user);
+        
+        // Also save to localStorage for this browser
+        const updatedApplications = applications.filter(app => !(app.email === user!.email && app.grantCategory === user!.grantCategory));
+        updatedApplications.push({ ...user, passkey });
+        localStorage.setItem('grantApplications', JSON.stringify(updatedApplications));
         
         setTrackingState((prev) => ({
           ...prev,
@@ -338,11 +439,9 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
         }));
         setErrors({});
         setGetPasskeyForm({ email: '', password: '' });
-        showAlertMessage('✅ Your passkey is ready! Copy it and use it to login.');
+        showAlertMessage('✅ Your passkey is ready! Your account details have been synced across browsers.');
       } else {
-        // User doesn't exist in this browser's localStorage (different browser case)
-        // Don't create a new account - just show the passkey for login
-        // Account data stays on original browser
+        // User doesn't exist anywhere - show passkey but explain to use original browser
         setTrackingState((prev) => ({
           ...prev,
           hasPasskey: true,
@@ -353,7 +452,7 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
         }));
         setErrors({});
         setGetPasskeyForm({ email: '', password: '' });
-        showAlertMessage('✅ Passkey generated! Your original account is on the browser where you created it, but you can use this passkey to verify your submission was received.');
+        showAlertMessage('⚠️ Email or password not recognized. If you created an account, please check your email and password. You may need to use your original browser to see full details.');
       }
       setIsLoading(false);
     }, 800);
@@ -928,23 +1027,6 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
                   </div>
                 </div>
               </div>
-
-              {/* Cross-Browser Warning - if logged in from different browser */}
-              {trackingState.currentGrant === 'Cross-Browser Access' && (
-                <motion.div
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="bg-gradient-to-br from-amber-500/20 to-orange-500/20 backdrop-blur border border-amber-500/50 rounded-2xl p-4 sm:p-5 text-amber-100"
-                >
-                  <div className="flex items-start gap-3">
-                    <AlertCircle size={20} className="flex-shrink-0 mt-0.5 text-amber-400" />
-                    <div className="flex-1 min-w-0">
-                      <h3 className="font-black text-sm sm:text-base mb-1 text-amber-200">📱 Different Browser Detected</h3>
-                      <p className="text-xs sm:text-sm text-amber-100">Your application was created on a different browser. <span className="font-bold">Login on your original browser</span> (where you filled the form) to see your full application details and track status.</p>
-                    </div>
-                  </div>
-                </motion.div>
-              )}
 
               {/* Account Update Notification - Top Left */}
               {(() => {
