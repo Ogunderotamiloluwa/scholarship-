@@ -40,7 +40,22 @@ const Institutions: React.FC<InstitutionsProps> = ({ onNavigate, setSelectedUniv
     message: ''
   });
 
-  // Universities data
+  // Universities data with local campus images
+  const campusImages = [
+    '/university image/adrien-olichon-z8XO8BfqpYc-unsplash.jpg',
+    '/university image/andreas-haslinger--swDR70y2M8-unsplash.jpg',
+    '/university image/camilo-botia-k4vFDPJoDZk-unsplash.jpg',
+    '/university image/christopher-le--I7wVCCUve8-unsplash.jpg',
+    '/university image/divyansh-jain--BA1r4Rf_zM-unsplash.jpg',
+    '/university image/dorian-le-senechal-6S1B3Hj-2DM-unsplash.jpg',
+    '/university image/emily-karakis-T-tVt4xsCdE-unsplash.jpg',
+    '/university image/john-kon-garang-4gD-zpzW6Ds-unsplash (1).jpg',
+    '/university image/john-kon-garang-4gD-zpzW6Ds-unsplash (2).jpg',
+    '/university image/john-kon-garang-4gD-zpzW6Ds-unsplash (3).jpg',
+    '/university image/john-kon-garang-4gD-zpzW6Ds-unsplash.jpg',
+    '/university image/joydeep-pal-EZiSDT-v8XY-unsplash.jpg',
+  ];
+
   const universities: UnifiedInstitution[] = [
     {
       id: 'university-1',
@@ -48,7 +63,7 @@ const Institutions: React.FC<InstitutionsProps> = ({ onNavigate, setSelectedUniv
       city: 'Budapest',
       country: 'Hungary',
       coordinates: { lat: 47.4745, lng: 19.0504 },
-      imageUrl: 'https://www.bme.hu/sites/default/files/styles/large/public/2021-05/10_BME_K%C3%A9pmagazin.jpg?itok=7UlHm7_v',
+      imageUrl: campusImages[0],
       description: 'Leading technical university with world-class engineering and technology programs',
       programs: ['Engineering', 'Computer Science', 'Architecture', 'Business'],
       studentCount: 12500,
@@ -68,7 +83,7 @@ const Institutions: React.FC<InstitutionsProps> = ({ onNavigate, setSelectedUniv
       city: 'Budapest',
       country: 'Hungary',
       coordinates: { lat: 47.4979, lng: 19.0402 },
-      imageUrl: 'https://www.elte.hu/files/image/2023/01/27/c17f8996-f6b6-4ba0-a4fe-c5ca7ee7d4f2.jpg',
+      imageUrl: campusImages[1],
       description: 'Hungary\'s premier research university specializing in sciences and humanities',
       programs: ['Physics', 'Chemistry', 'Biology', 'Mathematics', 'Humanities'],
       studentCount: 10200,
@@ -88,7 +103,7 @@ const Institutions: React.FC<InstitutionsProps> = ({ onNavigate, setSelectedUniv
       city: 'Debrecen',
       country: 'Hungary',
       coordinates: { lat: 47.5316, lng: 21.6273 },
-      imageUrl: 'https://www.unideb.hu/download/kepmagazin/_images/12_debreceni-egyetem.jpg',
+      imageUrl: campusImages[2],
       description: 'Second-largest university in Hungary with strong medical and agricultural programs',
       programs: ['Medicine', 'Veterinary', 'Agriculture', 'Engineering', 'Law'],
       studentCount: 9800,
@@ -108,7 +123,7 @@ const Institutions: React.FC<InstitutionsProps> = ({ onNavigate, setSelectedUniv
       city: 'Budapest',
       country: 'Hungary',
       coordinates: { lat: 47.4761, lng: 19.0425 },
-      imageUrl: 'https://www.uni-corvinus.hu/files/image/2023/11/24/a0e0f658-f19b-4951-ad91-85e87e8d2f09.png',
+      imageUrl: campusImages[3],
       description: 'Premier business and economics university with international recognition',
       programs: ['Business', 'Economics', 'International Relations', 'Management'],
       studentCount: 8500,
@@ -128,7 +143,7 @@ const Institutions: React.FC<InstitutionsProps> = ({ onNavigate, setSelectedUniv
       city: 'Szeged',
       country: 'Hungary',
       coordinates: { lat: 46.2530, lng: 20.1414 },
-      imageUrl: 'https://www.u-szeged.hu/download/kepmagazin/_images/08_szegedi-egyetem.jpg',
+      imageUrl: campusImages[4],
       description: 'Historical university with excellent programs in medicine, law, and humanities',
       programs: ['Medicine', 'Law', 'Arts', 'Dentistry', 'Pharmacy'],
       studentCount: 7600,
@@ -148,7 +163,7 @@ const Institutions: React.FC<InstitutionsProps> = ({ onNavigate, setSelectedUniv
       city: 'Budapest',
       country: 'Hungary',
       coordinates: { lat: 47.5144, lng: 19.0347 },
-      imageUrl: 'https://www.ppke.hu/files/image/2023/03/13/7fe0bc39-6f48-4bb4-8cea-68f3cf44c002.jpg',
+      imageUrl: campusImages[5],
       description: 'Premier Catholic university with strong theology, law, and business programs',
       programs: ['Theology', 'Law', 'Business', 'Philosophy', 'Social Sciences'],
       studentCount: 6800,
@@ -168,7 +183,7 @@ const Institutions: React.FC<InstitutionsProps> = ({ onNavigate, setSelectedUniv
       city: 'Budapest',
       country: 'Hungary',
       coordinates: { lat: 47.4878, lng: 19.0347 },
-      imageUrl: 'https://www.metropolitan.hu/images/metro_campus.jpg',
+      imageUrl: campusImages[6],
       description: 'Modern university specializing in business, IT, and applied sciences',
       programs: ['Business Administration', 'Information Technology', 'Engineering', 'Management'],
       studentCount: 5200,
@@ -188,7 +203,7 @@ const Institutions: React.FC<InstitutionsProps> = ({ onNavigate, setSelectedUniv
       city: 'Miskolc',
       country: 'Hungary',
       coordinates: { lat: 48.1034, lng: 20.7784 },
-      imageUrl: 'https://www.uni-miskolc.hu/images/miskolci-egyetem-kampusz.jpg',
+      imageUrl: campusImages[7],
       description: 'Technical university with strong engineering and material science programs',
       programs: ['Mechanical Engineering', 'Materials Science', 'Mining Engineering', 'Electrical Engineering'],
       studentCount: 8200,
@@ -208,7 +223,7 @@ const Institutions: React.FC<InstitutionsProps> = ({ onNavigate, setSelectedUniv
       city: 'Pécs',
       country: 'Hungary',
       coordinates: { lat: 46.0727, lng: 18.2292 },
-      imageUrl: 'https://www.pte.hu/sites/default/files/pte_kampusz_1.jpg',
+      imageUrl: campusImages[8],
       description: 'Historic university with world-renowned medical school and international programs',
       programs: ['Medicine', 'Law', 'Engineering', 'Sciences', 'Arts'],
       studentCount: 8700,
@@ -226,18 +241,18 @@ const Institutions: React.FC<InstitutionsProps> = ({ onNavigate, setSelectedUniv
 
   // Unique building-focused images for US institutions
   const usInstitutionImages = [
-    'https://images.mit.edu/download.php?file=/img/news_articles/20230215_01_FEATURE.jpg',
-    'https://news.harvard.edu/wp-content/uploads/2023/07/20230706_harvard_campaign_highlights_2x1_6-2000x1325.jpg',
-    'https://d3n8a8pro7vhmx.cloudfront.net/ccsu/pages/3568/attachments/original/1554226196/20180601_DV_CCSU-0137.jpg',
-    'https://www.yale.edu/sites/default/files/styles/og_image/public/2024-03/Yale_2024_Spring_Reels_0048_-_00.00.20.17Still001.jpg',
-    'https://www.stanford.edu/sites/default/files/2024-12/image_3_0.jpg',
-    'https://www.berkeley.edu/news/berkeley-news/2023/09/26/campus-photos-berkeley-2/berkeley-2023-0077-2000-crop.jpg',
-    'https://www.nyu.edu/content/dam/nyu-dot-com/images/explore/our-locations/Washington-Square-Park-NYU-campus-unsplash.jpg',
-    'https://www.northeastern.edu/uploads/ckeditor/images/d7/2023-07/NortheasternBoston2.jpg',
-    'https://www.columbia.edu/content/dam/cu-web/images/news/2023/12/cu_campus-4.jpg',
-    'https://www.penn.edu/sites/www/files/2023-11/penn-campus-aerial.jpg',
-    'https://www.cmu.edu/news/archive/2023/11/images/CMU_Gates_Center_Exterior_small.jpg',
-    'https://www.caltech.edu/sites/default/files/images/2024-01/caltech_campus.jpg'
+    '/university image/k-mitch-hodge-oIPMwJFd-t0-unsplash.jpg',
+    '/university image/mauricio-arias-h6QQiYftoO0-unsplash.jpg',
+    '/university image/michael-marsh-U0dBV_QeiYk-unsplash.jpg',
+    '/university image/olu-famule-Dv2PNbMWtsE-unsplash.jpg',
+    '/university image/porter-raab-gnj9vj--FRY-unsplash (1).jpg',
+    '/university image/porter-raab-gnj9vj--FRY-unsplash (2).jpg',
+    '/university image/porter-raab-gnj9vj--FRY-unsplash (3).jpg',
+    '/university image/porter-raab-gnj9vj--FRY-unsplash (4).jpg',
+    '/university image/porter-raab-gnj9vj--FRY-unsplash (5).jpg',
+    '/university image/porter-raab-gnj9vj--FRY-unsplash (6).jpg',
+    '/university image/porter-raab-gnj9vj--FRY-unsplash (7).jpg',
+    '/university image/porter-raab-gnj9vj--FRY-unsplash.jpg'
   ];
 
   // Convert US institutions to University format for unified display
