@@ -1023,7 +1023,7 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
                 return null;
               })()}
 
-              {/* Wallet Section - Professional Design */}
+              {/* Wallet Section - Available Balance & Details */}
               {(() => {
                 const status = calculateGrantStatus(trackingState.currentUser?.timestamp || '');
                 // Format amount with comma separators
@@ -1034,61 +1034,13 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
                 
                 return (
                   <div className="space-y-6">
-                    {/* TIMER CARD - First Card */}
-                    {(status.isHidden || status.isPending) && (
-                      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl p-6 sm:p-8">
-                        {status.isHidden && (
-                          <>
-                            <p className="text-xs text-slate-500 dark:text-slate-400 font-semibold uppercase tracking-wide mb-6">Time Until Account Activation</p>
-                            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-center gap-6 sm:gap-4">
-                              <div className="flex flex-col items-center">
-                                <p className="text-5xl sm:text-6xl font-black text-slate-900 dark:text-white font-mono">{String(status.hoursRemaining).padStart(2, '0')}</p>
-                                <p className="text-xs text-slate-500 dark:text-slate-400 font-semibold mt-3 uppercase tracking-wide">Hours</p>
-                              </div>
-                              <div className="hidden sm:block text-2xl text-slate-300 dark:text-slate-600">:</div>
-                              <div className="flex flex-col items-center">
-                                <p className="text-5xl sm:text-6xl font-black text-slate-900 dark:text-white font-mono">{String(status.minutesRemaining).padStart(2, '0')}</p>
-                                <p className="text-xs text-slate-500 dark:text-slate-400 font-semibold mt-3 uppercase tracking-wide">Minutes</p>
-                              </div>
-                            </div>
-                          </>
-                        )}
-
-                        {status.isPending && (
-                          <>
-                            <p className="text-xs text-slate-500 dark:text-slate-400 font-semibold uppercase tracking-wide mb-6">Processing Timeline</p>
-                            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-center gap-6 sm:gap-4 mb-6">
-                              <div className="flex flex-col items-center">
-                                <p className="text-5xl sm:text-6xl font-black text-slate-900 dark:text-white font-mono">{status.daysRemaining}</p>
-                                <p className="text-xs text-slate-500 dark:text-slate-400 font-semibold mt-3 uppercase tracking-wide">Days</p>
-                              </div>
-                              <div className="hidden sm:block text-2xl text-slate-300 dark:text-slate-600">:</div>
-                              <div className="flex flex-col items-center">
-                                <p className="text-5xl sm:text-6xl font-black text-slate-900 dark:text-white font-mono">{status.hoursRemaining}</p>
-                                <p className="text-xs text-slate-500 dark:text-slate-400 font-semibold mt-3 uppercase tracking-wide">Hours</p>
-                              </div>
-                            </div>
-                            <div className="w-full bg-slate-200 dark:bg-slate-700 h-1.5 rounded-full overflow-hidden">
-                              <motion.div
-                                className="h-full bg-slate-900 dark:bg-slate-100"
-                                initial={{ width: '0%' }}
-                                animate={{ width: `${status.progressPercentage}%` }}
-                                transition={{ duration: 1 }}
-                              />
-                            </div>
-                            <p className="text-xs text-slate-500 dark:text-slate-400 font-semibold mt-3 text-center">{Math.round(status.progressPercentage)}% Complete</p>
-                          </>
-                        )}
-                      </div>
-                    )}
-
-                    {/* AVAILABLE BALANCE CARD - Always Second, Right Below Timer */}
+                    {/* AVAILABLE BALANCE CARD - Right Below Timer */}
                     <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl p-6 sm:p-8">
                       <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-6">
                         <div className="flex-1 min-w-0">
                           <p className="text-xs text-slate-500 dark:text-slate-400 font-semibold uppercase tracking-wide mb-3">Available Balance</p>
                           <div className="flex items-baseline gap-3 flex-wrap">
-                            <span className="text-5xl sm:text-6xl font-black text-slate-900 dark:text-white break-words">
+                            <span className="text-4xl sm:text-5xl font-black text-slate-900 dark:text-white break-words">
                               {privacySettings.hideBalance ? '••••' : `$${formatAmount(trackingState.currentUser?.amount)}`}
                             </span>
                             <button
@@ -1109,7 +1061,7 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
                       </div>
                     </div>
 
-                    {/* ACCOUNT DETAILS CARD - Third Card */}
+                    {/* ACCOUNT DETAILS CARD */}
                     <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl p-6 sm:p-8">
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                         <div>
