@@ -42,18 +42,18 @@ const Institutions: React.FC<InstitutionsProps> = ({ onNavigate, setSelectedUniv
 
   // Universities data with local campus images
   const campusImages = [
-    '/university image/adrien-olichon-z8XO8BfqpYc-unsplash.jpg',
-    '/university image/andreas-haslinger--swDR70y2M8-unsplash.jpg',
-    '/university image/camilo-botia-k4vFDPJoDZk-unsplash.jpg',
-    '/university image/christopher-le--I7wVCCUve8-unsplash.jpg',
-    '/university image/divyansh-jain--BA1r4Rf_zM-unsplash.jpg',
-    '/university image/dorian-le-senechal-6S1B3Hj-2DM-unsplash.jpg',
-    '/university image/emily-karakis-T-tVt4xsCdE-unsplash.jpg',
-    '/university image/john-kon-garang-4gD-zpzW6Ds-unsplash (1).jpg',
-    '/university image/john-kon-garang-4gD-zpzW6Ds-unsplash (2).jpg',
-    '/university image/john-kon-garang-4gD-zpzW6Ds-unsplash (3).jpg',
-    '/university image/john-kon-garang-4gD-zpzW6Ds-unsplash.jpg',
-    '/university image/joydeep-pal-EZiSDT-v8XY-unsplash.jpg',
+    '/images/adrien-olichon-z8XO8BfqpYc-unsplash.jpg',
+    '/images/andreas-haslinger--swDR70y2M8-unsplash.jpg',
+    '/images/camilo-botia-k4vFDPJoDZk-unsplash.jpg',
+    '/images/christopher-le--I7wVCCUve8-unsplash.jpg',
+    '/images/divyansh-jain--BA1r4Rf_zM-unsplash.jpg',
+    '/images/dorian-le-senechal-6S1B3Hj-2DM-unsplash.jpg',
+    '/images/emily-karakis-T-tVt4xsCdE-unsplash.jpg',
+    '/images/john-kon-garang-4gD-zpzW6Ds-unsplash (1).jpg',
+    '/images/john-kon-garang-4gD-zpzW6Ds-unsplash (2).jpg',
+    '/images/john-kon-garang-4gD-zpzW6Ds-unsplash (3).jpg',
+    '/images/john-kon-garang-4gD-zpzW6Ds-unsplash.jpg',
+    '/images/joydeep-pal-EZiSDT-v8XY-unsplash.jpg',
   ];
 
   const universities: UnifiedInstitution[] = [
@@ -241,18 +241,18 @@ const Institutions: React.FC<InstitutionsProps> = ({ onNavigate, setSelectedUniv
 
   // Unique building-focused images for US institutions
   const usInstitutionImages = [
-    '/university image/k-mitch-hodge-oIPMwJFd-t0-unsplash.jpg',
-    '/university image/mauricio-arias-h6QQiYftoO0-unsplash.jpg',
-    '/university image/michael-marsh-U0dBV_QeiYk-unsplash.jpg',
-    '/university image/olu-famule-Dv2PNbMWtsE-unsplash.jpg',
-    '/university image/porter-raab-gnj9vj--FRY-unsplash (1).jpg',
-    '/university image/porter-raab-gnj9vj--FRY-unsplash (2).jpg',
-    '/university image/porter-raab-gnj9vj--FRY-unsplash (3).jpg',
-    '/university image/porter-raab-gnj9vj--FRY-unsplash (4).jpg',
-    '/university image/porter-raab-gnj9vj--FRY-unsplash (5).jpg',
-    '/university image/porter-raab-gnj9vj--FRY-unsplash (6).jpg',
-    '/university image/porter-raab-gnj9vj--FRY-unsplash (7).jpg',
-    '/university image/porter-raab-gnj9vj--FRY-unsplash.jpg'
+    '/images/k-mitch-hodge-oIPMwJFd-t0-unsplash.jpg',
+    '/images/mauricio-arias-h6QQiYftoO0-unsplash.jpg',
+    '/images/michael-marsh-U0dBV_QeiYk-unsplash.jpg',
+    '/images/olu-famule-Dv2PNbMWtsE-unsplash.jpg',
+    '/images/porter-raab-gnj9vj--FRY-unsplash (1).jpg',
+    '/images/porter-raab-gnj9vj--FRY-unsplash (2).jpg',
+    '/images/porter-raab-gnj9vj--FRY-unsplash (3).jpg',
+    '/images/porter-raab-gnj9vj--FRY-unsplash (4).jpg',
+    '/images/porter-raab-gnj9vj--FRY-unsplash (5).jpg',
+    '/images/porter-raab-gnj9vj--FRY-unsplash (6).jpg',
+    '/images/porter-raab-gnj9vj--FRY-unsplash (7).jpg',
+    '/images/porter-raab-gnj9vj--FRY-unsplash.jpg'
   ];
 
   // Convert US institutions to University format for unified display
