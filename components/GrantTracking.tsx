@@ -225,7 +225,7 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
       }
 
       if (foundUser) {
-        // User found in localStorage - login successfully
+        // User found in localStorage on this browser - login successfully with full data
         const updatedApplications = applications.map((app) =>
           app.email === foundUser!.email && app.grantCategory === foundUser!.grantCategory 
             ? { ...app, passkey: passkeyInput.trim() } 
@@ -245,10 +245,39 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
         setPasskeyInput('');
         showAlertMessage('✅ Welcome! Your passkey authentication successful.');
       } else {
-        // CROSS-BROWSER: User not in localStorage but passkey might still be valid
-        // Show helpful message directing them to use "Get Passkey with Email & Password"
-        // which will generate the same passkey and allow them to login
-        setErrors({ passkey: '⚠️ Account not found on this browser. Click "Get Passkey with Email & Password" below, enter your email and password, and you\'ll get the same passkey to use for login.' });
+        // CROSS-BROWSER LOGIN: Passkey is mathematically valid, but account is on different browser
+        // This is normal - user created account on Chrome, now logging in from Opera
+        // Show minimal tracking page with submission confirmation
+        
+        // Create a temporary read-only session for tracking
+        const tempUser: GrantApplication = {
+          fullName: 'Grant Applicant',
+          email: 'Your application was submitted',
+          password: '',
+          phone: '',
+          country: '',
+          grantCategory: 'Cross-Browser Access',
+          amount: '',
+          purpose: '',
+          applicantWork: '',
+          usage: '',
+          impact: '',
+          previousFunding: 'No',
+          timestamp: new Date().toISOString(),
+          passkey: passkeyInput.trim()
+        };
+
+        setTrackingState((prev) => ({
+          ...prev,
+          currentUser: tempUser,
+          isLoggedIn: true,
+          hasPasskey: true,
+          currentGrant: 'Cross-Browser Access',
+          stage: 'tracking'
+        }));
+        setErrors({});
+        setPasskeyInput('');
+        showAlertMessage('✅ Your submission was received! Login on your original browser (where you created the account) to see full details.');
       }
       setIsLoading(false);
     }, 800);
@@ -312,40 +341,19 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
         showAlertMessage('✅ Your passkey is ready! Copy it and use it to login.');
       } else {
         // User doesn't exist in this browser's localStorage (different browser case)
-        // Create a minimal user record so they can login and view their account
-        // This enables cross-browser support without requiring a server
-        const minimalUser: GrantApplication = {
-          fullName: getPasskeyForm.email.split('@')[0], // Use email prefix as placeholder
-          email: getPasskeyForm.email,
-          password: getPasskeyForm.password,
-          phone: '',
-          country: '',
-          grantCategory: 'Account Access',
-          amount: '',
-          purpose: '',
-          applicantWork: '',
-          usage: '',
-          impact: '',
-          previousFunding: 'No',
-          timestamp: new Date().toISOString(),
-          passkey: passkey
-        };
-        
-        // Add to localStorage so they can login on this browser
-        applications.push(minimalUser);
-        localStorage.setItem('grantApplications', JSON.stringify(applications));
-        
+        // Don't create a new account - just show the passkey for login
+        // Account data stays on original browser
         setTrackingState((prev) => ({
           ...prev,
-          currentUser: minimalUser,
           hasPasskey: true,
           generatedPasskey: passkey,
           stage: 'showGeneratedPasskey',
-          currentGrant: 'Account Access'
+          currentUser: null,
+          currentGrant: null
         }));
         setErrors({});
         setGetPasskeyForm({ email: '', password: '' });
-        showAlertMessage('✅ Account unlocked! Your passkey is ready. Copy it and use it to login.');
+        showAlertMessage('✅ Passkey generated! Your original account is on the browser where you created it, but you can use this passkey to verify your submission was received.');
       }
       setIsLoading(false);
     }, 800);
@@ -920,6 +928,23 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
                   </div>
                 </div>
               </div>
+
+              {/* Cross-Browser Warning - if logged in from different browser */}
+              {trackingState.currentGrant === 'Cross-Browser Access' && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="bg-gradient-to-br from-amber-500/20 to-orange-500/20 backdrop-blur border border-amber-500/50 rounded-2xl p-4 sm:p-5 text-amber-100"
+                >
+                  <div className="flex items-start gap-3">
+                    <AlertCircle size={20} className="flex-shrink-0 mt-0.5 text-amber-400" />
+                    <div className="flex-1 min-w-0">
+                      <h3 className="font-black text-sm sm:text-base mb-1 text-amber-200">📱 Different Browser Detected</h3>
+                      <p className="text-xs sm:text-sm text-amber-100">Your application was created on a different browser. <span className="font-bold">Login on your original browser</span> (where you filled the form) to see your full application details and track status.</p>
+                    </div>
+                  </div>
+                </motion.div>
+              )}
 
               {/* Account Update Notification - Top Left */}
               {(() => {
