@@ -983,18 +983,18 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
                     <motion.div
                       initial={{ opacity: 0, x: -20 }}
                       animate={{ opacity: 1, x: 0 }}
-                      className="bg-gradient-to-br from-blue-600 to-blue-700 dark:from-blue-700 dark:to-blue-800 rounded-2xl p-4 sm:p-5 text-white border-l-4 border-blue-400"
+                      className="bg-gradient-to-br from-blue-600 to-blue-700 dark:from-blue-700 dark:to-blue-800 rounded-xl p-3 text-white border-l-4 border-blue-400"
                     >
-                      <div className="flex items-start gap-3">
-                        <div className="flex-shrink-0 mt-1">
-                          <Clock size={20} className="text-blue-200 animate-pulse" />
+                      <div className="flex items-start gap-2">
+                        <div className="flex-shrink-0 mt-0.5">
+                          <Clock size={18} className="text-blue-200 animate-pulse" />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <h3 className="font-black text-base sm:text-lg mb-1">⏱️ Account Update in Progress</h3>
-                          <p className="text-xs sm:text-sm text-blue-100 mb-2">Your account will be updated with your grant amount after 24 hours</p>
-                          <div className="flex items-center gap-2 text-xs sm:text-sm font-bold">
-                            <span className="text-blue-200">Time until update:</span>
-                            <span className="text-white text-sm sm:text-base">{String(status.hoursRemaining).padStart(2, '0')}h {String(status.minutesRemaining).padStart(2, '0')}m</span>
+                          <h3 className="font-black text-sm mb-0.5">⏱️ Account Update in Progress</h3>
+                          <p className="text-xs text-blue-100 mb-1">Your account will be updated after 24 hours</p>
+                          <div className="flex items-center gap-1 text-xs font-bold">
+                            <span className="text-blue-200">Time:</span>
+                            <span className="text-white">{String(status.hoursRemaining).padStart(2, '0')}h {String(status.minutesRemaining).padStart(2, '0')}m</span>
                           </div>
                         </div>
                       </div>
