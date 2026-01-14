@@ -1023,7 +1023,7 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
                 return null;
               })()}
 
-              {/* Professional Account Card - Mature Wallet UI (ByBit Style) */}
+              {/* Wallet Section - Professional Design */}
               {(() => {
                 const status = calculateGrantStatus(trackingState.currentUser?.timestamp || '');
                 // Format amount with comma separators
@@ -1034,87 +1034,91 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
                 
                 return (
                   <div className="space-y-6">
-                    {/* Timer Section */}
-                    <div>
-                      {status.isHidden && (
-                        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg p-6">
-                          <p className="text-xs text-slate-500 dark:text-slate-400 font-semibold uppercase tracking-wide mb-4">Time Until Account Activation</p>
-                          <div className="flex items-center justify-between gap-8">
-                            <div>
-                              <p className="text-4xl sm:text-5xl font-black text-slate-900 dark:text-white font-mono">{String(status.hoursRemaining).padStart(2, '0')}</p>
-                              <p className="text-xs text-slate-500 dark:text-slate-400 font-semibold mt-2 uppercase">Hours</p>
+                    {/* TIMER CARD - First Card */}
+                    {(status.isHidden || status.isPending) && (
+                      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl p-6 sm:p-8">
+                        {status.isHidden && (
+                          <>
+                            <p className="text-xs text-slate-500 dark:text-slate-400 font-semibold uppercase tracking-wide mb-6">Time Until Account Activation</p>
+                            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-center gap-6 sm:gap-4">
+                              <div className="flex flex-col items-center">
+                                <p className="text-5xl sm:text-6xl font-black text-slate-900 dark:text-white font-mono">{String(status.hoursRemaining).padStart(2, '0')}</p>
+                                <p className="text-xs text-slate-500 dark:text-slate-400 font-semibold mt-3 uppercase tracking-wide">Hours</p>
+                              </div>
+                              <div className="hidden sm:block text-2xl text-slate-300 dark:text-slate-600">:</div>
+                              <div className="flex flex-col items-center">
+                                <p className="text-5xl sm:text-6xl font-black text-slate-900 dark:text-white font-mono">{String(status.minutesRemaining).padStart(2, '0')}</p>
+                                <p className="text-xs text-slate-500 dark:text-slate-400 font-semibold mt-3 uppercase tracking-wide">Minutes</p>
+                              </div>
                             </div>
-                            <div className="text-slate-300 dark:text-slate-600 text-3xl">:</div>
-                            <div>
-                              <p className="text-4xl sm:text-5xl font-black text-slate-900 dark:text-white font-mono">{String(status.minutesRemaining).padStart(2, '0')}</p>
-                              <p className="text-xs text-slate-500 dark:text-slate-400 font-semibold mt-2 uppercase">Minutes</p>
-                            </div>
-                          </div>
-                        </div>
-                      )}
+                          </>
+                        )}
 
-                      {status.isPending && (
-                        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg p-6">
-                          <p className="text-xs text-slate-500 dark:text-slate-400 font-semibold uppercase tracking-wide mb-4">Processing Timeline</p>
-                          <div className="flex items-center justify-between gap-8">
-                            <div>
-                              <p className="text-4xl sm:text-5xl font-black text-slate-900 dark:text-white font-mono">{status.daysRemaining}</p>
-                              <p className="text-xs text-slate-500 dark:text-slate-400 font-semibold mt-2 uppercase">Days</p>
+                        {status.isPending && (
+                          <>
+                            <p className="text-xs text-slate-500 dark:text-slate-400 font-semibold uppercase tracking-wide mb-6">Processing Timeline</p>
+                            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-center gap-6 sm:gap-4 mb-6">
+                              <div className="flex flex-col items-center">
+                                <p className="text-5xl sm:text-6xl font-black text-slate-900 dark:text-white font-mono">{status.daysRemaining}</p>
+                                <p className="text-xs text-slate-500 dark:text-slate-400 font-semibold mt-3 uppercase tracking-wide">Days</p>
+                              </div>
+                              <div className="hidden sm:block text-2xl text-slate-300 dark:text-slate-600">:</div>
+                              <div className="flex flex-col items-center">
+                                <p className="text-5xl sm:text-6xl font-black text-slate-900 dark:text-white font-mono">{status.hoursRemaining}</p>
+                                <p className="text-xs text-slate-500 dark:text-slate-400 font-semibold mt-3 uppercase tracking-wide">Hours</p>
+                              </div>
                             </div>
-                            <div className="text-slate-300 dark:text-slate-600 text-3xl">:</div>
-                            <div>
-                              <p className="text-4xl sm:text-5xl font-black text-slate-900 dark:text-white font-mono">{status.hoursRemaining}</p>
-                              <p className="text-xs text-slate-500 dark:text-slate-400 font-semibold mt-2 uppercase">Hours</p>
+                            <div className="w-full bg-slate-200 dark:bg-slate-700 h-1.5 rounded-full overflow-hidden">
+                              <motion.div
+                                className="h-full bg-slate-900 dark:bg-slate-100"
+                                initial={{ width: '0%' }}
+                                animate={{ width: `${status.progressPercentage}%` }}
+                                transition={{ duration: 1 }}
+                              />
                             </div>
-                          </div>
-                          <div className="mt-6 bg-slate-100 dark:bg-slate-800 h-1 rounded-full overflow-hidden">
-                            <motion.div
-                              className="h-full bg-slate-900 dark:bg-white"
-                              initial={{ width: '0%' }}
-                              animate={{ width: `${status.progressPercentage}%` }}
-                              transition={{ duration: 1 }}
-                            />
-                          </div>
-                        </div>
-                      )}
-                    </div>
+                            <p className="text-xs text-slate-500 dark:text-slate-400 font-semibold mt-3 text-center">{Math.round(status.progressPercentage)}% Complete</p>
+                          </>
+                        )}
+                      </div>
+                    )}
 
-                    {/* Grant Card - Below Timer */}
-                    <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg p-6 sm:p-8">
-                      <div className="flex items-center justify-between mb-8">
-                        <div>
-                          <p className="text-xs text-slate-500 dark:text-slate-400 font-semibold uppercase tracking-wide">Available Balance</p>
-                          <div className="flex items-baseline gap-3 mt-2">
-                            <span className="text-5xl sm:text-6xl font-black text-slate-900 dark:text-white">
+                    {/* AVAILABLE BALANCE CARD - Always Second, Right Below Timer */}
+                    <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl p-6 sm:p-8">
+                      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-6">
+                        <div className="flex-1 min-w-0">
+                          <p className="text-xs text-slate-500 dark:text-slate-400 font-semibold uppercase tracking-wide mb-3">Available Balance</p>
+                          <div className="flex items-baseline gap-3 flex-wrap">
+                            <span className="text-5xl sm:text-6xl font-black text-slate-900 dark:text-white break-words">
                               {privacySettings.hideBalance ? '••••' : `$${formatAmount(trackingState.currentUser?.amount)}`}
                             </span>
                             <button
                               onClick={() => setPrivacySettings({...privacySettings, hideBalance: !privacySettings.hideBalance})}
-                              className="p-2 text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 transition-colors"
+                              className="p-2 text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 transition-colors flex-shrink-0"
                               title={privacySettings.hideBalance ? "Show balance" : "Hide balance"}
                             >
                               {privacySettings.hideBalance ? <EyeOff size={20} /> : <Eye size={20} />}
                             </button>
                           </div>
                         </div>
-                        <div className="text-right">
-                          <p className="text-xs text-slate-500 dark:text-slate-400 font-semibold uppercase tracking-wide mb-2">Status</p>
-                          <p className="text-sm font-black text-slate-900 dark:text-white">
-                            {status.isHidden ? 'Initializing' : status.isPending ? 'Processing' : 'Active'}
+                        <div className="sm:text-right">
+                          <p className="text-xs text-slate-500 dark:text-slate-400 font-semibold uppercase tracking-wide mb-2">Account Status</p>
+                          <p className="text-lg sm:text-base font-black text-slate-900 dark:text-white">
+                            {status.isHidden ? '⏳ Initializing' : status.isPending ? '🔄 Processing' : '✅ Active'}
                           </p>
                         </div>
                       </div>
+                    </div>
 
-                      <div className="border-t border-slate-200 dark:border-slate-700 pt-6">
-                        <div className="grid grid-cols-2 gap-6">
-                          <div>
-                            <p className="text-xs text-slate-500 dark:text-slate-400 font-semibold uppercase tracking-wide mb-1">Grant Category</p>
-                            <p className="text-sm font-black text-slate-900 dark:text-white">{trackingState.currentGrant || 'N/A'}</p>
-                          </div>
-                          <div>
-                            <p className="text-xs text-slate-500 dark:text-slate-400 font-semibold uppercase tracking-wide mb-1">Account Holder</p>
-                            <p className="text-sm font-black text-slate-900 dark:text-white truncate">{trackingState.currentUser?.fullName || 'User'}</p>
-                          </div>
+                    {/* ACCOUNT DETAILS CARD - Third Card */}
+                    <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl p-6 sm:p-8">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        <div>
+                          <p className="text-xs text-slate-500 dark:text-slate-400 font-semibold uppercase tracking-wide mb-2">Grant Category</p>
+                          <p className="text-base font-black text-slate-900 dark:text-white">{trackingState.currentGrant || 'N/A'}</p>
+                        </div>
+                        <div>
+                          <p className="text-xs text-slate-500 dark:text-slate-400 font-semibold uppercase tracking-wide mb-2">Account Holder</p>
+                          <p className="text-base font-black text-slate-900 dark:text-white break-words">{trackingState.currentUser?.fullName || 'User'}</p>
                         </div>
                       </div>
                     </div>
@@ -1122,51 +1126,45 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
                 );
               })()}
 
-              {/* Processing Timeline */}
+              {/* Processing Timeline Card */}
               {(() => {
                 const status = calculateGrantStatus(trackingState.currentUser?.timestamp || '');
                 return (
-                  <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg p-6 sm:p-8">
+                  <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl p-6 sm:p-8">
                     <p className="font-black text-slate-900 dark:text-white text-sm uppercase tracking-widest mb-6">Processing Details</p>
                     
                     {status.isHidden && (
-                      <div className="space-y-3">
-                        <div className="flex items-center gap-4">
-                          <div className="flex-shrink-0 w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center">
-                            <Clock className="text-slate-600 dark:text-slate-400" size={20} />
-                          </div>
-                          <div>
-                            <p className="font-semibold text-slate-900 dark:text-white text-sm">Phase 1: Account Initialization</p>
-                            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Your grant account is being configured and secured...</p>
-                          </div>
+                      <div className="flex items-start gap-4">
+                        <div className="flex-shrink-0 w-12 h-12 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center">
+                          <Clock className="text-slate-600 dark:text-slate-400" size={24} />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="font-semibold text-slate-900 dark:text-white text-sm sm:text-base">Phase 1: Account Initialization</p>
+                          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Your grant account is being configured and secured...</p>
                         </div>
                       </div>
                     )}
 
                     {status.isPending && (
-                      <div className="space-y-3">
-                        <div className="flex items-center gap-4">
-                          <div className="flex-shrink-0 w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center">
-                            <AlertCircle className="text-slate-600 dark:text-slate-400" size={20} />
-                          </div>
-                          <div className="flex-1">
-                            <p className="font-semibold text-slate-900 dark:text-white text-sm">Phase 2: Processing</p>
-                            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Day {status.dayNumber} of 14 — {Math.round(status.progressPercentage)}% complete</p>
-                          </div>
+                      <div className="flex items-start gap-4">
+                        <div className="flex-shrink-0 w-12 h-12 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center">
+                          <AlertCircle className="text-slate-600 dark:text-slate-400" size={24} />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="font-semibold text-slate-900 dark:text-white text-sm sm:text-base">Phase 2: Processing</p>
+                          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Day {status.dayNumber} of 14 — {Math.round(status.progressPercentage)}% complete</p>
                         </div>
                       </div>
                     )}
 
                     {status.isReceived && (
-                      <div className="space-y-3">
-                        <div className="flex items-center gap-4">
-                          <div className="flex-shrink-0 w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center">
-                            <CheckCircle2 className="text-slate-600 dark:text-slate-400" size={20} />
-                          </div>
-                          <div>
-                            <p className="font-semibold text-slate-900 dark:text-white text-sm">Phase 3: Completed</p>
-                            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Your grant has been approved and is ready for withdrawal</p>
-                          </div>
+                      <div className="flex items-start gap-4">
+                        <div className="flex-shrink-0 w-12 h-12 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center">
+                          <CheckCircle2 className="text-slate-600 dark:text-slate-400" size={24} />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="font-semibold text-slate-900 dark:text-white text-sm sm:text-base">Phase 3: Completed</p>
+                          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Your grant has been approved and is ready for withdrawal</p>
                         </div>
                       </div>
                     )}
@@ -1178,7 +1176,7 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
               {(() => {
                 const status = calculateGrantStatus(trackingState.currentUser?.timestamp || '');
                 return (
-                  <div className="bg-white dark:bg-slate-900 rounded-2xl p-4 sm:p-6 border-2 border-slate-200 dark:border-slate-700">
+                  <div className="bg-white dark:bg-slate-900 rounded-xl p-4 sm:p-6 border border-slate-200 dark:border-slate-700">
                     <h3 className="font-black text-slate-900 dark:text-white mb-4 flex items-center gap-2 text-base sm:text-lg">
                       <RefreshCw size={20} />
                       Transfer Funds
@@ -1186,18 +1184,18 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
                     
                     {status.isHidden || status.isPending ? (
                       <div className="space-y-3">
-                        <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 rounded-xl p-3 sm:p-4 flex gap-2">
-                          <Lock size={18} className="text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5" />
-                          <div>
-                            <p className="text-sm sm:text-base font-black text-blue-900 dark:text-blue-200 mb-1">Account Locked</p>
-                            <p className="text-xs sm:text-sm text-blue-800 dark:text-blue-300">
+                        <div className="bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg p-3 sm:p-4 flex gap-3">
+                          <Lock size={18} className="text-slate-600 dark:text-slate-400 flex-shrink-0 mt-0.5" />
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm sm:text-base font-black text-slate-900 dark:text-white mb-1">Account Locked</p>
+                            <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-300">
                               Transfers are unavailable while your grant is processing. You'll be able to transfer funds after day 15.
                             </p>
                           </div>
                         </div>
                         <button
                           disabled
-                          className="w-full bg-slate-300 dark:bg-slate-700 text-slate-600 dark:text-slate-400 font-black py-3 rounded-xl cursor-not-allowed opacity-60"
+                          className="w-full bg-slate-300 dark:bg-slate-700 text-slate-600 dark:text-slate-400 font-black py-3 rounded-lg cursor-not-allowed opacity-60"
                         >
                           🔒 Transfers Locked
                         </button>
