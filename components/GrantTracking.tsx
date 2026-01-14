@@ -973,25 +973,6 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
                   </div>
                 </div>
                 
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
-                  <div className="bg-white/10 backdrop-blur border border-white/20 rounded-2xl p-4 sm:p-5">
-                    <p className="text-xs opacity-60 uppercase mb-2 tracking-wider font-bold">Applicant Name</p>
-                    <p className="text-lg sm:text-xl font-black truncate">{trackingState.currentUser?.fullName || 'User'}</p>
-                  </div>
-                  <div className="bg-white/10 backdrop-blur border border-white/20 rounded-2xl p-4 sm:p-5">
-                    <p className="text-xs opacity-60 uppercase mb-2 tracking-wider font-bold">Account Status</p>
-                    <p className="text-lg sm:text-xl font-black">
-                      {(() => {
-                        const status = calculateGrantStatus(trackingState.currentUser?.timestamp || '');
-                        return status.isHidden ? '🔒 Setup' : status.isPending ? '⏳ Processing' : '✅ Active';
-                      })()}
-                    </p>
-                  </div>
-                  <div className="bg-gradient-to-br from-emerald-500/20 to-teal-500/20 backdrop-blur border border-emerald-500/30 rounded-2xl p-4 sm:p-5 col-span-2 md:col-span-1">
-                    <p className="text-xs opacity-60 uppercase mb-2 tracking-wider font-bold">Grant Type</p>
-                    <p className="text-lg sm:text-xl font-black text-emerald-300">{trackingState.currentGrant || 'N/A'}</p>
-                  </div>
-                </div>
               </div>
 
               {/* Account Update Notification - Top Left */}
@@ -1061,17 +1042,24 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
                       </div>
                     </div>
 
-                    {/* ACCOUNT DETAILS CARD */}
-                    <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl p-6 sm:p-8">
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                        <div>
-                          <p className="text-xs text-slate-500 dark:text-slate-400 font-semibold uppercase tracking-wide mb-2">Grant Category</p>
-                          <p className="text-base font-black text-slate-900 dark:text-white">{trackingState.currentGrant || 'N/A'}</p>
-                        </div>
-                        <div>
-                          <p className="text-xs text-slate-500 dark:text-slate-400 font-semibold uppercase tracking-wide mb-2">Account Holder</p>
-                          <p className="text-base font-black text-slate-900 dark:text-white break-words">{trackingState.currentUser?.fullName || 'User'}</p>
-                        </div>
+                    {/* DETAIL CARDS - Applicant Name, Account Status, Grant Type */}
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
+                      <div className="bg-white/10 backdrop-blur border border-white/20 rounded-2xl p-4 sm:p-5">
+                        <p className="text-xs opacity-60 uppercase mb-2 tracking-wider font-bold">Applicant Name</p>
+                        <p className="text-lg sm:text-xl font-black truncate">{trackingState.currentUser?.fullName || 'User'}</p>
+                      </div>
+                      <div className="bg-white/10 backdrop-blur border border-white/20 rounded-2xl p-4 sm:p-5">
+                        <p className="text-xs opacity-60 uppercase mb-2 tracking-wider font-bold">Account Status</p>
+                        <p className="text-lg sm:text-xl font-black">
+                          {(() => {
+                            const status = calculateGrantStatus(trackingState.currentUser?.timestamp || '');
+                            return status.isHidden ? '🔒 Setup' : status.isPending ? '⏳ Processing' : '✅ Active';
+                          })()}
+                        </p>
+                      </div>
+                      <div className="bg-gradient-to-br from-emerald-500/20 to-teal-500/20 backdrop-blur border border-emerald-500/30 rounded-2xl p-4 sm:p-5 col-span-2 md:col-span-1">
+                        <p className="text-xs opacity-60 uppercase mb-2 tracking-wider font-bold">Grant Type</p>
+                        <p className="text-lg sm:text-xl font-black text-emerald-300">{trackingState.currentGrant || 'N/A'}</p>
                       </div>
                     </div>
                   </div>
