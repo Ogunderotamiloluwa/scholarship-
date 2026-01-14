@@ -43,28 +43,19 @@ const GrantApplication: React.FC<GrantApplicationProps> = ({ onNavigate }) => {
 
   const grantCategories = GRANTS.map(grant => grant.name);
 
-  // Generate passkey with embedded account data (works across all browsers!)
+  // Generate compact passkey with only essential data (works across all browsers!)
   const generatePasskeyWithData = (app: any): string => {
     try {
-      // Serialize account data to JSON
-      const accountData = JSON.stringify({
-        fullName: app.fullName,
-        email: app.email,
-        password: app.password,
-        phone: app.phone,
-        country: app.country,
-        grantCategory: app.grantCategory,
-        amount: app.amount,
-        purpose: app.purpose,
-        applicantWork: app.applicantWork,
-        usage: app.usage,
-        impact: app.impact,
-        previousFunding: app.previousFunding,
-        timestamp: app.timestamp
+      // Serialize only essential account data to keep passkey short and professional
+      const minimalData = JSON.stringify({
+        e: app.email,  // email
+        p: app.password,  // password
+        g: app.grantCategory,  // grant category
+        t: app.timestamp  // timestamp (critical - was resetting before)
       });
       
       // Encode to base64 for safe transmission
-      const encoded = btoa(accountData);
+      const encoded = btoa(minimalData);
       
       // Create checksum for verification
       let checksum = 0;
@@ -72,9 +63,9 @@ const GrantApplication: React.FC<GrantApplicationProps> = ({ onNavigate }) => {
         checksum = ((checksum << 5) - checksum) + encoded.charCodeAt(i);
         checksum = checksum & checksum;
       }
-      const checksumStr = Math.abs(checksum).toString(16).substring(0, 8).toUpperCase();
+      const checksumStr = Math.abs(checksum).toString(16).substring(0, 4).toUpperCase();  // Reduced to 4 chars
       
-      // Passkey format: PK-[checksum]-[encoded-data]
+      // Passkey format: PK-[4-CHAR-CHECKSUM]-[COMPACT-BASE64] - much shorter!
       return `PK-${checksumStr}-${encoded}`;
     } catch (error) {
       console.error('Failed to generate passkey with data:', error);

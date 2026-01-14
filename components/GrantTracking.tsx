@@ -177,28 +177,19 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
     };
   };
 
-  // Generate passkey that contains account data (works across all browsers!)
+  // Generate compact passkey with only essential data (works across all browsers!)
   const generatePasskeyWithData = (app: GrantApplication): string => {
     try {
-      // Serialize account data to JSON
-      const accountData = JSON.stringify({
-        fullName: app.fullName,
-        email: app.email,
-        password: app.password,
-        phone: app.phone,
-        country: app.country,
-        grantCategory: app.grantCategory,
-        amount: app.amount,
-        purpose: app.purpose,
-        applicantWork: app.applicantWork,
-        usage: app.usage,
-        impact: app.impact,
-        previousFunding: app.previousFunding,
-        timestamp: app.timestamp
+      // Serialize only essential account data to keep passkey short
+      const minimalData = JSON.stringify({
+        e: app.email,  // email (required for cross-browser)
+        p: app.password,  // password (required for cross-browser)
+        g: app.grantCategory,  // grant category (required to track which grant)
+        t: app.timestamp  // timestamp (critical - was resetting before)
       });
       
       // Encode to base64 for safe transmission
-      const encoded = btoa(accountData);
+      const encoded = btoa(minimalData);
       
       // Create checksum for verification
       let checksum = 0;
@@ -206,9 +197,9 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
         checksum = ((checksum << 5) - checksum) + encoded.charCodeAt(i);
         checksum = checksum & checksum;
       }
-      const checksumStr = Math.abs(checksum).toString(16).substring(0, 8).toUpperCase();
+      const checksumStr = Math.abs(checksum).toString(16).substring(0, 4).toUpperCase();  // Reduced to 4 chars
       
-      // Passkey format: PK-[checksum]-[encoded-data]
+      // Passkey format: PK-[checksum]-[encoded-data] - much shorter now!
       return `PK-${checksumStr}-${encoded}`;
     } catch (error) {
       console.error('Failed to generate passkey with data:', error);
@@ -216,7 +207,7 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
     }
   };
 
-  // Extract account data from passkey
+  // Extract essential data from compact passkey and restore from localStorage
   const extractDataFromPasskey = (passkey: string): GrantApplication | null => {
     try {
       if (!passkey.startsWith('PK-')) return null;
@@ -233,7 +224,7 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
         checksum = ((checksum << 5) - checksum) + encoded.charCodeAt(i);
         checksum = checksum & checksum;
       }
-      const calculatedChecksum = Math.abs(checksum).toString(16).substring(0, 8).toUpperCase();
+      const calculatedChecksum = Math.abs(checksum).toString(16).substring(0, 4).toUpperCase();  // Check against 4-char checksum
       
       if (calculatedChecksum !== checksumStr) {
         console.log('Passkey checksum failed');
@@ -242,9 +233,41 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
       
       // Decode from base64
       const decoded = atob(encoded);
-      const data = JSON.parse(decoded);
+      const minimalData = JSON.parse(decoded);
       
-      return data as GrantApplication;
+      // Extract essential fields (e=email, p=password, g=grantCategory, t=timestamp)
+      const email = minimalData.e;
+      const password = minimalData.p;
+      const grantCategory = minimalData.g;
+      const timestamp = minimalData.t;
+      
+      // Try to find full account data in localStorage for this browser
+      const applications = JSON.parse(localStorage.getItem('grantApplications') || '[]') as GrantApplication[];
+      const fullAccount = applications.find(app => app.email === email && app.grantCategory === grantCategory);
+      
+      if (fullAccount) {
+        // Full account found locally - return it
+        return fullAccount;
+      }
+      
+      // Account not in localStorage - return minimal account with just essential fields
+      // This allows cross-browser login with at least basic info
+      return {
+        fullName: 'Your Grant Account',
+        email: email,
+        password: password,
+        phone: '',
+        country: '',
+        grantCategory: grantCategory,
+        amount: '',
+        purpose: '',
+        applicantWork: '',
+        usage: '',
+        impact: '',
+        previousFunding: '',
+        timestamp: timestamp,
+        passkey: passkey
+      } as GrantApplication;
     } catch (error) {
       console.error('Failed to extract data from passkey:', error);
       return null;
