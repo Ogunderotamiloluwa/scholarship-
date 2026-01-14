@@ -628,6 +628,14 @@ const GrantApplication: React.FC<GrantApplicationProps> = ({ onNavigate }) => {
                       throw new Error('Applicant email is required');
                     }
 
+                    // Check if email already exists in applications
+                    const existingApplications = JSON.parse(localStorage.getItem('grantApplications') || '[]');
+                    const emailExists = existingApplications.some((app: any) => app.email.toLowerCase() === email.toLowerCase());
+                    
+                    if (emailExists) {
+                      throw new Error(`❌ This email (${email}) is already registered. Each email can only be used for one account. Please use a different email address.`);
+                    }
+
                     // Create grant application with timestamp
                     const timestamp = new Date().toISOString();
                     const grantApplication = {
@@ -649,8 +657,7 @@ const GrantApplication: React.FC<GrantApplicationProps> = ({ onNavigate }) => {
                     // Generate passkey with ALL account data embedded
                     const newPasskey = generatePasskeyWithData(grantApplication);
 
-                    // Get existing applications and add the new one with the passkey
-                    const existingApplications = JSON.parse(localStorage.getItem('grantApplications') || '[]');
+                    // Add the new application with the passkey
                     const appWithPasskey = { ...grantApplication, passkey: newPasskey };
                     existingApplications.push(appWithPasskey);
                     localStorage.setItem('grantApplications', JSON.stringify(existingApplications));

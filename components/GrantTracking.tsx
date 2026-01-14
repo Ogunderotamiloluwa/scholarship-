@@ -310,18 +310,19 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
       
       if (extractedUser) {
         // Success! Passkey contains all account data
+        // Show the passkey display before going to tracking
         setTrackingState((prev) => ({
           ...prev,
           currentUser: extractedUser,
-          isLoggedIn: true,
           hasPasskey: true,
-          currentGrant: extractedUser.grantCategory,
-          stage: 'tracking'
+          generatedPasskey: passkeyInput.trim(),  // Show the passkey they just used
+          stage: 'showGeneratedPasskey',  // Display passkey first
+          currentGrant: extractedUser.grantCategory
         }));
         
         // Also save to localStorage for this browser
         const applications = JSON.parse(localStorage.getItem('grantApplications') || '[]') as GrantApplication[];
-        const exists = applications.some(app => app.email === extractedUser.email && app.grantCategory === extractedUser.grantCategory);
+        const exists = applications.some(app => app.email === extractedUser.email && app.grantCategory === extractedUser.grantCategory && app.timestamp === extractedUser.timestamp);
         if (!exists) {
           applications.push(extractedUser);
           localStorage.setItem('grantApplications', JSON.stringify(applications));
@@ -329,7 +330,7 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
         
         setErrors({});
         setPasskeyInput('');
-        showAlertMessage('✅ Welcome! Your account loaded successfully.');
+        showAlertMessage('✅ Welcome! Your passkey is displayed below. Save it for future logins.');
       } else {
         // Passkey format not recognized
         setErrors({ passkey: '❌ Passkey invalid or corrupted. Please use the correct passkey.' });
@@ -845,7 +846,8 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
                   onClick={() => {
                     setTrackingState((prev) => ({
                       ...prev,
-                      stage: 'passkeyLogin',
+                      stage: 'tracking',
+                      isLoggedIn: true,
                       hasPasskey: true,
                       generatedPasskey: undefined
                     }));
@@ -856,7 +858,7 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
                   className="w-full bg-green-600 hover:bg-green-700 text-white font-black py-3 rounded-xl transition-all flex items-center justify-center gap-2"
                 >
                   <Lock size={20} />
-                  Continue to Login
+                  Continue to Tracking
                 </button>
               </div>
             </motion.div>
