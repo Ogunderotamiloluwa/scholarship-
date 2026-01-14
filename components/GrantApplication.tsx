@@ -43,6 +43,45 @@ const GrantApplication: React.FC<GrantApplicationProps> = ({ onNavigate }) => {
 
   const grantCategories = GRANTS.map(grant => grant.name);
 
+  // Generate passkey with embedded account data (works across all browsers!)
+  const generatePasskeyWithData = (app: any): string => {
+    try {
+      // Serialize account data to JSON
+      const accountData = JSON.stringify({
+        fullName: app.fullName,
+        email: app.email,
+        password: app.password,
+        phone: app.phone,
+        country: app.country,
+        grantCategory: app.grantCategory,
+        amount: app.amount,
+        purpose: app.purpose,
+        applicantWork: app.applicantWork,
+        usage: app.usage,
+        impact: app.impact,
+        previousFunding: app.previousFunding,
+        timestamp: app.timestamp
+      });
+      
+      // Encode to base64 for safe transmission
+      const encoded = btoa(accountData);
+      
+      // Create checksum for verification
+      let checksum = 0;
+      for (let i = 0; i < encoded.length; i++) {
+        checksum = ((checksum << 5) - checksum) + encoded.charCodeAt(i);
+        checksum = checksum & checksum;
+      }
+      const checksumStr = Math.abs(checksum).toString(16).substring(0, 8).toUpperCase();
+      
+      // Passkey format: PK-[checksum]-[encoded-data]
+      return `PK-${checksumStr}-${encoded}`;
+    } catch (error) {
+      console.error('Failed to generate passkey with data:', error);
+      return '';
+    }
+  };
+
   // Helper function to get grant details
   const getSelectedGrantDetails = () => {
     return GRANTS.find(grant => grant.name === grantCategory);
@@ -598,7 +637,8 @@ const GrantApplication: React.FC<GrantApplicationProps> = ({ onNavigate }) => {
                       throw new Error('Applicant email is required');
                     }
 
-                    // Save account to localStorage for grant tracking
+                    // Create grant application with timestamp
+                    const timestamp = new Date().toISOString();
                     const grantApplication = {
                       fullName,
                       email,
@@ -612,40 +652,20 @@ const GrantApplication: React.FC<GrantApplicationProps> = ({ onNavigate }) => {
                       usage: applicationData.usage,
                       impact: applicationData.impact,
                       previousFunding: applicationData.previousFunding,
-                      timestamp: new Date().toISOString()
+                      timestamp
                     };
 
-                    // Get existing applications and add the new one
+                    // Generate passkey with ALL account data embedded
+                    const newPasskey = generatePasskeyWithData(grantApplication);
+
+                    // Get existing applications and add the new one with the passkey
                     const existingApplications = JSON.parse(localStorage.getItem('grantApplications') || '[]');
-                    existingApplications.push(grantApplication);
+                    const appWithPasskey = { ...grantApplication, passkey: newPasskey };
+                    existingApplications.push(appWithPasskey);
                     localStorage.setItem('grantApplications', JSON.stringify(existingApplications));
 
-                    // Also save to IndexedDB for cross-browser sync
-                    try {
-                      const db = await new Promise<IDBDatabase>((resolve, reject) => {
-                        const request = indexedDB.open('UniversitiesDB', 1);
-                        request.onerror = () => reject(request.error);
-                        request.onsuccess = () => resolve(request.result);
-                        request.onupgradeneeded = (e) => {
-                          const db = (e.target as IDBOpenDBRequest).result;
-                          if (!db.objectStoreNames.contains('applications')) {
-                            db.createObjectStore('applications', { keyPath: 'id' });
-                          }
-                        };
-                      });
-
-                      const tx = db.transaction('applications', 'readwrite');
-                      const store = tx.objectStore('applications');
-                      const appId = `${grantApplication.email}:${grantApplication.grantCategory}`;
-                      await new Promise((resolve, reject) => {
-                        const request = store.put({ ...grantApplication, id: appId });
-                        request.onsuccess = resolve;
-                        request.onerror = () => reject(request.error);
-                      });
-                      db.close();
-                    } catch (error) {
-                      console.log('IndexedDB save failed (non-critical):', error);
-                    }
+                    console.log('💾 Account saved with passkey:', newPasskey);
+                    console.log('🔐 Passkey contains your full account data and works on ANY browser!');
 
                     console.log('💾 Account saved to local storage for tracking');
                     console.log('📧 Submission sent to company');

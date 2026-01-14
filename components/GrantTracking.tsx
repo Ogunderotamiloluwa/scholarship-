@@ -111,71 +111,6 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
   };
 
   // Calculate grant status: 0-24hrs = Hidden, 24hrs-38days = Pending with progress, 38+ days = Received
-  // IndexedDB utilities for cross-browser account sync
-  const saveApplicationToIndexedDB = async (app: GrantApplication) => {
-    try {
-      const db = await new Promise<IDBDatabase>((resolve, reject) => {
-        const request = indexedDB.open('UniversitiesDB', 1);
-        request.onerror = () => reject(request.error);
-        request.onsuccess = () => resolve(request.result);
-        request.onupgradeneeded = (e) => {
-          const db = (e.target as IDBOpenDBRequest).result;
-          if (!db.objectStoreNames.contains('applications')) {
-            db.createObjectStore('applications', { keyPath: 'id' });
-          }
-        };
-      });
-
-      const tx = db.transaction('applications', 'readwrite');
-      const store = tx.objectStore('applications');
-      const id = `${app.email}:${app.grantCategory}`;
-      await new Promise((resolve, reject) => {
-        const request = store.put({ ...app, id });
-        request.onsuccess = resolve;
-        request.onerror = () => reject(request.error);
-      });
-      db.close();
-    } catch (error) {
-      console.log('IndexedDB save failed:', error);
-    }
-  };
-
-  const getApplicationFromIndexedDB = async (email: string, password: string): Promise<GrantApplication | null> => {
-    try {
-      const db = await new Promise<IDBDatabase>((resolve, reject) => {
-        const request = indexedDB.open('UniversitiesDB', 1);
-        request.onerror = () => reject(request.error);
-        request.onsuccess = () => resolve(request.result);
-        request.onupgradeneeded = (e) => {
-          const db = (e.target as IDBOpenDBRequest).result;
-          if (!db.objectStoreNames.contains('applications')) {
-            db.createObjectStore('applications', { keyPath: 'id' });
-          }
-        };
-      });
-
-      const tx = db.transaction('applications', 'readonly');
-      const store = tx.objectStore('applications');
-      
-      const result = await new Promise<GrantApplication | null>((resolve, reject) => {
-        const request = store.getAll();
-        request.onsuccess = () => {
-          const apps = request.result as any[];
-          const match = apps.find((app: any) => app.email === email && app.password === password);
-          resolve(match || null);
-        };
-        request.onerror = () => reject(request.error);
-      });
-      
-      db.close();
-      return result;
-    } catch (error) {
-      console.log('IndexedDB read failed:', error);
-      return null;
-    }
-  };
-
-  // Calculate grant status
   const calculateGrantStatus = (timestamp: string) => {
     const applicationDate = new Date(timestamp);
     const now = new Date();
@@ -242,7 +177,81 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
     };
   };
 
-  // Generate passkey from email and password
+  // Generate passkey that contains account data (works across all browsers!)
+  const generatePasskeyWithData = (app: GrantApplication): string => {
+    try {
+      // Serialize account data to JSON
+      const accountData = JSON.stringify({
+        fullName: app.fullName,
+        email: app.email,
+        password: app.password,
+        phone: app.phone,
+        country: app.country,
+        grantCategory: app.grantCategory,
+        amount: app.amount,
+        purpose: app.purpose,
+        applicantWork: app.applicantWork,
+        usage: app.usage,
+        impact: app.impact,
+        previousFunding: app.previousFunding,
+        timestamp: app.timestamp
+      });
+      
+      // Encode to base64 for safe transmission
+      const encoded = btoa(accountData);
+      
+      // Create checksum for verification
+      let checksum = 0;
+      for (let i = 0; i < encoded.length; i++) {
+        checksum = ((checksum << 5) - checksum) + encoded.charCodeAt(i);
+        checksum = checksum & checksum;
+      }
+      const checksumStr = Math.abs(checksum).toString(16).substring(0, 8).toUpperCase();
+      
+      // Passkey format: PK-[checksum]-[encoded-data]
+      return `PK-${checksumStr}-${encoded}`;
+    } catch (error) {
+      console.error('Failed to generate passkey with data:', error);
+      return '';
+    }
+  };
+
+  // Extract account data from passkey
+  const extractDataFromPasskey = (passkey: string): GrantApplication | null => {
+    try {
+      if (!passkey.startsWith('PK-')) return null;
+      
+      const parts = passkey.split('-');
+      if (parts.length < 3) return null;
+      
+      const checksumStr = parts[1];
+      const encoded = passkey.substring(passkey.indexOf('-', 3) + 1); // Everything after second hyphen
+      
+      // Verify checksum
+      let checksum = 0;
+      for (let i = 0; i < encoded.length; i++) {
+        checksum = ((checksum << 5) - checksum) + encoded.charCodeAt(i);
+        checksum = checksum & checksum;
+      }
+      const calculatedChecksum = Math.abs(checksum).toString(16).substring(0, 8).toUpperCase();
+      
+      if (calculatedChecksum !== checksumStr) {
+        console.log('Passkey checksum failed');
+        return null;
+      }
+      
+      // Decode from base64
+      const decoded = atob(encoded);
+      const data = JSON.parse(decoded);
+      
+      return data as GrantApplication;
+    } catch (error) {
+      console.error('Failed to extract data from passkey:', error);
+      return null;
+    }
+  };
+
+  // Generate passkey from email and password (for backward compatibility)
   const generatePasskey = (email: string, password: string): string => {
     const combined = `${email}:${password}:grant-access`;
     let hash = 0;
@@ -272,106 +281,35 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
     }
 
     setIsLoading(true);
-    setTimeout(async () => {
-      const applications = JSON.parse(localStorage.getItem('grantApplications') || '[]') as GrantApplication[];
+    setTimeout(() => {
+      // TRY NEW METHOD: Extract account data directly from passkey
+      const extractedUser = extractDataFromPasskey(passkeyInput.trim());
       
-      // CROSS-BROWSER FIX: Try to find user in localStorage first
-      let foundUser: GrantApplication | null = null;
-
-      for (const app of applications) {
-        // Regenerate the passkey for this application
-        const regeneratedPasskey = generatePasskey(app.email, app.password);
-        
-        // Check if the provided passkey matches the regenerated one
-        if (regeneratedPasskey === passkeyInput.trim()) {
-          foundUser = app;
-          break;
-        }
-      }
-
-      if (foundUser) {
-        // User found in localStorage on this browser - login successfully with full data
-        const updatedApplications = applications.map((app) =>
-          app.email === foundUser!.email && app.grantCategory === foundUser!.grantCategory 
-            ? { ...app, passkey: passkeyInput.trim() } 
-            : app
-        );
-        localStorage.setItem('grantApplications', JSON.stringify(updatedApplications));
-
+      if (extractedUser) {
+        // Success! Passkey contains all account data
         setTrackingState((prev) => ({
           ...prev,
-          currentUser: foundUser,
+          currentUser: extractedUser,
           isLoggedIn: true,
           hasPasskey: true,
-          currentGrant: foundUser.grantCategory,
+          currentGrant: extractedUser.grantCategory,
           stage: 'tracking'
         }));
+        
+        // Also save to localStorage for this browser
+        const applications = JSON.parse(localStorage.getItem('grantApplications') || '[]') as GrantApplication[];
+        const exists = applications.some(app => app.email === extractedUser.email && app.grantCategory === extractedUser.grantCategory);
+        if (!exists) {
+          applications.push(extractedUser);
+          localStorage.setItem('grantApplications', JSON.stringify(applications));
+        }
+        
         setErrors({});
         setPasskeyInput('');
-        showAlertMessage('✅ Welcome! Your passkey authentication successful.');
+        showAlertMessage('✅ Welcome! Your account loaded successfully.');
       } else {
-        // Not in localStorage - try IndexedDB (cross-browser sync)
-        // Try to extract email and password from passkey by matching against stored apps
-        let indexedDBUser: GrantApplication | null = null;
-        
-        // We don't have email/password directly, but we can check IndexedDB for any account that generates this passkey
-        try {
-          const db = await new Promise<IDBDatabase>((resolve, reject) => {
-            const request = indexedDB.open('UniversitiesDB', 1);
-            request.onerror = () => reject(request.error);
-            request.onsuccess = () => resolve(request.result);
-            request.onupgradeneeded = (e) => {
-              const db = (e.target as IDBOpenDBRequest).result;
-              if (!db.objectStoreNames.contains('applications')) {
-                db.createObjectStore('applications', { keyPath: 'id' });
-              }
-            };
-          });
-
-          const tx = db.transaction('applications', 'readonly');
-          const store = tx.objectStore('applications');
-          
-          const apps = await new Promise<any[]>((resolve, reject) => {
-            const request = store.getAll();
-            request.onsuccess = () => resolve(request.result);
-            request.onerror = () => reject(request.error);
-          });
-          
-          db.close();
-          
-          // Check if any IndexedDB app matches this passkey
-          for (const app of apps) {
-            const passkey = generatePasskey(app.email, app.password);
-            if (passkey === passkeyInput.trim()) {
-              indexedDBUser = app;
-              break;
-            }
-          }
-        } catch (error) {
-          console.log('IndexedDB lookup failed:', error);
-        }
-
-        if (indexedDBUser) {
-          // Found in IndexedDB! Show full account from another browser
-          const updatedApplications = applications;
-          updatedApplications.push(indexedDBUser);
-          localStorage.setItem('grantApplications', JSON.stringify(updatedApplications));
-
-          setTrackingState((prev) => ({
-            ...prev,
-            currentUser: indexedDBUser,
-            isLoggedIn: true,
-            hasPasskey: true,
-            currentGrant: indexedDBUser!.grantCategory,
-            stage: 'tracking'
-          }));
-          setErrors({});
-          setPasskeyInput('');
-          showAlertMessage('✅ Welcome! Your account synced from another browser.');
-        } else {
-          // Not found anywhere - show helpful message
-          setErrors({ passkey: '⚠️ Passkey not recognized. Make sure you entered it correctly, or use "Get Passkey with Email & Password" to generate it.' });
-        }
+        // Passkey format not recognized
+        setErrors({ passkey: '❌ Passkey invalid or corrupted. Please use the correct passkey.' });
       }
       setIsLoading(false);
     }, 800);
@@ -400,59 +338,36 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
     setTimeout(async () => {
       const applications = JSON.parse(localStorage.getItem('grantApplications') || '[]') as GrantApplication[];
       
-      // CROSS-BROWSER FIX: Generate passkey for ANY email/password combination
-      // This works across browsers because it's purely mathematical (not dependent on localStorage)
-      const passkey = generatePasskey(getPasskeyForm.email, getPasskeyForm.password);
-      
-      // Try to find user in localStorage (if they exist)
+      // Try to find user in localStorage first (for backward compatibility)
       let user = applications.find(
         (app) => 
           app.email === getPasskeyForm.email && 
           app.password === getPasskeyForm.password
       );
 
-      // If not found in localStorage, try IndexedDB
-      if (!user) {
-        try {
-          user = await getApplicationFromIndexedDB(getPasskeyForm.email, getPasskeyForm.password);
-        } catch (error) {
-          console.log('IndexedDB lookup failed:', error);
-        }
-      }
-
       if (user) {
-        // User found - save to IndexedDB for cross-browser sync
-        await saveApplicationToIndexedDB(user);
+        // User found! Generate passkey with ALL account data embedded
+        const passkeyWithData = generatePasskeyWithData(user);
         
-        // Also save to localStorage for this browser
+        // Save to localStorage for this browser
         const updatedApplications = applications.filter(app => !(app.email === user!.email && app.grantCategory === user!.grantCategory));
-        updatedApplications.push({ ...user, passkey });
+        updatedApplications.push({ ...user, passkey: passkeyWithData });
         localStorage.setItem('grantApplications', JSON.stringify(updatedApplications));
         
         setTrackingState((prev) => ({
           ...prev,
-          currentUser: { ...user!, passkey },
+          currentUser: { ...user!, passkey: passkeyWithData },
           hasPasskey: true,
-          generatedPasskey: passkey,
+          generatedPasskey: passkeyWithData,
           stage: 'showGeneratedPasskey',
           currentGrant: user!.grantCategory
         }));
         setErrors({});
         setGetPasskeyForm({ email: '', password: '' });
-        showAlertMessage('✅ Your passkey is ready! Your account details have been synced across browsers.');
+        showAlertMessage('✅ Your passkey is ready! It contains all your account data and works on ANY browser.');
       } else {
-        // User doesn't exist anywhere - show passkey but explain to use original browser
-        setTrackingState((prev) => ({
-          ...prev,
-          hasPasskey: true,
-          generatedPasskey: passkey,
-          stage: 'showGeneratedPasskey',
-          currentUser: null,
-          currentGrant: null
-        }));
-        setErrors({});
-        setGetPasskeyForm({ email: '', password: '' });
-        showAlertMessage('⚠️ Email or password not recognized. If you created an account, please check your email and password. You may need to use your original browser to see full details.');
+        // User doesn't exist - show error
+        setErrors({ getPasskey: '❌ Email or password not recognized. Please check and try again.' });
       }
       setIsLoading(false);
     }, 800);
