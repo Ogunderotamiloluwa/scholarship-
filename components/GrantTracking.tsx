@@ -182,6 +182,7 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
     try {
       // Serialize only essential account data to keep passkey short
       const minimalData = JSON.stringify({
+        n: app.fullName,  // fullName (display name across browsers)
         e: app.email,  // email (required for cross-browser)
         p: app.password,  // password (required for cross-browser)
         g: app.grantCategory,  // grant category (required to track which grant)
@@ -236,6 +237,7 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
       const minimalData = JSON.parse(decoded);
       
       // Extract essential fields from passkey - THESE ARE THE SOURCE OF TRUTH
+      const fullName = minimalData.n;  // Full name from passkey
       const email = minimalData.e;
       const password = minimalData.p;
       const grantCategory = minimalData.g;
@@ -251,9 +253,9 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
       }
       
       // Account not found in localStorage, or timestamp/grant doesn't match
-      // Return complete account using passkey values (which are definitive) and empty optional fields
+      // Return complete account using passkey values (which are definitive)
       return {
-        fullName: 'Your Grant Account',
+        fullName: fullName,  // Use fullName from passkey (works on all browsers!)
         email: email,
         password: password,
         phone: '',
