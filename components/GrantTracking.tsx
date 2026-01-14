@@ -209,25 +209,45 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
     setIsLoading(true);
     setTimeout(() => {
       const applications = JSON.parse(localStorage.getItem('grantApplications') || '[]') as GrantApplication[];
-      // Find user by passkey ONLY (no need for grantCategory since passkey is unique)
-      const user = applications.find(
-        (app) => app.passkey === passkeyInput.trim()
-      );
+      
+      // FIXED: Find user by regenerating passkey from their email/password combination
+      // This allows the passkey to work across different browsers and devices
+      // because it's based on the user's credentials, not on localStorage state
+      let foundUser: GrantApplication | null = null;
 
-      if (user) {
+      for (const app of applications) {
+        // Regenerate the passkey for this application
+        const regeneratedPasskey = generatePasskey(app.email, app.password);
+        
+        // Check if the provided passkey matches the regenerated one
+        if (regeneratedPasskey === passkeyInput.trim()) {
+          foundUser = app;
+          break;
+        }
+      }
+
+      if (foundUser) {
+        // Update the user's stored data with the passkey to maintain consistency
+        const updatedApplications = applications.map((app) =>
+          app.email === foundUser!.email && app.grantCategory === foundUser!.grantCategory 
+            ? { ...app, passkey: passkeyInput.trim() } 
+            : app
+        );
+        localStorage.setItem('grantApplications', JSON.stringify(updatedApplications));
+
         setTrackingState((prev) => ({
           ...prev,
-          currentUser: user,
+          currentUser: foundUser,
           isLoggedIn: true,
           hasPasskey: true,
-          currentGrant: user.grantCategory,
+          currentGrant: foundUser.grantCategory,
           stage: 'tracking'
         }));
         setErrors({});
         setPasskeyInput('');
         showAlertMessage('✅ Welcome! Your passkey authentication successful.');
       } else {
-        setErrors({ passkey: '❌ Passkey not found. If you\'re using a different browser or device, click "Get Passkey with Email & Password" instead.' });
+        setErrors({ passkey: '❌ Passkey not found. Please verify it is correct and try again. Make sure to use the exact passkey generated from your email and password.' });
       }
       setIsLoading(false);
     }, 800);

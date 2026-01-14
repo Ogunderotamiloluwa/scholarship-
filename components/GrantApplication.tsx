@@ -488,7 +488,7 @@ const GrantApplication: React.FC<GrantApplicationProps> = ({ onNavigate }) => {
                   } else {
                     const amount = parseFloat(applicationData.amount);
                     const grantDetails = getSelectedGrantDetails();
-                    const GLOBAL_MIN = 20000;
+                    const GLOBAL_MIN = 50000;
                     const GLOBAL_MAX = 150000;
                     
                     if (!grantDetails) {
