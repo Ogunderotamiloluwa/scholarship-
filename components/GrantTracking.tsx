@@ -210,9 +210,7 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
     setTimeout(() => {
       const applications = JSON.parse(localStorage.getItem('grantApplications') || '[]') as GrantApplication[];
       
-      // FIXED: Find user by regenerating passkey from their email/password combination
-      // This allows the passkey to work across different browsers and devices
-      // because it's based on the user's credentials, not on localStorage state
+      // CROSS-BROWSER FIX: Try to find user in localStorage first
       let foundUser: GrantApplication | null = null;
 
       for (const app of applications) {
@@ -227,7 +225,7 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
       }
 
       if (foundUser) {
-        // Update the user's stored data with the passkey to maintain consistency
+        // User found in localStorage - login successfully
         const updatedApplications = applications.map((app) =>
           app.email === foundUser!.email && app.grantCategory === foundUser!.grantCategory 
             ? { ...app, passkey: passkeyInput.trim() } 
@@ -247,9 +245,10 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
         setPasskeyInput('');
         showAlertMessage('✅ Welcome! Your passkey authentication successful.');
       } else {
-        // If not found in localStorage, still accept the passkey if we can verify it's valid
-        // This helps with cross-browser login where data might not be synced
-        setErrors({ passkey: '❌ Passkey not found. If you created your account on a different browser, please use "Get Passkey with Email & Password" to login instead. This will generate your passkey again.' });
+        // CROSS-BROWSER: User not in localStorage but passkey might still be valid
+        // Show helpful message directing them to use "Get Passkey with Email & Password"
+        // which will generate the same passkey and allow them to login
+        setErrors({ passkey: '⚠️ Account not found on this browser. Click "Get Passkey with Email & Password" below, enter your email and password, and you\'ll get the same passkey to use for login.' });
       }
       setIsLoading(false);
     }, 800);
@@ -277,50 +276,76 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
     setIsLoading(true);
     setTimeout(() => {
       const applications = JSON.parse(localStorage.getItem('grantApplications') || '[]') as GrantApplication[];
-      // Find user by email and password ONLY - automatically detect their grant
-      const user = applications.find(
+      
+      // CROSS-BROWSER FIX: Generate passkey for ANY email/password combination
+      // This works across browsers because it's purely mathematical (not dependent on localStorage)
+      const passkey = generatePasskey(getPasskeyForm.email, getPasskeyForm.password);
+      
+      // Try to find user in localStorage (if they exist)
+      let user = applications.find(
         (app) => 
           app.email === getPasskeyForm.email && 
           app.password === getPasskeyForm.password
       );
 
       if (user) {
-        if (user.passkey) {
-          // User already has a passkey - show it and require them to use it for login
-          setTrackingState((prev) => ({
-            ...prev,
-            currentUser: user,
-            hasPasskey: true,
-            generatedPasskey: user.passkey,
-            stage: 'showGeneratedPasskey',
-            currentGrant: user.grantCategory
-          }));
-          setErrors({});
-          setGetPasskeyForm({ email: '', password: '' });
-          showAlertMessage('✅ Your passkey found! Copy it and use it to login.');
-        } else {
-          // Generate new passkey
-          const passkey = generatePasskey(user.email, user.password);
+        // User exists in this browser's localStorage - update their passkey and show
+        if (!user.passkey) {
           const updatedApplications = applications.map((app) =>
-            app.email === user.email && app.grantCategory === user.grantCategory 
+            app.email === user!.email && app.grantCategory === user!.grantCategory 
               ? { ...app, passkey } 
               : app
           );
           localStorage.setItem('grantApplications', JSON.stringify(updatedApplications));
-
-          setTrackingState((prev) => ({
-            ...prev,
-            currentUser: { ...user, passkey },
-            hasPasskey: true,
-            generatedPasskey: passkey,
-            stage: 'showGeneratedPasskey',
-            currentGrant: user.grantCategory
-          }));
-          setErrors({});
-          setGetPasskeyForm({ email: '', password: '' });
         }
+        
+        setTrackingState((prev) => ({
+          ...prev,
+          currentUser: { ...user!, passkey },
+          hasPasskey: true,
+          generatedPasskey: passkey,
+          stage: 'showGeneratedPasskey',
+          currentGrant: user!.grantCategory
+        }));
+        setErrors({});
+        setGetPasskeyForm({ email: '', password: '' });
+        showAlertMessage('✅ Your passkey is ready! Copy it and use it to login.');
       } else {
-        setErrors({ getPasskey: '❌ Email or password is incorrect. Please verify and try again.' });
+        // User doesn't exist in this browser's localStorage (different browser case)
+        // Create a minimal user record so they can login and view their account
+        // This enables cross-browser support without requiring a server
+        const minimalUser: GrantApplication = {
+          fullName: getPasskeyForm.email.split('@')[0], // Use email prefix as placeholder
+          email: getPasskeyForm.email,
+          password: getPasskeyForm.password,
+          phone: '',
+          country: '',
+          grantCategory: 'Account Access',
+          amount: '',
+          purpose: '',
+          applicantWork: '',
+          usage: '',
+          impact: '',
+          previousFunding: 'No',
+          timestamp: new Date().toISOString(),
+          passkey: passkey
+        };
+        
+        // Add to localStorage so they can login on this browser
+        applications.push(minimalUser);
+        localStorage.setItem('grantApplications', JSON.stringify(applications));
+        
+        setTrackingState((prev) => ({
+          ...prev,
+          currentUser: minimalUser,
+          hasPasskey: true,
+          generatedPasskey: passkey,
+          stage: 'showGeneratedPasskey',
+          currentGrant: 'Account Access'
+        }));
+        setErrors({});
+        setGetPasskeyForm({ email: '', password: '' });
+        showAlertMessage('✅ Account unlocked! Your passkey is ready. Copy it and use it to login.');
       }
       setIsLoading(false);
     }, 800);
@@ -649,9 +674,9 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
                 <div className="bg-amber-50 dark:bg-amber-900/20 border-2 border-amber-200 dark:border-amber-700 rounded-xl p-4 flex gap-3">
                   <Mail size={20} className="text-amber-600 dark:text-amber-400 flex-shrink-0 mt-0.5" />
                   <div>
-                    <h4 className="font-black text-amber-900 dark:text-amber-200 mb-1">Create Your Passkey</h4>
+                    <h4 className="font-black text-amber-900 dark:text-amber-200 mb-1">Generate Your Passkey</h4>
                     <p className="text-sm text-amber-800 dark:text-amber-300">
-                      Enter the email and password you used for your grant application. Your grant will be automatically detected.
+                      Enter the email and password from your grant application. This works on any browser - Chrome, Opera, Firefox, Safari, etc. You'll get your passkey to use for login.
                     </p>
                   </div>
                 </div>
