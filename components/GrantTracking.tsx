@@ -188,9 +188,17 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
         g: app.grantCategory,  // grant category (required to track which grant)
         t: app.timestamp  // timestamp (critical - was resetting before)
       });
-      
-      // Encode to base64 for safe transmission
-      const encoded = btoa(minimalData);
+
+      // Use a UTF-8-safe base64 encode (btoa fails for non-latin characters in some browsers)
+      const safeBase64Encode = (str: string) => {
+        try {
+          return btoa(str);
+        } catch (e) {
+          return btoa(unescape(encodeURIComponent(str)));
+        }
+      };
+
+      const encoded = safeBase64Encode(minimalData);
       
       // Create checksum for verification
       let checksum = 0;
@@ -232,12 +240,21 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
         return null;
       }
       
-      // Decode from base64
-      const decoded = atob(encoded);
+      // Decode from base64 (handle UTF-8 safely)
+      const safeBase64Decode = (str: string) => {
+        try {
+          return atob(str);
+        } catch (e) {
+          // Fallback for UTF-8 content
+          return decodeURIComponent(escape(atob(str)));
+        }
+      };
+
+      const decoded = safeBase64Decode(encoded);
       const minimalData = JSON.parse(decoded);
       
       // Extract essential fields from passkey - THESE ARE THE SOURCE OF TRUTH
-      const fullName = minimalData.n;  // Full name from passkey
+      let fullName = minimalData.n;  // Full name from passkey (may be missing for older passkeys)
       const email = minimalData.e;
       const password = minimalData.p;
       const grantCategory = minimalData.g;
@@ -245,15 +262,22 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
       
       // Try to find full account data in localStorage for this browser
       const applications = JSON.parse(localStorage.getItem('grantApplications') || '[]') as GrantApplication[];
+
+      // Try exact match first (email + grant + timestamp)
       const fullAccount = applications.find(app => app.email === email && app.grantCategory === grantCategory && app.timestamp === timestamp);
-      
       if (fullAccount) {
-        // Full account found locally with SAME timestamp and grant category - return it as-is
         return fullAccount;
       }
-      
-      // Account not found in localStorage, or timestamp/grant doesn't match
-      // Return complete account using passkey values (which are definitive)
+
+      // If name missing in passkey, try to find any application with the same email (best-effort cross-browser recovery)
+      if ((!fullName || fullName.trim() === '') && email) {
+        const anyAccount = applications.find(app => app.email && app.email.toLowerCase() === email.toLowerCase());
+        if (anyAccount && anyAccount.fullName) {
+          fullName = anyAccount.fullName;
+        }
+      }
+
+      // If still no fullAccount, but we have enough from passkey, return constructed account
       return {
         fullName: fullName,  // Use fullName from passkey (works on all browsers!)
         email: email,
