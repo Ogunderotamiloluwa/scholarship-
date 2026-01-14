@@ -1023,59 +1023,138 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
                 return null;
               })()}
 
-              {/* Dynamic Balance Card - Premium Wallet Card */}
+              {/* Professional Account Card - Mature Wallet UI */}
               {(() => {
                 const status = calculateGrantStatus(trackingState.currentUser?.timestamp || '');
+                // Format amount with comma separators
+                const formatAmount = (amount: string | undefined) => {
+                  if (!amount) return '0.00';
+                  return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+                };
+                
                 return (
                   <motion.div
-                    className={`rounded-3xl p-6 sm:p-8 transition-all border-2 shadow-xl ${
-                      status.isHidden 
-                        ? 'bg-gradient-to-br from-slate-100 via-blue-50 to-slate-100 dark:from-slate-800 dark:via-slate-800 dark:to-slate-800 border-slate-300 dark:border-slate-700'
-                        : status.isPending
-                        ? 'bg-gradient-to-br from-amber-100 via-orange-50 to-amber-100 dark:from-amber-900/30 dark:via-orange-900/20 dark:to-amber-900/30 border-amber-300 dark:border-amber-700'
-                        : 'bg-gradient-to-br from-emerald-100 via-teal-50 to-emerald-100 dark:from-emerald-900/30 dark:via-teal-900/20 dark:to-emerald-900/30 border-emerald-400 dark:border-emerald-600'
-                    }`}
-                    animate={{ y: [0, -5, 0] }}
-                    transition={{ duration: 3, repeat: Infinity }}
+                    className="rounded-2xl border border-slate-200 dark:border-slate-700 shadow-lg overflow-hidden"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
                   >
-                    <p className={`text-xs sm:text-sm font-black uppercase mb-4 tracking-widest ${
+                    {/* Card Header */}
+                    <div className={`px-6 sm:px-8 py-4 sm:py-5 border-b border-slate-200 dark:border-slate-700 ${
                       status.isHidden 
-                        ? 'text-slate-600 dark:text-slate-400'
+                        ? 'bg-slate-50 dark:bg-slate-800'
                         : status.isPending
-                        ? 'text-amber-700 dark:text-amber-300'
-                        : 'text-emerald-700 dark:text-emerald-300'
+                        ? 'bg-blue-50 dark:bg-blue-950/30'
+                        : 'bg-emerald-50 dark:bg-emerald-950/30'
                     }`}>
-                      {status.isHidden ? '💤 Account Setup' : status.isPending ? '⏳ Pending Balance' : '✅ Available Balance'}
-                    </p>
-                    <div className="flex items-center justify-between gap-4">
-                      <div className="flex-1">
-                        <p className="text-xs sm:text-sm font-semibold text-slate-500 dark:text-slate-400 mb-2 uppercase tracking-wider">Total Grant Amount</p>
-                        <div className="text-5xl sm:text-6xl font-black mb-3 text-slate-900 dark:text-white tracking-tighter">
-                          {privacySettings.hideBalance ? '••••••' : status.isHidden ? '$0.00' : `$${trackingState.currentUser?.amount}`}
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-xs text-slate-600 dark:text-slate-400 font-semibold uppercase tracking-wide mb-1">
+                            {status.isHidden ? 'Account Status: Initializing' : status.isPending ? 'Account Status: Processing' : 'Account Status: Active'}
+                          </p>
+                          <h3 className="text-lg sm:text-xl font-black text-slate-900 dark:text-white">Grant Account</h3>
                         </div>
-                        {status.isPending && (
-                          <p className="text-xs sm:text-sm font-semibold text-amber-700 dark:text-amber-300">
-                            🔓 Unlocks in {status.daysRemaining} days {status.hoursRemaining} hours
+                        <div className={`w-12 h-12 rounded-lg flex items-center justify-center font-black text-lg ${
+                          status.isHidden 
+                            ? 'bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300'
+                            : status.isPending
+                            ? 'bg-blue-200 dark:bg-blue-800 text-blue-700 dark:text-blue-300'
+                            : 'bg-emerald-200 dark:bg-emerald-800 text-emerald-700 dark:text-emerald-300'
+                        }`}>
+                          💰
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Card Body */}
+                    <div className="px-6 sm:px-8 py-6 sm:py-8 bg-white dark:bg-slate-900">
+                      {/* Countdown Timer Section */}
+                      {status.isHidden && (
+                        <div className="mb-8 p-4 sm:p-5 bg-slate-100 dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700">
+                          <p className="text-xs text-slate-600 dark:text-slate-400 font-semibold uppercase tracking-wide mb-3">Time Until Account Activation</p>
+                          <div className="flex items-center justify-between">
+                            <div className="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white font-mono">
+                              {String(status.hoursRemaining).padStart(2, '0')}
+                              <span className="text-sm text-slate-500 dark:text-slate-400 ml-1">hours</span>
+                            </div>
+                            <div className="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white font-mono">
+                              {String(status.minutesRemaining).padStart(2, '0')}
+                              <span className="text-sm text-slate-500 dark:text-slate-400 ml-1">mins</span>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+
+                      {status.isPending && (
+                        <div className="mb-8 p-4 sm:p-5 bg-blue-100 dark:bg-blue-950/40 rounded-xl border border-blue-200 dark:border-blue-800">
+                          <p className="text-xs text-blue-700 dark:text-blue-300 font-semibold uppercase tracking-wide mb-3">Processing Timeline</p>
+                          <div className="flex items-center justify-between">
+                            <div className="text-3xl sm:text-4xl font-black text-blue-900 dark:text-blue-200 font-mono">
+                              {status.daysRemaining}
+                              <span className="text-sm text-blue-700 dark:text-blue-400 ml-1">days</span>
+                            </div>
+                            <div className="text-3xl sm:text-4xl font-black text-blue-900 dark:text-blue-200 font-mono">
+                              {status.hoursRemaining}
+                              <span className="text-sm text-blue-700 dark:text-blue-400 ml-1">hours</span>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Grant Amount Display - Right Below Timer */}
+                      <div className="mb-8">
+                        <p className="text-xs text-slate-500 dark:text-slate-400 font-semibold uppercase tracking-wide mb-2">Available Balance</p>
+                        <div className="flex items-baseline gap-2">
+                          <span className="text-5xl sm:text-6xl font-black text-slate-900 dark:text-white">
+                            {privacySettings.hideBalance ? '••••••' : `$${formatAmount(trackingState.currentUser?.amount)}`}
+                          </span>
+                          <button
+                            onClick={() => setPrivacySettings({...privacySettings, hideBalance: !privacySettings.hideBalance})}
+                            className="p-2 text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 transition-colors"
+                            title={privacySettings.hideBalance ? "Show balance" : "Hide balance"}
+                          >
+                            {privacySettings.hideBalance ? <EyeOff size={20} /> : <Eye size={20} />}
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* Account Status Details */}
+                      <div className={`p-4 rounded-lg ${
+                        status.isHidden
+                          ? 'bg-slate-100 dark:bg-slate-800'
+                          : status.isPending
+                          ? 'bg-blue-100 dark:bg-blue-950/40'
+                          : 'bg-emerald-100 dark:bg-emerald-950/40'
+                      }`}>
+                        {status.isHidden && (
+                          <p className="text-sm text-slate-700 dark:text-slate-300 font-semibold">
+                            ⏳ Account initializing. Funds will appear after 24 hours.
                           </p>
                         )}
-                        {status.isHidden && (
-                          <p className="text-xs sm:text-sm font-semibold text-slate-600 dark:text-slate-400">
-                            Initializing in 24 hours...
+                        {status.isPending && (
+                          <p className="text-sm text-blue-700 dark:text-blue-300 font-semibold">
+                            🔄 Processing — {Math.round(status.progressPercentage)}% complete
                           </p>
                         )}
                         {status.isReceived && (
-                          <p className="text-xs sm:text-sm font-semibold text-emerald-700 dark:text-emerald-300">
-                            ✓ Ready for withdrawal
+                          <p className="text-sm text-emerald-700 dark:text-emerald-300 font-semibold">
+                            ✅ Funds available — Ready for withdrawal
                           </p>
                         )}
                       </div>
-                      <button
-                        onClick={() => setPrivacySettings({...privacySettings, hideBalance: !privacySettings.hideBalance})}
-                        className="p-3 sm:p-4 bg-white/20 hover:bg-white/30 rounded-full transition-all border border-white/30"
-                        title={privacySettings.hideBalance ? "Show balance" : "Hide balance"}
-                      >
-                        {privacySettings.hideBalance ? <EyeOff size={24} className="text-slate-700 dark:text-white" /> : <Eye size={24} className="text-slate-700 dark:text-white" />}
-                      </button>
+                    </div>
+
+                    {/* Card Footer - Account Details */}
+                    <div className="px-6 sm:px-8 py-4 bg-slate-50 dark:bg-slate-800/50 border-t border-slate-200 dark:border-slate-700">
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <p className="text-xs text-slate-500 dark:text-slate-400 font-semibold uppercase tracking-wide mb-1">Grant Category</p>
+                          <p className="text-sm font-black text-slate-900 dark:text-white">{trackingState.currentGrant || 'N/A'}</p>
+                        </div>
+                        <div>
+                          <p className="text-xs text-slate-500 dark:text-slate-400 font-semibold uppercase tracking-wide mb-1">Account Holder</p>
+                          <p className="text-sm font-black text-slate-900 dark:text-white truncate">{trackingState.currentUser?.fullName || 'User'}</p>
+                        </div>
+                      </div>
                     </div>
                   </motion.div>
                 );
