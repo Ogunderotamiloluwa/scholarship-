@@ -236,6 +236,267 @@ const Institutions: React.FC<InstitutionsProps> = ({ onNavigate, setSelectedUniv
         'Cultural city location',
         'International student community'
       ]
+    },
+    // United States Universities
+    {
+      id: 'university-10',
+      name: 'University of California, Los Angeles (UCLA)',
+      city: 'Los Angeles',
+      country: 'United States',
+      coordinates: { lat: 34.0695, lng: -118.4431 },
+      imageUrl: '/images/k-mitch-hodge-oIPMwJFd-t0-unsplash.jpg',
+      description: 'Top-tier public research university known for excellence in engineering and sciences',
+      programs: ['Engineering', 'Business', 'Medicine', 'Law', 'Computer Science'],
+      studentCount: 45000,
+      established: 1919,
+      website: 'ucla.edu',
+      accommodation: 'On-campus housing available, residence halls throughout campus',
+      highlights: [
+        'Top 15 US university',
+        'Strong engineering programs',
+        'Beautiful Westwood campus',
+        'Extensive research opportunities'
+      ]
+    },
+    {
+      id: 'university-11',
+      name: 'University of Texas at Austin',
+      city: 'Austin',
+      country: 'United States',
+      coordinates: { lat: 30.2849, lng: -97.7341 },
+      imageUrl: '/images/mauricio-arias-h6QQiYftoO0-unsplash.jpg',
+      description: 'Flagship university with strong programs in engineering, business, and liberal arts',
+      programs: ['Engineering', 'Business', 'Liberal Arts', 'Computer Science', 'Architecture'],
+      studentCount: 52000,
+      established: 1883,
+      website: 'utexas.edu',
+      accommodation: 'Residential halls and off-campus housing options available',
+      highlights: [
+        'Top public university in US',
+        'Strong engineering college',
+        'Vibrant student community',
+        'Excellent internship opportunities'
+      ]
+    },
+    {
+      id: 'university-12',
+      name: 'Northwestern University',
+      city: 'Evanston',
+      country: 'United States',
+      coordinates: { lat: 42.0534, lng: -87.6754 },
+      imageUrl: '/images/michael-marsh-U0dBV_QeiYk-unsplash.jpg',
+      description: 'Private research university renowned for engineering, journalism, and business programs',
+      programs: ['Engineering', 'Journalism', 'Business', 'Law', 'Medicine'],
+      studentCount: 20000,
+      established: 1851,
+      website: 'northwestern.edu',
+      accommodation: 'On-campus housing for all 4 years available',
+      highlights: [
+        'Top business school (Kellogg)',
+        'Excellent journalism program',
+        'Strong engineering programs',
+        'Beautiful Lake Michigan campus'
+      ]
+    },
+    {
+      id: 'university-13',
+      name: 'Cornell University',
+      city: 'Ithaca',
+      country: 'United States',
+      coordinates: { lat: 42.4534, lng: -76.4735 },
+      imageUrl: '/images/olu-famule-Dv2PNbMWtsE-unsplash.jpg',
+      description: 'Ivy League institution with strong programs in engineering, agriculture, and arts',
+      programs: ['Engineering', 'Agriculture', 'Arts', 'Law', 'Business'],
+      studentCount: 25000,
+      established: 1865,
+      website: 'cornell.edu',
+      accommodation: 'Multiple residential colleges with full accommodation',
+      highlights: [
+        'Ivy League school',
+        'Strong engineering college',
+        'Beautiful upstate campus',
+        'Diverse academic programs'
+      ]
+    },
+    {
+      id: 'university-14',
+      name: 'University of Michigan',
+      city: 'Ann Arbor',
+      country: 'United States',
+      coordinates: { lat: 42.2656, lng: -83.7314 },
+      imageUrl: '/images/richard-vance-cabusao-adQAb-L-YkE-unsplash.jpg',
+      description: 'Top public research university with world-class engineering and business programs',
+      programs: ['Engineering', 'Business', 'Medicine', 'Law', 'Computer Science'],
+      studentCount: 48000,
+      established: 1817,
+      website: 'umich.edu',
+      accommodation: 'Extensive on-campus housing and residential colleges',
+      highlights: [
+        'Top public university',
+        'Strong engineering (CoE)',
+        'Excellent business school (Ross)',
+        'Historic campus traditions'
+      ]
+    },
+    {
+      id: 'university-15',
+      name: 'University of Pennsylvania',
+      city: 'Philadelphia',
+      country: 'United States',
+      coordinates: { lat: 39.9504, lng: -75.1932 },
+      imageUrl: '/images/ruijia-wang-BS9w1QCkJys-unsplash.jpg',
+      description: 'Ivy League institution with prestigious Wharton business school and strong engineering',
+      programs: ['Business', 'Engineering', 'Medicine', 'Law', 'Arts'],
+      studentCount: 26000,
+      established: 1740,
+      website: 'upenn.edu',
+      accommodation: 'On-campus housing available for all years',
+      highlights: [
+        'Ivy League prestige',
+        'Top business school (Wharton)',
+        'Historic Philadelphia location',
+        'Strong medical programs'
+      ]
+    },
+    {
+      id: 'university-16',
+      name: 'Rice University',
+      city: 'Houston',
+      country: 'United States',
+      coordinates: { lat: 29.7174, lng: -95.4018 },
+      imageUrl: '/images/sangga-rima-roman-selia-LWfFfA5U5z8-unsplash.jpg',
+      description: 'Highly selective private research university with excellent engineering and sciences',
+      programs: ['Engineering', 'Sciences', 'Business', 'Architecture', 'Humanities'],
+      studentCount: 7500,
+      established: 1912,
+      website: 'rice.edu',
+      accommodation: 'All undergraduates required to live on campus',
+      highlights: [
+        'Small student body',
+        'Excellent engineering school',
+        'Residential college system',
+        'Strong research focus'
+      ]
+    },
+    {
+      id: 'university-17',
+      name: 'Johns Hopkins University',
+      city: 'Baltimore',
+      country: 'United States',
+      coordinates: { lat: 39.3299, lng: -76.6205 },
+      imageUrl: '/images/steven-cordes-r55kulBKAjM-unsplash.jpg',
+      description: 'World-leading research university with premier medical and engineering programs',
+      programs: ['Engineering', 'Medicine', 'Public Health', 'Business', 'Sciences'],
+      studentCount: 27000,
+      established: 1876,
+      website: 'jhu.edu',
+      accommodation: 'Housing available for graduate and professional students',
+      highlights: [
+        'Top research institution',
+        'Excellent medical school',
+        'Strong engineering programs',
+        'World-class facilities'
+      ]
+    },
+    {
+      id: 'university-18',
+      name: 'Duke University',
+      city: 'Durham',
+      country: 'United States',
+      coordinates: { lat: 36.0014, lng: -78.9382 },
+      imageUrl: '/images/tim-alex-JYqLCa-rv7o-unsplash.jpg',
+      description: 'Elite private research university with outstanding engineering and liberal arts programs',
+      programs: ['Engineering', 'Business', 'Law', 'Medicine', 'Liberal Arts'],
+      studentCount: 17000,
+      established: 1838,
+      website: 'duke.edu',
+      accommodation: 'Housing provided for all undergraduate years',
+      highlights: [
+        'Top-ranked university',
+        'Strong engineering school',
+        'Beautiful campus',
+        'Excellent business school (Fuqua)'
+      ]
+    },
+    {
+      id: 'university-19',
+      name: 'Georgia Institute of Technology',
+      city: 'Atlanta',
+      country: 'United States',
+      coordinates: { lat: 33.7756, lng: -84.3963 },
+      imageUrl: '/images/v-lionel-_Lylye3fjYs-unsplash.jpg',
+      description: 'Leading public research university specializing in engineering, computing, and sciences',
+      programs: ['Engineering', 'Computer Science', 'Business', 'Liberal Arts', 'Design'],
+      studentCount: 39000,
+      established: 1885,
+      website: 'gatech.edu',
+      accommodation: 'Residence halls available for undergraduate students',
+      highlights: [
+        'Top engineering school',
+        'Strong computer science programs',
+        'Urban Atlanta location',
+        'Excellent co-op program'
+      ]
+    },
+    {
+      id: 'university-20',
+      name: 'University of Washington',
+      city: 'Seattle',
+      country: 'United States',
+      coordinates: { lat: 47.6554, lng: -122.3035 },
+      imageUrl: '/images/vincent-lin-rLIkE9ZW0y4-unsplash.jpg',
+      description: 'Top public research university with leading programs in engineering, medicine, and sciences',
+      programs: ['Engineering', 'Medicine', 'Business', 'Computer Science', 'Nursing'],
+      studentCount: 54000,
+      established: 1861,
+      website: 'washington.edu',
+      accommodation: 'Housing available in multiple residential communities',
+      highlights: [
+        'Top public university',
+        'World-class medical school',
+        'Strong engineering programs',
+        'Beautiful Pacific Northwest campus'
+      ]
+    },
+    {
+      id: 'university-21',
+      name: 'Carnegie Mellon University',
+      city: 'Pittsburgh',
+      country: 'United States',
+      coordinates: { lat: 40.4427, lng: -79.9426 },
+      imageUrl: '/images/wander-fleur-xZPUlVjnlFQ-unsplash.jpg',
+      description: 'Elite research university renowned for computer science, engineering, and drama programs',
+      programs: ['Computer Science', 'Engineering', 'Drama', 'Business', 'Sciences'],
+      studentCount: 15000,
+      established: 1900,
+      website: 'cmu.edu',
+      accommodation: 'Comprehensive housing programs for undergraduate and graduate students',
+      highlights: [
+        'Top computer science programs',
+        'World-renowned drama school',
+        'Strong engineering college',
+        'Excellent research opportunities'
+      ]
+    },
+    {
+      id: 'university-22',
+      name: 'University of Southern California',
+      city: 'Los Angeles',
+      country: 'United States',
+      coordinates: { lat: 34.0224, lng: -118.2851 },
+      imageUrl: '/images/wonderlane-6zlgM-GUd6I-unsplash.jpg',
+      description: 'Premier private research university with outstanding engineering, business, and film programs',
+      programs: ['Engineering', 'Business', 'Film', 'Law', 'Medicine'],
+      studentCount: 20000,
+      established: 1880,
+      website: 'usc.edu',
+      accommodation: 'Housing available throughout Los Angeles area',
+      highlights: [
+        'Top film school',
+        'Strong engineering programs',
+        'Excellent business school (Marshall)',
+        'Vibrant Los Angeles location'
+      ]
     }
   ];
 
@@ -252,7 +513,20 @@ const Institutions: React.FC<InstitutionsProps> = ({ onNavigate, setSelectedUniv
     '/images/porter-raab-gnj9vj--FRY-unsplash (5).jpg',
     '/images/porter-raab-gnj9vj--FRY-unsplash (6).jpg',
     '/images/porter-raab-gnj9vj--FRY-unsplash (7).jpg',
-    '/images/porter-raab-gnj9vj--FRY-unsplash.jpg'
+    '/images/porter-raab-gnj9vj--FRY-unsplash.jpg',
+    '/images/john-kon-garang-4gD-zpzW6Ds-unsplash (3).jpg',
+    '/images/porter-raab-Ucr4Yp-t364-unsplash (1).jpg',
+    '/images/porter-raab-Ucr4Yp-t364-unsplash.jpg',
+    '/images/richard-vance-cabusao-adQAb-L-YkE-unsplash.jpg',
+    '/images/ruijia-wang-BS9w1QCkJys-unsplash.jpg',
+    '/images/sangga-rima-roman-selia-LWfFfA5U5z8-unsplash.jpg',
+    '/images/steven-cordes-r55kulBKAjM-unsplash.jpg',
+    '/images/tim-alex-JYqLCa-rv7o-unsplash.jpg',
+    '/images/v-lionel-_Lylye3fjYs-unsplash.jpg',
+    '/images/vincent-lin-rLIkE9ZW0y4-unsplash.jpg',
+    '/images/wander-fleur-xZPUlVjnlFQ-unsplash.jpg',
+    '/images/wonderlane-6zlgM-GUd6I-unsplash.jpg',
+    '/images/zhanhui-li-1iuxWsIZ6ko-unsplash.jpg'
   ];
 
   // Convert US institutions to University format for unified display
