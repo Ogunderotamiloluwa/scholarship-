@@ -93,6 +93,98 @@ const About: React.FC = () => {
         </div>
       </section>
 
+      {/* Heritage Gallery Section */}
+      <section className="py-32 px-6 bg-gradient-to-b from-slate-50 to-white">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-20">
+            <h2 className="heading-serif text-5xl md:text-9xl font-black mb-6 tracking-tighter text-slate-900">Our People.</h2>
+            <p className="text-slate-500 text-2xl font-light uppercase tracking-[0.4em]">The Heart of Our Heritage</p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div className="group relative overflow-hidden rounded-[40px] shadow-xl hover:shadow-2xl transition-all duration-500 h-96">
+              <img 
+                src="/images/chris-blonk-gICX2XvfpI0-unsplash.jpg" 
+                alt="Heritage member" 
+                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-900 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-6">
+                <p className="text-white font-black text-lg">Excellence in Action</p>
+              </div>
+            </div>
+            <div className="group relative overflow-hidden rounded-[40px] shadow-xl hover:shadow-2xl transition-all duration-500 h-96">
+              <img 
+                src="/images/christian-buehner-DItYlc26zVI-unsplash.jpg" 
+                alt="Heritage member" 
+                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-900 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-6">
+                <p className="text-white font-black text-lg">Leadership Vision</p>
+              </div>
+            </div>
+            <div className="group relative overflow-hidden rounded-[40px] shadow-xl hover:shadow-2xl transition-all duration-500 h-96">
+              <img 
+                src="/images/christina-wocintechchat-com-m-SJvDxw0azqw-unsplash.jpg" 
+                alt="Heritage member" 
+                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-900 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-6">
+                <p className="text-white font-black text-lg">Diversity & Inclusion</p>
+              </div>
+            </div>
+            <div className="group relative overflow-hidden rounded-[40px] shadow-xl hover:shadow-2xl transition-all duration-500 h-96">
+              <img 
+                src="/images/maria-lupan-fE5IaNta2KM-unsplash.jpg" 
+                alt="Heritage member" 
+                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-900 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-6">
+                <p className="text-white font-black text-lg">Student Success</p>
+              </div>
+            </div>
+            <div className="group relative overflow-hidden rounded-[40px] shadow-xl hover:shadow-2xl transition-all duration-500 h-96">
+              <img 
+                src="/images/shipman-northcutt-sgZX15Da8YE-unsplash.jpg" 
+                alt="Heritage member" 
+                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-900 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-6">
+                <p className="text-white font-black text-lg">Community Impact</p>
+              </div>
+            </div>
+            <div className="group relative overflow-hidden rounded-[40px] shadow-xl hover:shadow-2xl transition-all duration-500 h-96">
+              <img 
+                src="/images/sigmund-a19OVaa2rzA-unsplash.jpg" 
+                alt="Heritage member" 
+                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-900 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-6">
+                <p className="text-white font-black text-lg">Mentorship Programs</p>
+              </div>
+            </div>
+            <div className="group relative overflow-hidden rounded-[40px] shadow-xl hover:shadow-2xl transition-all duration-500 h-96">
+              <img 
+                src="/images/thisisengineering-TXxiFuQLBKQ-unsplash.jpg" 
+                alt="Heritage member" 
+                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-900 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-6">
+                <p className="text-white font-black text-lg">Innovation & Tech</p>
+              </div>
+            </div>
+            <div className="group relative overflow-hidden rounded-[40px] shadow-xl hover:shadow-2xl transition-all duration-500 h-96">
+              <img 
+                src="/images/usman-yousaf-GFOlzpLuiCg-unsplash.jpg" 
+                alt="Heritage member" 
+                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-900 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-6">
+                <p className="text-white font-black text-lg">Global Reach</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* History Timeline Vertical */}
       <section className="py-32 px-6 bg-white">
         <div className="max-w-4xl mx-auto">

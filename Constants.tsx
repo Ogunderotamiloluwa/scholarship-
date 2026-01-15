@@ -318,56 +318,56 @@ export const TEAM = [
     role: "President of the Board", 
     linkedin: "https://linkedin.com",
     bio: "Former Dean of Admissions at Stanford with 25 years of experience in educational philanthropy. Led the institutional fundraising efforts that grew the endowment to $366M.",
-    img: "/images/jonas-kakaroto-mjRwhvqEC0U-unsplash.jpg" 
+    img: "/images/chris-blonk-gICX2XvfpI0-unsplash.jpg" 
   },
   { 
     name: "Marcus Thorne", 
     role: "Endowment Strategy & Finance", 
     linkedin: "https://linkedin.com",
     bio: "Ex-institutional analyst specializing in long-term non-profit growth and capital preservation. Manages $366M endowment with award-winning returns exceeding market benchmarks.",
-    img: "/images/linkedin-sales-solutions-pAtA8xe_iVM-unsplash.jpg" 
+    img: "/images/christian-buehner-DItYlc26zVI-unsplash.jpg" 
   },
   { 
     name: "Elena Vance", 
     role: "Technology & Data Security Lead", 
     linkedin: "https://linkedin.com",
     bio: "Pioneer in secure data systems and student privacy. Elena ensures our digital portal exceeds federal FERPA standards and implements AES-256 encryption for all applicant records.",
-    img: "/images/vicky-hladynets-C8Ta0gwPbQg-unsplash.jpg" 
+    img: "/images/christina-wocintechchat-com-m-SJvDxw0azqw-unsplash.jpg" 
   },
   {
     name: "Dr. James Chen",
     role: "Chief Selection Officer",
     linkedin: "https://linkedin.com",
     bio: "Former Harvard admissions director with expertise in holistic evaluation. James leads our blind selection process ensuring unbiased, merit-based decisions across all applications.",
-    img: "/images/vicky-hladynets-C8Ta0gwPbQg-unsplash.jpg"
+    img: "/images/maria-lupan-fE5IaNta2KM-unsplash.jpg"
   },
   {
     name: "Priya Desai",
     role: "Scholar Development & Mentorship",
     linkedin: "https://linkedin.com",
     bio: "PhD in Educational Psychology. Oversees comprehensive mentorship programs connecting Beacon scholars with industry leaders and academic advisors for long-term success.",
-    img: "/images/rut-miit-3EMw3T-ZjkE-unsplash.jpg"
+    img: "/images/shipman-northcutt-sgZX15Da8YE-unsplash.jpg"
   },
   {
     name: "Michael Thompson",
     role: "Partnership & Institutional Relations",
     linkedin: "https://linkedin.com",
     bio: "20+ years building relationships with universities and corporations. Michael maintains partnerships with 200+ institutions ensuring seamless scholar integration and funding accessibility.",
-    img: "/images/javier-trueba-iQPr1XkF5F0-unsplash.jpg"
+    img: "/images/sigmund-a19OVaa2rzA-unsplash.jpg"
   },
   {
     name: "Lisa Washington",
     role: "Grants & Compliance Officer",
     linkedin: "https://linkedin.com",
     bio: "Former IRS nonprofit compliance specialist. Ensures all grant distributions meet 501(c)(3) requirements and maintains transparent annual impact reports.",
-    img: "/images/christian-buehner-DItYlc26zVI-unsplash.jpg"
+    img: "/images/thisisengineering-TXxiFuQLBKQ-unsplash.jpg"
   },
   {
     name: "Dr. Anil Kapoor",
     role: "Research Excellence Director",
     linkedin: "https://linkedin.com",
     bio: "Published researcher with 100+ peer-reviewed papers. Guides STEM scholars through research methodology and publication processes for maximum academic impact.",
-    img: "/images/joshua-hoehne-iggWDxHTAUQ-unsplash.jpg"
+    img: "/images/usman-yousaf-GFOlzpLuiCg-unsplash.jpg"
   }
 ];
 
