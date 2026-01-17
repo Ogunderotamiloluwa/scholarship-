@@ -58,18 +58,31 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
   // Restore user from localStorage if session is still valid
   useEffect(() => {
     const savedState = getGrantTrackingState();
-    if (savedState.isLoggedIn && savedState.currentUserEmail) {
-      // Try to restore user from localStorage
-      const applications = JSON.parse(localStorage.getItem('grantApplications') || '[]') as GrantApplication[];
-      const restoredUser = applications.find((app) => app.email === savedState.currentUserEmail);
-      if (restoredUser) {
+    if (savedState.isLoggedIn) {
+      // Restore from complete user data stored in state
+      if (savedState.currentUser) {
         setTrackingState((prev) => ({
           ...prev,
           isLoggedIn: true,
-          currentUser: restoredUser,
-          currentGrant: restoredUser.grantCategory,
+          currentUser: savedState.currentUser,
+          currentGrant: savedState.currentUser.grantCategory,
           stage: 'tracking'
         }));
+        console.log('✅ Grant account fully restored with all details');
+      } else if (savedState.currentUserEmail) {
+        // Fallback: Try to restore user from localStorage applications
+        const applications = JSON.parse(localStorage.getItem('grantApplications') || '[]') as GrantApplication[];
+        const restoredUser = applications.find((app) => app.email === savedState.currentUserEmail);
+        if (restoredUser) {
+          setTrackingState((prev) => ({
+            ...prev,
+            isLoggedIn: true,
+            currentUser: restoredUser,
+            currentGrant: restoredUser.grantCategory,
+            stage: 'tracking'
+          }));
+          console.log('✅ Grant account restored from applications backup');
+        }
       }
     }
   }, []);
@@ -468,8 +481,11 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
         isLoggedIn: true,
         hasPasskey: trackingState.hasPasskey,
         currentUserEmail: trackingState.currentUser.email,
-        currentGrant: trackingState.currentGrant
+        currentGrant: trackingState.currentGrant,
+        // Save complete user data to restore everything on refresh
+        currentUser: trackingState.currentUser
       });
+      console.log('💾 Saved complete grant account data: balance, name, grant type, timestamp');
     }
   }, [trackingState]);
 

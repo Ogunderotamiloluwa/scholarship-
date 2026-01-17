@@ -36,6 +36,23 @@ export interface GrantTrackingStateData {
   hasPasskey: boolean;
   currentUserEmail?: string;
   currentGrant?: string;
+  // Complete user data for full restoration
+  currentUser?: {
+    fullName: string;
+    email: string;
+    password: string;
+    phone: string;
+    country: string;
+    grantCategory: string;
+    amount: string;
+    purpose: string;
+    applicantWork: string;
+    usage: string;
+    impact: string;
+    previousFunding: string;
+    timestamp: string;
+    passkey?: string;
+  };
   timestamp: number;
   sessionExpiry?: number;
 }
