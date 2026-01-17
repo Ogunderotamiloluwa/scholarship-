@@ -1,19 +1,24 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ViewState, Application } from '../types';
 import { APPLICATION_TRACKING_STATUSES, GRANT_DEADLINES_CALENDAR } from '../Constants';
 import { 
   ArrowRight, Clock, CheckCircle2, AlertCircle, FileText, Calendar, 
-  TrendingUp, Download, Share2, Zap, Filter, Search 
+  TrendingUp, Download, Share2, Zap, Filter, Search, Bell, Mail, Eye
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { saveApplicationTrackerState, getApplicationTrackerState } from '../utils';
 
 interface ApplicationTrackerProps {
   onNavigate: (view: ViewState) => void;
 }
 
 const ApplicationTracker: React.FC<ApplicationTrackerProps> = ({ onNavigate }) => {
-  const [filterStatus, setFilterStatus] = useState<string>('all');
-  const [searchTerm, setSearchTerm] = useState('');
+  // Restore state from localStorage
+  const savedState = getApplicationTrackerState();
+  const [filterStatus, setFilterStatus] = useState<string>(savedState.filterStatus || 'all');
+  const [searchTerm, setSearchTerm] = useState(savedState.searchTerm || '');
+  const [selectedApp, setSelectedApp] = useState<string | null>(null);
+  const [showNotificationBell, setShowNotificationBell] = useState(false);
 
   // Mock application data
   const mockApplications: Application[] = [
@@ -194,6 +199,48 @@ const ApplicationTracker: React.FC<ApplicationTrackerProps> = ({ onNavigate }) =
       score: 93
     },
   ];
+
+  // Persist state changes
+  useEffect(() => {
+    saveApplicationTrackerState({ filterStatus, searchTerm });
+  }, [filterStatus, searchTerm]);
+
+  // Export application to CSV
+  const exportToCSV = (app: Application) => {
+    const csvContent = `
+Application Tracker Export
+Program Name,${app.programName}
+Type,${app.type}
+Status,${getStatusLabel(app.status)}
+Submission Date,${app.submissionDate}
+Last Updated,${app.lastUpdated}
+Score,${app.score || 'N/A'}
+    `.trim();
+
+    const element = document.createElement('a');
+    element.setAttribute('href', 'data:text/csv;charset=utf-8,' + encodeURIComponent(csvContent));
+    element.setAttribute('download', `${app.programName.replace(/\s+/g, '_')}_application.csv`);
+    element.style.display = 'none';
+    document.body.appendChild(element);
+    element.click();
+    document.body.removeChild(element);
+  };
+
+  // Share application details
+  const shareApplication = (app: Application) => {
+    const shareText = `I'm tracking my application for ${app.programName} (Status: ${getStatusLabel(app.status)}, Score: ${app.score || 'Pending'}). Submitted on ${app.submissionDate}. Track your applications with Beacon Scholar Foundation.`;
+    
+    if (navigator.share) {
+      navigator.share({
+        title: 'My Application',
+        text: shareText,
+      }).catch(err => console.log('Share failed:', err));
+    } else {
+      // Fallback: Copy to clipboard
+      navigator.clipboard.writeText(shareText);
+      alert('Application details copied to clipboard!');
+    }
+  };
 
   const filteredApplications = mockApplications.filter(app => {
     const matchesStatus = filterStatus === 'all' || app.status === filterStatus;
@@ -383,10 +430,18 @@ const ApplicationTracker: React.FC<ApplicationTrackerProps> = ({ onNavigate }) =
 
                         {/* Action Buttons */}
                         <div className="flex gap-2">
-                          <button className="flex-1 px-3 py-2 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-300 rounded-lg font-black text-xs uppercase transition-all">
+                          <button 
+                            onClick={() => exportToCSV(app)}
+                            title="Export to CSV"
+                            className="flex-1 px-3 py-2 bg-slate-100 dark:bg-slate-700 hover:bg-indigo-200 dark:hover:bg-indigo-800 text-slate-700 dark:text-slate-300 hover:text-indigo-700 rounded-lg font-black text-xs uppercase transition-all"
+                          >
                             <Download size={14} className="mx-auto" />
                           </button>
-                          <button className="flex-1 px-3 py-2 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-300 rounded-lg font-black text-xs uppercase transition-all">
+                          <button 
+                            onClick={() => shareApplication(app)}
+                            title="Share application"
+                            className="flex-1 px-3 py-2 bg-slate-100 dark:bg-slate-700 hover:bg-emerald-200 dark:hover:bg-emerald-800 text-slate-700 dark:text-slate-300 hover:text-emerald-700 rounded-lg font-black text-xs uppercase transition-all"
+                          >
                             <Share2 size={14} className="mx-auto" />
                           </button>
                         </div>

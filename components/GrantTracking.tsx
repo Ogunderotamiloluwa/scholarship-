@@ -3,9 +3,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   ArrowLeft, Eye, EyeOff, Lock, Mail, Key, Copy, CheckCircle2, AlertCircle,
   Clock, User, DollarSign, Shield, RefreshCw, LogOut, Settings, Lock as LockIcon,
-  Eye as EyeIcon, ToggleRight, ToggleLeft, X, FileText
+  Eye as EyeIcon, ToggleRight, ToggleLeft, X, FileText, Bell, TrendingUp
 } from 'lucide-react';
 import { ViewState } from '../types';
+import { saveGrantTrackingState, getGrantTrackingState, clearGrantTrackingState } from '../utils';
 
 interface GrantTrackingProps {
   onNavigate: (view: ViewState) => void;
@@ -40,20 +41,37 @@ interface TrackingState {
 }
 
 const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
+  // Get saved tracking state from localStorage
+  const savedTrackingState = getGrantTrackingState();
+  
   const [trackingState, setTrackingState] = useState<TrackingState>({
-    stage: 'passkeyLogin',
-    isLoggedIn: false,
-    hasPasskey: false,
+    stage: (savedTrackingState.stage as any) || 'passkeyLogin',
+    isLoggedIn: savedTrackingState.isLoggedIn || false,
+    hasPasskey: savedTrackingState.hasPasskey || false,
     currentUser: null,
-    currentGrant: null,
+    currentGrant: savedTrackingState.currentGrant || null,
     showPassword: false,
     showPasskey: false,
     generatedPasskey: undefined
   });
 
-  // Auto-fill form if returning after logout
+  // Restore user from localStorage if session is still valid
   useEffect(() => {
-    // Grant will be auto-detected when user enters email/password in getPasskey stage
+    const savedState = getGrantTrackingState();
+    if (savedState.isLoggedIn && savedState.currentUserEmail) {
+      // Try to restore user from localStorage
+      const applications = JSON.parse(localStorage.getItem('grantApplications') || '[]') as GrantApplication[];
+      const restoredUser = applications.find((app) => app.email === savedState.currentUserEmail);
+      if (restoredUser) {
+        setTrackingState((prev) => ({
+          ...prev,
+          isLoggedIn: true,
+          currentUser: restoredUser,
+          currentGrant: restoredUser.grantCategory,
+          stage: 'tracking'
+        }));
+      }
+    }
   }, []);
 
   const [getPasskeyForm, setGetPasskeyForm] = useState({ email: '', password: '' });
@@ -437,8 +455,23 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
     setGetPasskeyForm({ email: '', password: '' });
     setPasskeyInput('');
     setErrors({});
+    // Clear tracking state from localStorage on logout
+    clearGrantTrackingState();
     showAlertMessage('👋 You have been logged out.');
   };
+
+  // Persist tracking state to localStorage whenever it changes
+  useEffect(() => {
+    if (trackingState.isLoggedIn && trackingState.currentUser) {
+      saveGrantTrackingState({
+        stage: trackingState.stage as any,
+        isLoggedIn: true,
+        hasPasskey: trackingState.hasPasskey,
+        currentUserEmail: trackingState.currentUser.email,
+        currentGrant: trackingState.currentGrant
+      });
+    }
+  }, [trackingState]);
 
   // Handle passkey recovery
   // Generate secure recovery code (not sent via email, displayed on screen)

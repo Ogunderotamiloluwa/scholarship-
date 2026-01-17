@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import { ViewState, ApplicationStatus, Applicant, StoryContent, ResourcePhase, ScholarshipType, GrantType } from './types';
 import { STORIES, PHASES, SCHOLARSHIPS, TEAM, GALLERY_IMAGES, TESTIMONIALS, GRANTS } from './Constants';
+import { saveAppState, getAppState, saveApplicationDraft, getApplicationDraft } from './utils';
 import Navigation from './components/Navigations';
 import Grants from './components/Grants';
 import HowItWorks from './components/HowItWorks';
@@ -697,19 +698,21 @@ const MobileActionBar = ({ currentView, setView }: { currentView: ViewState, set
 };
 
 const App: React.FC = () => {
-  const [currentView, setCurrentView] = useState<ViewState>('HOME');
-  const [navigationHistory, setNavigationHistory] = useState<ViewState[]>(['HOME']);
+  // Initialize state from localStorage if available
+  const savedState = getAppState();
+  const [currentView, setCurrentView] = useState<ViewState>((savedState.currentView as ViewState) || 'HOME');
+  const [navigationHistory, setNavigationHistory] = useState<ViewState[]>(savedState.navigationHistory || ['HOME']);
   const [selectedStory, setSelectedStory] = useState<StoryContent | null>(null);
   const [selectedGrant, setSelectedGrant] = useState<GrantType | null>(null);
   const [selectedInternship, setSelectedInternship] = useState<any>(null);
   const [selectedEvent, setSelectedEvent] = useState<any>(null);
   const [selectedUniversity, setSelectedUniversity] = useState<any>(null);
   const [activePhase, setActivePhase] = useState<ResourcePhase>(PHASES[0]);
-  const [applyStep, setApplyStep] = useState(1);
+  const [applyStep, setApplyStep] = useState(savedState.applyStep || 1);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [applyErrors, setApplyErrors] = useState<Record<string, string>>({});
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' | 'info' } | null>(null);
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState(savedState.formData || {
     firstName: '', lastName: '', email: '', phone: '',
     studentEmail: '', studentNumber: '', studentPhone: '',
     gpa: 0, university: '', major: '', essay: ''
@@ -749,7 +752,16 @@ const App: React.FC = () => {
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
     setIsMenuOpen(false);
-  }, [currentView]);
+    // Save current view to localStorage
+    saveAppState({ currentView, navigationHistory, applyStep, formData });
+  }, [currentView, navigationHistory, applyStep, formData]);
+
+  // Save form data changes
+  useEffect(() => {
+    if (formData.firstName || formData.lastName || formData.email) {
+      saveApplicationDraft('applicationForm', formData);
+    }
+  }, [formData]);
 
   const validateApplyStep = (step: number): boolean => {
     const newErrors: Record<string, string> = {};
