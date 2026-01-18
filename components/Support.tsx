@@ -592,7 +592,7 @@ const Support: React.FC<SupportProps> = ({ onNavigate }) => {
                     <button 
                       onClick={() => {
                         if (method.title === 'Telegram Channel') {
-                          window.open('https://t.me/+jg4s7p31moTJh', '_blank');
+                          window.open('https://t.me/+Jg4s7pDS731mOTJh', '_blank');
                         } else if (method.title === 'Visit Us') {
                           setShowAppointmentModal(true);
                         }

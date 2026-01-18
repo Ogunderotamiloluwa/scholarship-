@@ -1357,7 +1357,7 @@ const App: React.FC = () => {
             <h4 className="text-white font-black text-[10px] uppercase tracking-[0.4em] mb-10 text-indigo-400">Access Hub</h4>
             <ul className="space-y-6 text-xl md:text-2xl font-light italic">
               <li className="flex items-center gap-4 justify-center md:justify-start"><MapPin size={24} className="text-indigo-600" /> Washington, D.C.</li>
-              <li><a href="https://t.me/+jg4s7p31moTJh" target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 justify-center md:justify-start hover:text-indigo-400 transition-colors"><MessageCircle size={24} className="text-indigo-600" /> Join Our Telegram</a></li>
+              <li><a href="https://t.me/+Jg4s7pDS731mOTJh" target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 justify-center md:justify-start hover:text-indigo-400 transition-colors"><MessageCircle size={24} className="text-indigo-600" /> Join Our Telegram</a></li>
             </ul>
           </div>
         </div>

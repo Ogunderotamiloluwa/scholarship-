@@ -635,7 +635,7 @@ const Events: React.FC<EventsProps> = ({ onNavigate }) => {
                           </div>
                           <div>
                             <p className="text-xs text-slate-600 dark:text-slate-400 font-semibold">Telegram</p>
-                            <a href="https://t.me/+jg4s7p31moTJh" target="_blank" rel="noopener noreferrer" className="font-bold text-indigo-600 dark:text-indigo-400 hover:underline">Join Our Channel</a>
+                            <a href="https://t.me/+Jg4s7pDS731mOTJh" target="_blank" rel="noopener noreferrer" className="font-bold text-indigo-600 dark:text-indigo-400 hover:underline">Join Our Channel</a>
                           </div>
                         </div>
                         <div className="flex items-center gap-3">
