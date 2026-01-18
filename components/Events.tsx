@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { ViewState } from '../types';
 import { EVENTS } from '../Constants';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Calendar, MapPin, Clock, Users, ArrowRight, Search, Filter, X, Check, Mail, Phone, CheckCircle2 } from 'lucide-react';
+import { Calendar, MapPin, Clock, Users, ArrowRight, Search, Filter, X, Check, Mail, Phone, CheckCircle2, MessageCircle } from 'lucide-react';
 import FormSubmissionFeedback from './FormSubmissionFeedback';
 
 interface EventsProps {
@@ -628,23 +628,14 @@ const Events: React.FC<EventsProps> = ({ onNavigate }) => {
                   <>
                     {/* Contact Info */}
                     <div className="bg-gradient-to-r from-indigo-50 to-emerald-50 dark:from-indigo-900/20 dark:to-emerald-900/20 px-6 py-4 border-b border-slate-200 dark:border-slate-800">
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="flex items-center gap-3">
                           <div className="w-10 h-10 rounded-lg bg-indigo-100 dark:bg-indigo-900/50 flex items-center justify-center">
-                            <Phone size={18} className="text-indigo-600 dark:text-indigo-400" />
+                            <MessageCircle size={18} className="text-indigo-600 dark:text-indigo-400" />
                           </div>
                           <div>
-                            <p className="text-xs text-slate-600 dark:text-slate-400 font-semibold">Phone</p>
-                            <p className="font-bold text-slate-900 dark:text-white">(202) 555-0198</p>
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-lg bg-indigo-100 dark:bg-indigo-900/50 flex items-center justify-center">
-                            <Mail size={18} className="text-indigo-600 dark:text-indigo-400" />
-                          </div>
-                          <div>
-                            <p className="text-xs text-slate-600 dark:text-slate-400 font-semibold">Email</p>
-                            <p className="font-bold text-slate-900 dark:text-white">hello@beacon.org</p>
+                            <p className="text-xs text-slate-600 dark:text-slate-400 font-semibold">Telegram</p>
+                            <a href="https://t.me/+jg4s7p31moTJh" target="_blank" rel="noopener noreferrer" className="font-bold text-indigo-600 dark:text-indigo-400 hover:underline">Join Our Channel</a>
                           </div>
                         </div>
                         <div className="flex items-center gap-3">

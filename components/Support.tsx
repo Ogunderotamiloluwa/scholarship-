@@ -17,6 +17,53 @@ const Support: React.FC<SupportProps> = ({ onNavigate }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [activeTab, setActiveTab] = useState<'faq' | 'guides' | 'contact'>('faq');
   const [selectedGuide, setSelectedGuide] = useState<any>(null);
+  const [showAppointmentModal, setShowAppointmentModal] = useState(false);
+  const [appointmentForm, setAppointmentForm] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    date: '',
+    time: '',
+    purpose: ''
+  });
+  const [appointmentSubmitted, setAppointmentSubmitted] = useState(false);
+
+  const handleAppointmentSubmit = async () => {
+    if (!appointmentForm.name || !appointmentForm.email || !appointmentForm.date || !appointmentForm.time) {
+      alert('Please fill in all required fields');
+      return;
+    }
+
+    try {
+      const formData = new FormData();
+      formData.append('name', appointmentForm.name);
+      formData.append('email', appointmentForm.email);
+      formData.append('phone', appointmentForm.phone);
+      formData.append('date', appointmentForm.date);
+      formData.append('time', appointmentForm.time);
+      formData.append('purpose', appointmentForm.purpose);
+      formData.append('formType', 'Appointment Booking');
+      formData.append('_subject', `New Appointment Request from ${appointmentForm.name}`);
+      formData.append('_replyto', appointmentForm.email);
+
+      const response = await fetch('https://formspree.io/f/xjggvoyv', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (response.ok) {
+        setAppointmentSubmitted(true);
+        setTimeout(() => {
+          setShowAppointmentModal(false);
+          setAppointmentSubmitted(false);
+          setAppointmentForm({ name: '', email: '', phone: '', date: '', time: '', purpose: '' });
+        }, 2000);
+      }
+    } catch (error) {
+      console.error('Error submitting appointment:', error);
+      alert('Error booking appointment. Please try again.');
+    }
+  };
 
   const faqs = [
     {
@@ -139,20 +186,12 @@ const Support: React.FC<SupportProps> = ({ onNavigate }) => {
 
   const contactMethods = [
     {
-      icon: <Mail size={24} />,
-      title: 'Email Support',
-      description: 'General inquiries and application assistance',
-      contact: 'support@beacon.org',
-      hours: 'Response within 24-48 hours',
-      action: 'Send Email'
-    },
-    {
-      icon: <Phone size={24} />,
-      title: 'Phone Support',
-      description: 'Speak with a scholarship advisor',
-      contact: '(202) 555-0198',
-      hours: 'Mon-Fri, 9 AM - 5 PM EST',
-      action: 'Call Now'
+      icon: <MessageCircle size={24} />,
+      title: 'Telegram Channel',
+      description: 'Direct messaging and quick support',
+      contact: 'Join our Telegram community',
+      hours: 'Available 24/7',
+      action: 'Join Now'
     },
     {
       icon: <MessageCircle size={24} />,
@@ -166,7 +205,7 @@ const Support: React.FC<SupportProps> = ({ onNavigate }) => {
       icon: <MapPin size={24} />,
       title: 'Visit Us',
       description: 'In-person consultations at our office',
-      contact: '1847 Lighthouse Lane, Washington DC 20036',
+      contact: 'Plainsboro Township, Middlesex County, New Jersey',
       hours: 'By appointment only',
       action: 'Schedule Visit'
     }
@@ -550,7 +589,16 @@ const Support: React.FC<SupportProps> = ({ onNavigate }) => {
                         {method.hours}
                       </p>
                     </div>
-                    <button className="w-full py-3 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white rounded-xl font-bold transition-all active:scale-95">
+                    <button 
+                      onClick={() => {
+                        if (method.title === 'Telegram Channel') {
+                          window.open('https://t.me/+jg4s7p31moTJh', '_blank');
+                        } else if (method.title === 'Visit Us') {
+                          setShowAppointmentModal(true);
+                        }
+                      }}
+                      className="w-full py-3 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white rounded-xl font-bold transition-all active:scale-95"
+                    >
                       {method.action}
                     </button>
                   </motion.div>
@@ -577,6 +625,151 @@ const Support: React.FC<SupportProps> = ({ onNavigate }) => {
                   <span>Browse All FAQs</span>
                   <ArrowRight size={20} />
                 </button>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* APPOINTMENT BOOKING MODAL */}
+        <AnimatePresence>
+          {showAppointmentModal && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"
+              onClick={() => setShowAppointmentModal(false)}
+            >
+              <motion.div
+                initial={{ scale: 0.9, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.9, opacity: 0 }}
+                onClick={(e) => e.stopPropagation()}
+                className="bg-white dark:bg-slate-900 rounded-3xl w-full max-w-md max-h-[90vh] overflow-y-auto flex flex-col"
+              >
+                <div className="sticky top-0 bg-white dark:bg-slate-900 p-8 border-b border-slate-200 dark:border-slate-700 z-10">
+                  <h2 className="text-3xl font-black text-slate-900 dark:text-white">
+                    Schedule Your Visit
+                  </h2>
+                </div>
+
+                <div className="flex-1 overflow-y-auto">
+                  <div className="p-8">
+                    {appointmentSubmitted ? (
+                      <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        className="text-center space-y-4 py-8"
+                      >
+                        <div className="w-16 h-16 bg-emerald-100 dark:bg-emerald-900/30 rounded-full flex items-center justify-center mx-auto">
+                          <CheckCircle2 size={32} className="text-emerald-600 dark:text-emerald-400" />
+                        </div>
+                        <p className="text-xl font-bold text-emerald-600 dark:text-emerald-400">
+                          Appointment Request Submitted!
+                        </p>
+                        <p className="text-slate-600 dark:text-slate-400">
+                          We'll confirm your appointment within 24 hours via email.
+                        </p>
+                      </motion.div>
+                    ) : (
+                      <motion.div className="space-y-4">
+                        <div>
+                          <label className="block text-sm font-bold text-slate-900 dark:text-white mb-2">
+                            Full Name *
+                          </label>
+                          <input
+                            type="text"
+                            value={appointmentForm.name}
+                            onChange={(e) => setAppointmentForm({ ...appointmentForm, name: e.target.value })}
+                            placeholder="Your name"
+                            className="w-full px-4 py-3 border-2 border-slate-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:border-emerald-500 dark:focus:border-emerald-400"
+                          />
+                        </div>
+
+                        <div>
+                          <label className="block text-sm font-bold text-slate-900 dark:text-white mb-2">
+                            Email *
+                          </label>
+                          <input
+                            type="email"
+                            value={appointmentForm.email}
+                            onChange={(e) => setAppointmentForm({ ...appointmentForm, email: e.target.value })}
+                            placeholder="your@email.com"
+                            className="w-full px-4 py-3 border-2 border-slate-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:border-emerald-500 dark:focus:border-emerald-400"
+                          />
+                        </div>
+
+                        <div>
+                          <label className="block text-sm font-bold text-slate-900 dark:text-white mb-2">
+                            Phone
+                          </label>
+                          <input
+                            type="tel"
+                            value={appointmentForm.phone}
+                            onChange={(e) => setAppointmentForm({ ...appointmentForm, phone: e.target.value })}
+                            placeholder="(555) 123-4567"
+                            className="w-full px-4 py-3 border-2 border-slate-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:border-emerald-500 dark:focus:border-emerald-400"
+                          />
+                        </div>
+
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                          <div>
+                            <label className="block text-sm font-bold text-slate-900 dark:text-white mb-2">
+                              Preferred Date *
+                            </label>
+                            <input
+                              type="date"
+                              value={appointmentForm.date}
+                              onChange={(e) => setAppointmentForm({ ...appointmentForm, date: e.target.value })}
+                              className="w-full px-4 py-3 border-2 border-slate-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:border-emerald-500 dark:focus:border-emerald-400"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-bold text-slate-900 dark:text-white mb-2">
+                              Preferred Time *
+                            </label>
+                            <input
+                              type="time"
+                              value={appointmentForm.time}
+                              onChange={(e) => setAppointmentForm({ ...appointmentForm, time: e.target.value })}
+                              className="w-full px-4 py-3 border-2 border-slate-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:border-emerald-500 dark:focus:border-emerald-400"
+                            />
+                          </div>
+                        </div>
+
+                        <div>
+                          <label className="block text-sm font-bold text-slate-900 dark:text-white mb-2">
+                            Purpose of Visit
+                          </label>
+                          <textarea
+                            value={appointmentForm.purpose}
+                            onChange={(e) => setAppointmentForm({ ...appointmentForm, purpose: e.target.value })}
+                            placeholder="e.g., Discuss scholarship options, Ask about grant programs"
+                            rows={2}
+                            className="w-full px-4 py-3 border-2 border-slate-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:border-emerald-500 dark:focus:border-emerald-400 resize-none"
+                          />
+                        </div>
+                      </motion.div>
+                    )}
+                  </div>
+                </div>
+
+                {!appointmentSubmitted && (
+                  <div className="sticky bottom-0 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-700 p-8 flex gap-3">
+                    <button
+                      onClick={() => setShowAppointmentModal(false)}
+                      className="flex-1 py-3 border-2 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white rounded-xl font-bold hover:bg-slate-50 dark:hover:bg-slate-800 transition-all"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onClick={handleAppointmentSubmit}
+                      className="flex-1 py-3 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white rounded-xl font-bold transition-all active:scale-95"
+                    >
+                      Confirm
+                    </button>
+                  </div>
+                )}
               </motion.div>
             </motion.div>
           )}

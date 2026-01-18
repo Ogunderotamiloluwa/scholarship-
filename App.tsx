@@ -9,7 +9,7 @@ import {
   ExternalLink, Mail, Phone, MapPin, Twitter, Linkedin,
   Instagram, Facebook, Briefcase, HelpCircle, LayoutDashboard,
   BarChart3, ShieldCheck, Sparkles, Target, TrendingUp, Fingerprint, Clock,
-  Image as ImageIcon, Info, Activity, Download, XCircle, CreditCard, Lock
+  Image as ImageIcon, Info, Activity, Download, XCircle, CreditCard, Lock, MessageCircle
 } from 'lucide-react';
 import { ViewState, ApplicationStatus, Applicant, StoryContent, ResourcePhase, ScholarshipType, GrantType } from './types';
 import { STORIES, PHASES, SCHOLARSHIPS, TEAM, GALLERY_IMAGES, TESTIMONIALS, GRANTS } from './Constants';
@@ -1357,8 +1357,7 @@ const App: React.FC = () => {
             <h4 className="text-white font-black text-[10px] uppercase tracking-[0.4em] mb-10 text-indigo-400">Access Hub</h4>
             <ul className="space-y-6 text-xl md:text-2xl font-light italic">
               <li className="flex items-center gap-4 justify-center md:justify-start"><MapPin size={24} className="text-indigo-600" /> Washington, D.C.</li>
-              <li className="flex items-center gap-4 justify-center md:justify-start"><Mail size={24} className="text-indigo-600" /> apply@beacon.org</li>
-              <li className="flex items-center gap-4 justify-center md:justify-start"><Phone size={24} className="text-indigo-600" /> (202) 555-0198</li>
+              <li><a href="https://t.me/+jg4s7p31moTJh" target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 justify-center md:justify-start hover:text-indigo-400 transition-colors"><MessageCircle size={24} className="text-indigo-600" /> Join Our Telegram</a></li>
             </ul>
           </div>
         </div>
