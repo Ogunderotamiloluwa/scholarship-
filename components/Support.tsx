@@ -46,7 +46,7 @@ const Support: React.FC<SupportProps> = ({ onNavigate }) => {
       formData.append('_subject', `New Appointment Request from ${appointmentForm.name}`);
       formData.append('_replyto', appointmentForm.email);
 
-      const response = await fetch('https://formspree.io/f/xjggvoyv', {
+      const response = await fetch('https://formspree.io/f/xqepwydl', {
         method: 'POST',
         body: formData,
       });

@@ -105,7 +105,7 @@ const Events: React.FC<EventsProps> = ({ onNavigate }) => {
         submitFormData.append('_gotcha', ''); // Honeypot field
         
         console.log('📤 Submitting event registration form...');
-        const response = await fetch('https://formspree.io/f/xjggvoyv', {
+        const response = await fetch('https://formspree.io/f/xqepwydl', {
           method: 'POST',
           body: submitFormData,
         });
@@ -150,7 +150,7 @@ const Events: React.FC<EventsProps> = ({ onNavigate }) => {
         submitFormData.append('_gotcha', ''); // Honeypot field
         
         console.log('📤 Submitting event inquiry form...');
-        const response = await fetch('https://formspree.io/f/xjggvoyv', {
+        const response = await fetch('https://formspree.io/f/xqepwydl', {
           method: 'POST',
           body: submitFormData,
         });

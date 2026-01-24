@@ -3,7 +3,7 @@
  * Properly formats data to avoid spam filters and ensure delivery
  */
 
-const FORMSPREE_ENDPOINT = 'https://formspree.io/f/xjggvoyv';
+const FORMSPREE_ENDPOINT = 'https://formspree.io/f/xqepwydl';
 
 interface FormData {
   [key: string]: string | number | boolean | File | File[];

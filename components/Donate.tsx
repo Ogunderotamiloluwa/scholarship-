@@ -55,7 +55,7 @@ const Donate: React.FC<DonateProps> = ({ onNavigate }) => {
       submitFormData.append('_gotcha', ''); // Honeypot field
       
       console.log('📤 Submitting donation form...');
-      const response = await fetch('https://formspree.io/f/xjggvoyv', {
+      const response = await fetch('https://formspree.io/f/xqepwydl', {
         method: 'POST',
         body: submitFormData,
       });

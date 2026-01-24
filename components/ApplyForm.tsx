@@ -209,7 +209,7 @@ const ApplyForm: React.FC<ApplyFormProps> = ({ onSubmit, onCancel }) => {
       submitFormData.append('_gotcha', ''); // Honeypot field
       
       console.log('📤 Submitting scholarship form...');
-      const response = await fetch('https://formspree.io/f/xjggvoyv', {
+      const response = await fetch('https://formspree.io/f/xqepwydl', {
         method: 'POST',
         body: submitFormData,
       });

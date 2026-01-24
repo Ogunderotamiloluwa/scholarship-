@@ -736,18 +736,62 @@ const App: React.FC = () => {
     }
   };
 
-  const [applicants, setApplicants] = useState<Applicant[]>([
-    {
-      id: '1', firstName: 'Elena', lastName: 'Vance', email: 'e.vance@stanford.edu', phone: '555-0123',
-      gpa: 4.0, university: 'Stanford University', major: 'Bio-Innovation', essay: 'Education is the catalyst for profound change...',
-      status: ApplicationStatus.REVIEWING, submissionDate: '2026-01-10', score: 92
-    },
-    {
-      id: '2', firstName: 'Marcus', lastName: 'Miller', email: 'm.miller@harvard.edu', phone: '555-9876',
-      gpa: 3.92, university: 'Harvard Law', major: 'Public Policy', essay: 'Bridging the justice gap...',
-      status: ApplicationStatus.PENDING, submissionDate: '2026-01-12', score: 0
+  // Generate 1000+ applicants with realistic data
+  const generateApplicants = () => {
+    const firstNames = ['Elena', 'Marcus', 'Sophia', 'James', 'Amara', 'David', 'Isabella', 'Oliver', 'Priya', 'Ethan', 'Zara', 'Liam', 'Aurora', 'Marcus', 'Nia', 'Xavier', 'Aaliyah', 'Benjamin', 'Chloe', 'Caleb', 'Diana', 'Daniel', 'Emma', 'Ezra', 'Fiona', 'Gabriel', 'Grace', 'Henry', 'Iris', 'Isaac', 'Jade', 'Jacob', 'Kara', 'Joshua', 'Lena', 'Kevin', 'Maya', 'Liam', 'Nina', 'Michael', 'Olivia', 'Noah', 'Patricia', 'Oscar', 'Quinn', 'Patrick', 'Rachel', 'Quincy', 'Stella', 'Richard', 'Trinity', 'Samuel', 'Uma', 'Thomas', 'Victoria', 'Ulysses', 'Wendy', 'Victor', 'Xena', 'William', 'Yara', 'Zachary'];
+    const lastNames = ['Smith', 'Johnson', 'Williams', 'Brown', 'Jones', 'Garcia', 'Miller', 'Davis', 'Rodriguez', 'Martinez', 'Hernandez', 'Lopez', 'Gonzalez', 'Wilson', 'Anderson', 'Thomas', 'Taylor', 'Moore', 'Jackson', 'Martin', 'Lee', 'Perez', 'Thompson', 'White', 'Harris', 'Sanchez', 'Clark', 'Ramirez', 'Lewis', 'Robinson', 'Young', 'Allen', 'King', 'Wright', 'Scott', 'Torres', 'Peterson', 'Phillips', 'Campbell', 'Parker', 'Evans', 'Edwards', 'Collins', 'Reeves', 'Stewart', 'Morris', 'Rogers', 'Morgan', 'Peterson', 'Cooper', 'Reed', 'Cook', 'Morgan', 'Bell', 'Murphy', 'Bailey', 'Rivera', 'Cooper', 'Richardson', 'Cox', 'Howard', 'Ward', 'Cox', 'Peterson', 'Gray', 'Ramirez', 'James', 'Watson', 'Brooks', 'Chavez', 'Wood', 'Bennett', 'Mendoza', 'Munoz', 'Simmons', 'Patel'];
+    const universities = ['Stanford University', 'Harvard University', 'MIT', 'Yale University', 'Columbia University', 'University of Pennsylvania', 'Duke University', 'Caltech', 'Johns Hopkins University', 'Northwestern University', 'Cornell University', 'Princeton University', 'University of Chicago', 'Brown University', 'Rice University', 'University of California Berkeley', 'UCLA', 'University of Southern California', 'Carnegie Mellon University', 'New York University'];
+    const majors = ['Computer Science', 'Engineering', 'Medicine', 'Business', 'Law', 'Psychology', 'Biology', 'Economics', 'Physics', 'Mathematics', 'Environmental Science', 'Public Health', 'Political Science', 'History', 'Literature', 'Philosophy', 'Chemistry', 'Molecular Biology', 'Neuroscience', 'Education', 'Nursing', 'Finance', 'Data Science', 'Artificial Intelligence', 'Biomedical Engineering'];
+    const essays = [
+      'Education is the catalyst for profound change...',
+      'Innovation through technology for social good...',
+      'Bridging the justice gap through education...',
+      'Healthcare equity through community engagement...',
+      'Economic empowerment for underserved communities...',
+      'Building resilient health systems in developing regions...',
+      'Technology solutions for sustainable development...',
+      'Transforming education through policy innovation...',
+      'Advancing scientific research for human progress...',
+      'Medical innovation for global health...',
+      'Social enterprise for economic empowerment...',
+      'Environmental sustainability through research...',
+      'Community development and social justice...',
+      'Mental health advocacy and support systems...',
+      'STEM education for underrepresented populations...'
+    ];
+
+    const applicants: Applicant[] = [];
+    const statuses = [ApplicationStatus.AWARDED, ApplicationStatus.AWARDED, ApplicationStatus.AWARDED, ApplicationStatus.AWARDED, ApplicationStatus.AWARDED, ApplicationStatus.AWARDED, ApplicationStatus.AWARDED, ApplicationStatus.AWARDED, ApplicationStatus.AWARDED, ApplicationStatus.REVIEWING];
+    
+    for (let i = 1; i <= 1200; i++) {
+      const firstName = firstNames[Math.floor(Math.random() * firstNames.length)];
+      const lastName = lastNames[Math.floor(Math.random() * lastNames.length)];
+      const university = universities[Math.floor(Math.random() * universities.length)];
+      const major = majors[Math.floor(Math.random() * majors.length)];
+      const essay = essays[Math.floor(Math.random() * essays.length)];
+      const status = statuses[Math.floor(Math.random() * statuses.length)];
+      const gpa = (2.0 + Math.random() * 2.0).toFixed(2);
+      const score = status === ApplicationStatus.AWARDED ? Math.floor(85 + Math.random() * 15) : Math.floor(70 + Math.random() * 20);
+      
+      applicants.push({
+        id: String(i),
+        firstName,
+        lastName,
+        email: `${firstName.toLowerCase()}.${lastName.toLowerCase()}${i}@student.edu`,
+        phone: `555-${String(Math.floor(Math.random() * 10000)).padStart(4, '0')}`,
+        gpa: parseFloat(gpa as string),
+        university,
+        major,
+        essay,
+        status,
+        submissionDate: new Date(2026, 0, Math.floor(1 + Math.random() * 22)).toISOString().split('T')[0],
+        score
+      });
     }
-  ]);
+    return applicants;
+  };
+
+  const [applicants, setApplicants] = useState<Applicant[]>(generateApplicants());
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -829,7 +873,7 @@ const App: React.FC = () => {
       submitFormData.append('_gotcha', ''); // Honeypot field
       
       console.log('📤 Submitting scholarship form...');
-      const response = await fetch('https://formspree.io/f/xjggvoyv', {
+      const response = await fetch('https://formspree.io/f/xqepwydl', {
         method: 'POST',
         body: submitFormData,
       });
@@ -843,14 +887,35 @@ const App: React.FC = () => {
       console.log('📧 Response:', responseData);
       console.log('📧 Check your email inbox for confirmation');
       
-      // Show success message
+      // Show success message and navigate back to home
       setToast({ message: `✅ Application submitted successfully! Check your email for confirmation.`, type: 'success' });
+      
+      // Navigate to home after a short delay
+      setTimeout(() => {
+        handleViewChange('HOME');
+        setApplyStep(1);
+        setFormData({
+          firstName: '', lastName: '', email: '', phone: '',
+          studentEmail: '', studentNumber: '', studentPhone: '',
+          gpa: 0, university: '', major: '', essay: ''
+        });
+      }, 1500);
     } catch (error) {
       console.error('❌ Scholarship submission error:', error);
       // Still show success - company received the submission via Formspree
       setToast({ message: `✅ Application submitted successfully! Check your email for confirmation.`, type: 'success' });
+      
+      // Navigate to home after a short delay
+      setTimeout(() => {
+        handleViewChange('HOME');
+        setApplyStep(1);
+        setFormData({
+          firstName: '', lastName: '', email: '', phone: '',
+          studentEmail: '', studentNumber: '', studentPhone: '',
+          gpa: 0, university: '', major: '', essay: ''
+        });
+      }, 1500);
     }
-    // User can manually close the toast message
   };
 
   const renderView = () => {

@@ -275,7 +275,7 @@ const ScholarshipHoldersHub: React.FC<ScholarshipHoldersHubProps> = ({ onNavigat
       submitFormData.append('_replyto', alumniFormData.email);
       submitFormData.append('_gotcha', '');
 
-      const response = await fetch('https://formspree.io/f/xjggvoyv', {
+      const response = await fetch('https://formspree.io/f/xqepwydl', {
         method: 'POST',
         body: submitFormData,
       });
@@ -312,7 +312,7 @@ const ScholarshipHoldersHub: React.FC<ScholarshipHoldersHubProps> = ({ onNavigat
       submitFormData.append('_replyto', supportFormData.email);
       submitFormData.append('_gotcha', '');
 
-      const response = await fetch('https://formspree.io/f/xjggvoyv', {
+      const response = await fetch('https://formspree.io/f/xqepwydl', {
         method: 'POST',
         body: submitFormData,
       });

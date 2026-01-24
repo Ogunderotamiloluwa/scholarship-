@@ -590,7 +590,7 @@ const Institutions: React.FC<InstitutionsProps> = ({ onNavigate, setSelectedUniv
       submitFormData.append('_replyto', formData.email);
       submitFormData.append('_gotcha', '');
 
-      const response = await fetch('https://formspree.io/f/xjggvoyv', {
+      const response = await fetch('https://formspree.io/f/xqepwydl', {
         method: 'POST',
         body: submitFormData,
       });
