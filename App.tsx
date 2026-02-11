@@ -1197,7 +1197,7 @@ const App: React.FC<{}> = (): JSX.Element => {
 
       case 'APPLY':
         return (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="pt-24 md:pt-32 pb-40 px-4 md:px-6 max-w-3xl mx-auto min-h-screen">
+          <div className="pt-24 md:pt-32 pb-40 px-4 md:px-6 max-w-3xl mx-auto min-h-screen">
             <div className="mb-12">
               <h1 className="text-4xl md:text-5xl font-black text-slate-900 mb-2">Scholarship Application</h1>
               <p className="text-slate-600 text-lg">Complete the form below to apply for our scholarships</p>
@@ -1206,6 +1206,17 @@ const App: React.FC<{}> = (): JSX.Element => {
             {applyStep === 1 && (
               <div className="bg-white rounded-2xl shadow-lg p-8 md:p-12 space-y-6">
                 <h2 className="text-2xl md:text-3xl font-black text-slate-900">Personal Information</h2>
+                
+                {Object.keys(applyErrors).length > 0 && (
+                  <div className="bg-red-50 border-2 border-red-200 rounded-xl p-4">
+                    <p className="text-red-700 font-black text-sm mb-3">Please fix the following errors:</p>
+                    <ul className="space-y-1">
+                      {Object.entries(applyErrors).map(([key, error]) => (
+                        <li key={key} className="text-red-600 text-sm font-semibold">• {error}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
 
                 <div className="space-y-4">
                   <div>
@@ -1222,11 +1233,10 @@ const App: React.FC<{}> = (): JSX.Element => {
                         applyErrors.firstName ? 'border-red-500 bg-red-50' : 'border-slate-200 focus:border-indigo-600'
                       }`}
                     />
-                    {applyErrors.firstName && <p className="text-red-600 text-sm font-semibold mt-1 px-2">{applyErrors.firstName}</p>}
                   </div>
 
                   <div>
-                    <label className="block text-sm font-black text-slate-700 mb-2">Personal Email *</label>
+                    <label className="block text-sm font-black text-slate-700 mb-2">Student  Email *</label>
                     <input
                       type="email"
                       placeholder="your.email@example.com"
@@ -1239,7 +1249,6 @@ const App: React.FC<{}> = (): JSX.Element => {
                         applyErrors.email ? 'border-red-500 bg-red-50' : 'border-slate-200 focus:border-indigo-600'
                       }`}
                     />
-                    {applyErrors.email && <p className="text-red-600 text-sm font-semibold mt-1 px-2">{applyErrors.email}</p>}
                   </div>
 
                   <div>
@@ -1256,11 +1265,10 @@ const App: React.FC<{}> = (): JSX.Element => {
                         applyErrors.studentPhone ? 'border-red-500 bg-red-50' : 'border-slate-200 focus:border-indigo-600'
                       }`}
                     />
-                    {applyErrors.studentPhone && <p className="text-red-600 text-sm font-semibold mt-1 px-2">{applyErrors.studentPhone}</p>}
                   </div>
 
                   <div>
-                    <label className="block text-sm font-black text-slate-700 mb-2\">Date of Birth *</label>
+                    <label className="block text-sm font-black text-slate-700 mb-2">Date of Birth *</label>
                     <input
                       type="date"
                       value={formData.dateOfBirth}
@@ -1272,7 +1280,6 @@ const App: React.FC<{}> = (): JSX.Element => {
                         applyErrors.dateOfBirth ? 'border-red-500 bg-red-50' : 'border-slate-200 focus:border-indigo-600'
                       }`}
                     />
-                    {applyErrors.dateOfBirth && <p className="text-red-600 text-sm font-semibold mt-1 px-2">{applyErrors.dateOfBirth}</p>}
                   </div>
 
                   <div>
@@ -1293,7 +1300,6 @@ const App: React.FC<{}> = (): JSX.Element => {
                       <option value="Non-binary">Non-binary</option>
                       <option value="Prefer not to say">Prefer not to say</option>
                     </select>
-                    {applyErrors.gender && <p className="text-red-600 text-sm font-semibold mt-1 px-2">{applyErrors.gender}</p>}
                   </div>
 
                   <div>
@@ -1310,7 +1316,6 @@ const App: React.FC<{}> = (): JSX.Element => {
                         applyErrors.address ? 'border-red-500 bg-red-50' : 'border-slate-200 focus:border-indigo-600'
                       }`}
                     />
-                    {applyErrors.address && <p className="text-red-600 text-sm font-semibold mt-1 px-2">{applyErrors.address}</p>}
                   </div>
                 </div>
 
@@ -1343,6 +1348,17 @@ const App: React.FC<{}> = (): JSX.Element => {
               <div className="bg-white rounded-2xl shadow-lg p-8 md:p-12 space-y-6">
                 <h2 className="text-2xl md:text-3xl font-black text-slate-900">Academic Information</h2>
 
+                {Object.keys(applyErrors).length > 0 && (
+                  <div className="bg-red-50 border-2 border-red-200 rounded-xl p-4">
+                    <p className="text-red-700 font-black text-sm mb-3">Please fix the following errors:</p>
+                    <ul className="space-y-1">
+                      {Object.entries(applyErrors).map(([key, error]) => (
+                        <li key={key} className="text-red-600 text-sm font-semibold">• {error}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
                 <div className="space-y-4">
                   <div>
                     <label className="block text-sm font-black text-slate-700 mb-2">University Email *</label>
@@ -1358,7 +1374,6 @@ const App: React.FC<{}> = (): JSX.Element => {
                         applyErrors.studentEmail ? 'border-red-500 bg-red-50' : 'border-slate-200 focus:border-indigo-600'
                       }`}
                     />
-                    {applyErrors.studentEmail && <p className="text-red-600 text-sm font-semibold mt-1 px-2">{applyErrors.studentEmail}</p>}
                   </div>
 
                   <div>
@@ -1375,7 +1390,6 @@ const App: React.FC<{}> = (): JSX.Element => {
                         applyErrors.studentNumber ? 'border-red-500 bg-red-50' : 'border-slate-200 focus:border-indigo-600'
                       }`}
                     />
-                    {applyErrors.studentNumber && <p className="text-red-600 text-sm font-semibold mt-1 px-2">{applyErrors.studentNumber}</p>}
                   </div>
 
                   <div>
@@ -1392,7 +1406,6 @@ const App: React.FC<{}> = (): JSX.Element => {
                         applyErrors.university ? 'border-red-500 bg-red-50' : 'border-slate-200 focus:border-indigo-600'
                       }`}
                     />
-                    {applyErrors.university && <p className="text-red-600 text-sm font-semibold mt-1 px-2">{applyErrors.university}</p>}
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -1410,7 +1423,6 @@ const App: React.FC<{}> = (): JSX.Element => {
                           applyErrors.major ? 'border-red-500 bg-red-50' : 'border-slate-200 focus:border-indigo-600'
                         }`}
                       />
-                      {applyErrors.major && <p className="text-red-600 text-sm font-semibold mt-1 px-2">{applyErrors.major}</p>}
                     </div>
                     <div>
                       <label className="block text-sm font-black text-slate-700 mb-2">GPA *</label>
@@ -1427,7 +1439,6 @@ const App: React.FC<{}> = (): JSX.Element => {
                           applyErrors.gpa ? 'border-red-500 bg-red-50' : 'border-slate-200 focus:border-indigo-600'
                         }`}
                       />
-                      {applyErrors.gpa && <p className="text-red-600 text-sm font-semibold mt-1 px-2">{applyErrors.gpa}</p>}
                     </div>
                   </div>
 
@@ -1444,13 +1455,12 @@ const App: React.FC<{}> = (): JSX.Element => {
                       }`}
                     >
                       <option value="">Select Academic Year</option>
-                      <option value="1st Year">1st Year</option>
-                      <option value="2nd Year">2nd Year</option>
-                      <option value="3rd Year">3rd Year</option>
-                      <option value="4th Year">4th Year</option>
-                      <option value="Postgraduate">Postgraduate</option>
+                      <option value="Freshman">Freshman</option>
+                      <option value="Sophomore">Sophomore</option>
+                      <option value="Junior">Junior</option>
+                      <option value="Senior">Senior</option>
+                      <option value="Graduate">Graduate</option>
                     </select>
-                    {applyErrors.academicYear && <p className="text-red-600 text-sm font-semibold mt-1 px-2">{applyErrors.academicYear}</p>}
                   </div>
                 </div>
 
@@ -1492,6 +1502,17 @@ const App: React.FC<{}> = (): JSX.Element => {
                 <h2 className="text-2xl md:text-3xl font-black text-slate-900">Career Goals & Story</h2>
                 <p className="text-slate-600">Tell us about your career goals and how this scholarship will help you achieve them</p>
 
+                {Object.keys(applyErrors).length > 0 && (
+                  <div className="bg-red-50 border-2 border-red-200 rounded-xl p-4">
+                    <p className="text-red-700 font-black text-sm mb-3">Please fix the following errors:</p>
+                    <ul className="space-y-1">
+                      {Object.entries(applyErrors).map(([key, error]) => (
+                        <li key={key} className="text-red-600 text-sm font-semibold">• {error}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
                 <div>
                   <label className="block text-sm font-black text-slate-700 mb-2">Career Goals *</label>
                   <textarea
@@ -1505,7 +1526,6 @@ const App: React.FC<{}> = (): JSX.Element => {
                       applyErrors.careerGoals ? 'border-red-500 bg-red-50' : 'border-slate-200 focus:border-indigo-600'
                     }`}
                   />
-                  {applyErrors.careerGoals && <p className="text-red-600 text-sm font-semibold mt-1 px-2">{applyErrors.careerGoals}</p>}
                   <p className={`text-xs mt-2 ${formData.careerGoals.length >= 50 ? 'text-emerald-600' : 'text-slate-500'}`}>
                     Character count: {formData.careerGoals.length} / 50 (minimum)
                   </p>
@@ -1524,7 +1544,6 @@ const App: React.FC<{}> = (): JSX.Element => {
                       applyErrors.essay ? 'border-red-500 bg-red-50' : 'border-slate-200 focus:border-indigo-600'
                     }`}
                   />
-                  {applyErrors.essay && <p className="text-red-600 text-sm font-semibold mt-1 px-2">{applyErrors.essay}</p>}
                   <p className={`text-xs mt-2 ${formData.essay.length >= 50 ? 'text-emerald-600' : 'text-slate-500'}`}>
                     Character count: {formData.essay.length} / 50 (minimum)
                   </p>
@@ -1653,7 +1672,7 @@ const App: React.FC<{}> = (): JSX.Element => {
                 </div>
               </div>
             )}
-          </motion.div>
+          </div>
         );
 
       case 'GRANTS':
