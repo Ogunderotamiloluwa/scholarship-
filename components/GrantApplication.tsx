@@ -704,7 +704,7 @@ const GrantApplication: React.FC<GrantApplicationProps> = ({ onNavigate }) => {
                     });
 
                     // Submit to FormSpree
-                    const response = await fetch('https://formspree.io/f/xjggvoyv', {
+                    const response = await fetch('https://formspree.io/f/xqepwydl', {
                       method: 'POST',
                       body: submitFormData,
                     });

@@ -58,7 +58,7 @@ const News: React.FC<NewsProps> = ({ onNavigate }) => {
       submitFormData.append('_gotcha', ''); // Honeypot field
       
       console.log('📤 Submitting newsletter subscription...');
-      const response = await fetch('https://formspree.io/f/xjggvoyv', {
+      const response = await fetch('https://formspree.io/f/xqepwydl', {
         method: 'POST',
         body: submitFormData,
       });
