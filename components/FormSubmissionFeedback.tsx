@@ -21,7 +21,7 @@ const FormSubmissionFeedback: React.FC<FormSubmissionFeedbackProps> = ({
     if (isVisible && !isLoading) {
       const timer = setTimeout(() => {
         onClose();
-      }, 30000); // 30 seconds to allow user to read the full message
+      }, 40000); // 40 seconds to allow user to read the full message
 
       return () => clearTimeout(timer);
     }
