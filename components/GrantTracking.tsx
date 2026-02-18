@@ -313,6 +313,15 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
         }
       }
 
+      // If amount is missing from passkey, try to get it from localStorage (fallback for old passkeys)
+      let finalAmount = amount;
+      if ((!finalAmount || finalAmount.trim() === '') && email && grantCategory) {
+        const anyAccount = applications.find(app => app.email && app.email.toLowerCase() === email.toLowerCase() && app.grantCategory === grantCategory);
+        if (anyAccount && anyAccount.amount) {
+          finalAmount = anyAccount.amount;
+        }
+      }
+
       // If still no fullAccount, but we have enough from passkey, return constructed account
       return {
         fullName: fullName,  // Use fullName from passkey (works on all browsers!)
@@ -321,7 +330,7 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
         phone: '',
         country: '',
         grantCategory: grantCategory,  // From passkey - exact
-        amount: amount || '',  // Amount from passkey (from form submission)
+        amount: finalAmount || '',  // Amount from passkey or localStorage fallback
         purpose: '',
         applicantWork: '',
         usage: '',
@@ -1071,6 +1080,35 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
                   return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
                 };
                 
+                // Get display amount with fallback to localStorage if needed during frozen phase
+                const getDisplayAmount = () => {
+                  let amount = trackingState.currentUser?.amount;
+                  
+                  // If amount is empty/zero during frozen phase, try to fetch from localStorage
+                  if ((status.isFrozen && (!amount || amount === '0' || amount.trim() === '')) || 
+                      (!status.isInitializing && !amount)) {
+                    try {
+                      const apps = localStorage.getItem('grantApplications');
+                      if (apps) {
+                        const applications = JSON.parse(apps);
+                        const currentApp = applications.find((app: any) => 
+                          app.email && trackingState.currentUser?.email && 
+                          app.email.toLowerCase() === trackingState.currentUser.email.toLowerCase()
+                        );
+                        if (currentApp && currentApp.amount) {
+                          amount = currentApp.amount;
+                        }
+                      }
+                    } catch (e) {
+                      console.error('Error fetching amount from localStorage:', e);
+                    }
+                  }
+                  
+                  return amount;
+                };
+                
+                const displayAmount = getDisplayAmount();
+                
                 return (
                   <div className="space-y-6">
                     {/* AVAILABLE BALANCE CARD - Right Below Timer */}
@@ -1082,7 +1120,7 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
                           </p>
                           <div className="flex items-baseline gap-3 flex-wrap">
                             <span className="text-4xl sm:text-5xl font-black text-slate-900 dark:text-white break-words">
-                              {privacySettings.hideBalance ? '••••' : status.isInitializing ? '$0.00' : status.isReviewComplete ? '❌' : `$${formatAmount(trackingState.currentUser?.amount)}`}
+                              {privacySettings.hideBalance ? '••••' : status.isInitializing ? '$0.00' : status.isReviewComplete ? '❌' : `$${formatAmount(displayAmount)}`}
                             </span>
                             <button
                               onClick={() => setPrivacySettings({...privacySettings, hideBalance: !privacySettings.hideBalance})}
