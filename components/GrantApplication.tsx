@@ -51,6 +51,7 @@ const GrantApplication: React.FC<GrantApplicationProps> = ({ onNavigate }) => {
         e: app.email,  // email
         p: app.password,  // password
         g: app.grantCategory,  // grant category
+        a: app.amount,  // amount (from form submission)
         t: app.timestamp  // timestamp (critical - was resetting before)
       });
       

