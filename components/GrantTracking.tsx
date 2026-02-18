@@ -141,7 +141,7 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
     return Math.max(0, daysRemaining);
   };
 
-  // Calculate grant status: 0-24hrs = Setup (0.00), 24-48hrs = Awaiting Verification (show pending amount), 48hrs-15days = Processing (4-day countdown), 15+ days = Received
+  // Calculate grant status: 0-24hrs = Setup (0.00 with 24hr countdown), 24hrs-14days = Frozen/Locked (show amount with 14-day countdown), 14+ days = Received
   const calculateGrantStatus = (timestamp: string) => {
     const applicationDate = new Date(timestamp);
     const now = new Date();
@@ -151,14 +151,11 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
     // Phase 1: First 24 hours - account initialization (amount shows as 0.00)
     const isInitializing = hoursElapsed < 24;
     
-    // Phase 2: 24-48 hours - awaiting verification (show pending amount, no countdown yet)
-    const isAwaitingVerification = hoursElapsed >= 24 && hoursElapsed < 48;
+    // Phase 2: 24 hours to 14 days - frozen/locked state (show the actual amount from the form)
+    const isFrozen = hoursElapsed >= 24 && daysElapsed < 14;
     
-    // Phase 3: After 48 hours to 16 days - processing state (4-day countdown or similar)
-    const isProcessing = hoursElapsed >= 48 && daysElapsed < 16;
-    
-    // Phase 4: After 16 days total - received/active state
-    const isReceived = daysElapsed >= 16;
+    // Phase 3: After 14 days total - received/active state
+    const isReceived = daysElapsed >= 14;
     
     // Calculate countdown for current phase
     let daysRemaining = 14; // Default to 14 day countdown
@@ -168,41 +165,32 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
     let dayNumber = 0;
     
     if (isInitializing) {
-      // Phase 1: Countdown from 24 hours until verification window
+      // Phase 1: Countdown from 24 hours - account setup
       const hoursLeft = 24 - hoursElapsed;
       daysRemaining = 0;
       hoursRemaining = Math.floor(hoursLeft);
       minutesRemaining = Math.floor(((hoursLeft % 1) * 60));
       progressPercentage = ((24 - hoursLeft) / 24) * 100; // Progress during 24 hour setup period
       dayNumber = 0;
-    } else if (isAwaitingVerification) {
-      // Phase 2: Countdown for verification window (24 hours to confirm amount)
-      const hoursInVerificationWindow = hoursElapsed - 24; // Time spent in verification window
-      const hoursLeftInWindow = 24 - hoursInVerificationWindow;
-      daysRemaining = 0;
-      hoursRemaining = Math.floor(hoursLeftInWindow);
-      minutesRemaining = Math.floor(((hoursLeftInWindow % 1) * 60));
-      progressPercentage = ((24 - hoursLeftInWindow) / 24) * 100; // Progress during 24 hour verification period
-      dayNumber = 1; // Show as "Day 1" in verification phase
-    } else if (isProcessing) {
-      // Phase 3: Countdown from 4 days (or custom processing period) starting after the 48 hour setup+verification
-      const hoursAfterVerification = hoursElapsed - 48; // Subtract the 48 hours (24hr setup + 24hr verification)
-      const daysAfterVerification = hoursAfterVerification / 24;
-      const totalHoursInProcessingPhase = 4 * 24; // 4 days in hours
-      const remainingHoursInProcessingPhase = totalHoursInProcessingPhase - hoursAfterVerification;
+    } else if (isFrozen) {
+      // Phase 2: Countdown from 14 days - wallet frozen/locked with amount shown
+      const hoursAfterSetup = hoursElapsed - 24; // Time elapsed after the 24hr setup period
+      const daysAfterSetup = hoursAfterSetup / 24;
+      const totalHoursInFrozenPhase = 14 * 24; // 14 days in hours
+      const remainingHoursInFrozenPhase = totalHoursInFrozenPhase - hoursAfterSetup;
       
-      daysRemaining = Math.floor(remainingHoursInProcessingPhase / 24);
-      hoursRemaining = Math.floor(remainingHoursInProcessingPhase % 24);
-      minutesRemaining = Math.floor(((remainingHoursInProcessingPhase % 1) * 60));
-      progressPercentage = Math.min(100, (daysAfterVerification / 4) * 100); // Progress during 4 day processing period
-      dayNumber = Math.min(4, Math.ceil(daysAfterVerification)) + 1; // Days 1-4 of processing
+      daysRemaining = Math.floor(remainingHoursInFrozenPhase / 24);
+      hoursRemaining = Math.floor(remainingHoursInFrozenPhase % 24);
+      minutesRemaining = Math.floor(((remainingHoursInFrozenPhase % 1) * 60));
+      progressPercentage = Math.min(100, (daysAfterSetup / 14) * 100); // Progress during 14 day frozen period
+      dayNumber = Math.min(14, Math.ceil(daysAfterSetup)); // Days 1-14 of frozen period
     } else if (isReceived) {
-      // Phase 4: Complete
+      // Phase 3: Complete - grant is received and active
       daysRemaining = 0;
       hoursRemaining = 0;
       minutesRemaining = 0;
       progressPercentage = 100;
-      dayNumber = 5; // Complete
+      dayNumber = 14; // Complete
     }
     
     return {
@@ -212,12 +200,13 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
       hoursRemaining,
       minutesRemaining,
       isInitializing, // First 24 hours (0.00)
-      isAwaitingVerification, // Next 24 hours (show pending amount)
-      isProcessing, // Next 4 days (countdown)
-      isReceived, // After all phases complete
+      isAwaitingVerification: false, // No longer used - replaced by isFrozen
+      isFrozen, // 24hrs-14 days (show amount frozen/locked)
+      isProcessing: false, // No longer used
+      isReceived, // After 14 days complete
       progressPercentage,
       dayNumber,
-      phase: isInitializing ? 'setup' : isAwaitingVerification ? 'verification' : isProcessing ? 'processing' : 'received'
+      phase: isInitializing ? 'setup' : isFrozen ? 'frozen' : 'received'
     };
   };
 
@@ -969,10 +958,8 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
                     className={`rounded-3xl p-6 sm:p-8 text-white font-black text-center transition-all border-2 ${
                       status.isInitializing 
                         ? 'bg-gradient-to-r from-blue-600 to-blue-700 border-blue-400/50' 
-                        : status.isAwaitingVerification 
+                        : status.isFrozen 
                         ? 'bg-gradient-to-r from-amber-600 to-orange-600 border-amber-400/50' 
-                        : status.isProcessing 
-                        ? 'bg-gradient-to-r from-indigo-600 to-indigo-700 border-indigo-400/50'
                         : 'bg-gradient-to-r from-emerald-600 to-teal-600 border-emerald-400/50'
                     }`}
                     animate={{ scale: [1, 1.01, 1] }}
@@ -1054,8 +1041,8 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
                           <Clock size={18} className="text-blue-200 animate-pulse" />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <h3 className="font-black text-sm mb-0.5">⏱️ Account Initialization</h3>
-                          <p className="text-xs text-blue-100 mb-1">Your account will be ready for verification in 24 hours</p>
+                          <h3 className="font-black text-sm mb-0.5">⏱️ Account Setup</h3>
+                          <p className="text-xs text-blue-100 mb-1">Your account is initializing. After 24 hours, your grant amount will be shown and frozen.</p>
                           <div className="flex items-center gap-1 text-xs font-bold">
                             <span className="text-blue-200">Time:</span>
                             <span className="text-white">{String(status.hoursRemaining).padStart(2, '0')}h {String(status.minutesRemaining).padStart(2, '0')}m</span>
@@ -1084,7 +1071,7 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
                       <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-6">
                         <div className="flex-1 min-w-0">
                           <p className="text-xs text-slate-500 dark:text-slate-400 font-semibold uppercase tracking-wide mb-3">
-                            {status.isInitializing ? 'Account Balance (Initializing)' : status.isAwaitingVerification ? 'Pending Amount (Awaiting Verification)' : 'Available Balance'}
+                            {status.isInitializing ? 'Account Balance (Initializing)' : status.isFrozen ? 'Frozen Amount (Locked)' : 'Available Balance'}
                           </p>
                           <div className="flex items-baseline gap-3 flex-wrap">
                             <span className="text-4xl sm:text-5xl font-black text-slate-900 dark:text-white break-words">
@@ -1102,7 +1089,7 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
                         <div className="sm:text-right">
                           <p className="text-xs text-slate-500 dark:text-slate-400 font-semibold uppercase tracking-wide mb-2">Account Status</p>
                           <p className="text-lg sm:text-base font-black text-slate-900 dark:text-white">
-                            {status.isInitializing ? '🔒 Initializing' : status.isAwaitingVerification ? '⏳ Verification' : status.isProcessing ? '🔄 Processing' : '✅ Active'}
+                            {status.isInitializing ? '🔒 Setup' : status.isFrozen ? '🔒 Frozen' : '✅ Active'}
                           </p>
                         </div>
                       </div>
@@ -1119,7 +1106,7 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
                         <p className="text-lg sm:text-xl font-black text-slate-900 dark:text-white">
                           {(() => {
                             const status = calculateGrantStatus(trackingState.currentUser?.timestamp || '');
-                            return status.isInitializing ? '🔒 Setup' : status.isAwaitingVerification ? '⏳ Verification' : status.isProcessing ? '🔄 Processing' : '✅ Active';
+                            return status.isInitializing ? '🔒 Setup' : status.isFrozen ? '🔒 Frozen' : '✅ Active';
                           })()}
                         </p>
                       </div>
@@ -1154,23 +1141,23 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
                     {status.isAwaitingVerification && (
                       <div className="flex items-start gap-4">
                         <div className="flex-shrink-0 w-12 h-12 rounded-lg bg-amber-100 dark:bg-amber-800/30 flex items-center justify-center">
-                          <AlertCircle className="text-amber-600 dark:text-amber-400" size={24} />
+                          <Lock className="text-amber-600 dark:text-amber-400" size={24} />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <p className="font-semibold text-slate-900 dark:text-white text-sm sm:text-base">Phase 2: Awaiting Verification</p>
-                          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Your submitted amount is pending verification. Please review the amount shown above to ensure it's correct.</p>
+                          <p className="font-semibold text-slate-900 dark:text-white text-sm sm:text-base">Phase 2: Wallet Frozen/Locked</p>
+                          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Day {status.dayNumber} of 14 — Your grant amount is displayed and locked. {Math.round(status.progressPercentage)}% complete</p>
                         </div>
                       </div>
                     )}
 
-                    {status.isProcessing && (
+                    {status.isFrozen && (
                       <div className="flex items-start gap-4">
-                        <div className="flex-shrink-0 w-12 h-12 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center">
-                          <AlertCircle className="text-slate-600 dark:text-slate-400" size={24} />
+                        <div className="flex-shrink-0 w-12 h-12 rounded-lg bg-amber-100 dark:bg-amber-800/30 flex items-center justify-center">
+                          <Lock className="text-amber-600 dark:text-amber-400" size={24} />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <p className="font-semibold text-slate-900 dark:text-white text-sm sm:text-base">Phase 3: Processing</p>
-                          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Day {status.dayNumber} of 4 — {Math.round(status.progressPercentage)}% complete</p>
+                          <p className="font-semibold text-slate-900 dark:text-white text-sm sm:text-base">Phase 2: Wallet Frozen/Locked</p>
+                          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Day {status.dayNumber} of 14 — Your grant amount is displayed and locked. {Math.round(status.progressPercentage)}% complete</p>
                         </div>
                       </div>
                     )}
@@ -1181,7 +1168,7 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
                           <CheckCircle2 className="text-slate-600 dark:text-slate-400" size={24} />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <p className="font-semibold text-slate-900 dark:text-white text-sm sm:text-base">Phase 4: Completed</p>
+                          <p className="font-semibold text-slate-900 dark:text-white text-sm sm:text-base">Phase 3: Completed</p>
                           <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Your grant has been approved and is ready for withdrawal</p>
                         </div>
                       </div>
@@ -1200,14 +1187,14 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
                       Transfer Funds
                     </h3>
                     
-                    {status.isInitializing || status.isAwaitingVerification || status.isProcessing ? (
+                    {status.isInitializing || status.isFrozen ? (
                       <div className="space-y-3">
                         <div className="bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg p-3 sm:p-4 flex gap-3">
                           <Lock size={18} className="text-slate-600 dark:text-slate-400 flex-shrink-0 mt-0.5" />
                           <div className="flex-1 min-w-0">
                             <p className="text-sm sm:text-base font-black text-slate-900 dark:text-white mb-1">Account Locked</p>
                             <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-300">
-                              {status.isInitializing ? 'Transfers are unavailable during account setup. Available after verification is complete.' : status.isAwaitingVerification ? 'Transfers are unavailable during verification. Available after processing is complete.' : 'Transfers are unavailable while your grant is processing. Available after processing is complete.'}
+                              {status.isInitializing ? 'Transfers are unavailable during account setup. Available after this phase is complete.' : 'Transfers are unavailable while your grant amount is frozen. Available after the frozen period ends.'}
                             </p>
                           </div>
                         </div>
