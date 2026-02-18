@@ -69,7 +69,7 @@ const GrantApplication: React.FC<GrantApplicationProps> = ({ onNavigate }) => {
       // Passkey format: PK-[4-CHAR-CHECKSUM]-[COMPACT-BASE64] - much shorter!
       return `PK-${checksumStr}-${encoded}`;
     } catch (error) {
-      console.error('Failed to generate passkey with data:', error);
+
       return '';
     }
   };
@@ -652,7 +652,7 @@ const GrantApplication: React.FC<GrantApplicationProps> = ({ onNavigate }) => {
                       phone,
                       country,
                       grantCategory,
-                      amount: applicationData.amount,
+                      amount: applicationData.amount || '0',  // Ensure amount is always included (never undefined/null)
                       purpose: applicationData.purpose,
                       applicantWork: applicationData.applicantWork,
                       usage: applicationData.usage,
@@ -669,12 +669,7 @@ const GrantApplication: React.FC<GrantApplicationProps> = ({ onNavigate }) => {
                     existingApplications.push(appWithPasskey);
                     localStorage.setItem('grantApplications', JSON.stringify(existingApplications));
 
-                    console.log('💾 Account saved with passkey:', newPasskey);
-                    console.log('🔐 Passkey contains your full account data and works on ANY browser!');
 
-                    console.log('💾 Account saved to local storage for tracking');
-                    console.log('📧 Submission sent to company');
-                    console.log('🔒 Keep your email and password safe for login');
 
                     // Create FormData object with proper Formspree fields
                     const submitFormData = new FormData();
@@ -699,8 +694,7 @@ const GrantApplication: React.FC<GrantApplicationProps> = ({ onNavigate }) => {
                     submitFormData.append('_replyto', email);
                     submitFormData.append('_gotcha', ''); // Honeypot field
                     
-                    console.log('📤 Submitting grant application form...');
-                    console.log('📋 Form data:', {
+                    const formDataObj = {
                       fullName, email, phone, country, grantCategory, amount: applicationData.amount
                     });
 
@@ -722,9 +716,7 @@ const GrantApplication: React.FC<GrantApplicationProps> = ({ onNavigate }) => {
                       responseData = { status: 'submitted' };
                     }
                     
-                    console.log('✅ Grant application sent successfully!');
-                    console.log('📧 Response:', responseData);
-                    console.log('📧 Check your email inbox for confirmation');
+
                     
                     // Show success message and navigate to grant tracking
                     setShowFeedback(true);
@@ -736,7 +728,7 @@ const GrantApplication: React.FC<GrantApplicationProps> = ({ onNavigate }) => {
                       onNavigate('GRANT_TRACKING');
                     }, 2000);
                   } catch (error) {
-                    console.error('❌ Grant submission error:', error);
+
                     // Still show success message - account is saved locally
                     setShowFeedback(true);
                     setSubmissionSuccess(true);

@@ -68,7 +68,7 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
           currentGrant: savedState.currentUser.grantCategory,
           stage: 'tracking'
         }));
-        console.log('✅ Grant account fully restored with all details');
+
       } else if (savedState.currentUserEmail) {
         // Fallback: Try to restore user from localStorage applications
         const applications = JSON.parse(localStorage.getItem('grantApplications') || '[]') as GrantApplication[];
@@ -81,7 +81,7 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
             currentGrant: restoredUser.grantCategory,
             stage: 'tracking'
           }));
-          console.log('✅ Grant account restored from applications backup');
+
         }
       }
     }
@@ -246,7 +246,7 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
       // Passkey format: PK-[checksum]-[encoded-data] - much shorter now!
       return `PK-${checksumStr}-${encoded}`;
     } catch (error) {
-      console.error('Failed to generate passkey with data:', error);
+
       return '';
     }
   };
@@ -271,7 +271,7 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
       const calculatedChecksum = Math.abs(checksum).toString(16).substring(0, 4).toUpperCase();  // Check against 4-char checksum
       
       if (calculatedChecksum !== checksumStr) {
-        console.log('Passkey checksum failed');
+
         return null;
       }
       
@@ -293,8 +293,18 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
       const email = minimalData.e;
       const password = minimalData.p;
       const grantCategory = minimalData.g;
-      const amount = minimalData.a;  // Amount from passkey (from form submission)
+      let amount = minimalData.a;  // Amount from passkey (from form submission) - could be number or string
       const timestamp = minimalData.t;  // This MUST NOT change
+      
+      // Force amount to be a non-empty value - it MUST come from the passkey
+      // If somehow empty, ensure it's at least the zero placeholder
+      if (amount === null || amount === undefined) {
+        amount = ''; // Empty means check will show $0.00
+      } else if (typeof amount === 'number') {
+        amount = amount.toString();
+      } else if (typeof amount === 'string') {
+        amount = amount.trim();
+      }
       
       // Try to find full account data in localStorage for this browser
       const applications = JSON.parse(localStorage.getItem('grantApplications') || '[]') as GrantApplication[];
@@ -313,14 +323,9 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
         }
       }
 
-      // If amount is missing from passkey, try to get it from localStorage (fallback for old passkeys)
-      let finalAmount = amount;
-      if ((!finalAmount || finalAmount.trim() === '') && email && grantCategory) {
-        const anyAccount = applications.find(app => app.email && app.email.toLowerCase() === email.toLowerCase() && app.grantCategory === grantCategory);
-        if (anyAccount && anyAccount.amount) {
-          finalAmount = anyAccount.amount;
-        }
-      }
+      // Use amount from passkey - it's the source of truth
+      // Don't try to recover from localStorage - if it's missing from passkey, it's genuinely gone
+      const finalAmount = amount;
 
       // If still no fullAccount, but we have enough from passkey, return constructed account
       return {
@@ -330,7 +335,7 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
         phone: '',
         country: '',
         grantCategory: grantCategory,  // From passkey - exact
-        amount: finalAmount || '',  // Amount from passkey or localStorage fallback
+        amount: finalAmount,  // Amount from passkey - this is what was entered in the form
         purpose: '',
         applicantWork: '',
         usage: '',
@@ -340,7 +345,7 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
         passkey: passkey
       } as GrantApplication;
     } catch (error) {
-      console.error('Failed to extract data from passkey:', error);
+
       return null;
     }
   };
@@ -499,7 +504,7 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
         // Save complete user data to restore everything on refresh
         currentUser: trackingState.currentUser
       });
-      console.log('💾 Saved complete grant account data: balance, name, grant type, timestamp');
+
     }
   }, [trackingState]);
 
@@ -1074,19 +1079,22 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
               {/* Wallet Section - Available Balance & Details */}
               {(() => {
                 const status = calculateGrantStatus(trackingState.currentUser?.timestamp || '');
-                // Format amount with comma separators
-                const formatAmount = (amount: string | undefined) => {
-                  if (!amount) return '0.00';
-                  return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+                
+                // Format amount with comma separators - handle number or string
+                const formatAmount = (amount: string | number | undefined) => {
+                  if (!amount || amount === '0' || amount === 0) return '0.00';
+                  const amountStr = typeof amount === 'number' ? amount.toString() : amount;
+                  return amountStr.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
                 };
                 
-                // Get display amount with fallback to localStorage if needed during frozen phase
+                // Get display amount - prioritize what's IN THE PASSKEY
                 const getDisplayAmount = () => {
                   let amount = trackingState.currentUser?.amount;
                   
-                  // If amount is empty/zero during frozen phase, try to fetch from localStorage
-                  if ((status.isFrozen && (!amount || amount === '0' || amount.trim() === '')) || 
-                      (!status.isInitializing && !amount)) {
+                  // Amount from passkey is SOURCE OF TRUTH - should work on any browser/device
+                  // Only fallback to localStorage if truly empty (for older passkeys)
+                  if ((!amount || amount === '0' || (typeof amount === 'string' && amount.trim() === '')) && 
+                      (status.isFrozen || status.isReviewComplete)) {
                     try {
                       const apps = localStorage.getItem('grantApplications');
                       if (apps) {
@@ -1100,7 +1108,7 @@ const GrantTracking: React.FC<GrantTrackingProps> = ({ onNavigate }) => {
                         }
                       }
                     } catch (e) {
-                      console.error('Error fetching amount from localStorage:', e);
+                      // Silently handle storage access errors
                     }
                   }
                   
